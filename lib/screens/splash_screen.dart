@@ -16,16 +16,13 @@ class SplashScreen extends StatefulWidget {
     );
   }
 
-
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
-
-  void startTimer(){
-    Future.delayed(const Duration(seconds: 2),()async{
+  void startTimer() {
+    Future.delayed(const Duration(seconds: 2), () async {
       await Navigator.pushReplacementNamed(context, OnboardingScreen.routeName);
     });
   }
@@ -36,8 +33,6 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     startTimer();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -58,10 +53,12 @@ class _SplashScreenState extends State<SplashScreen> {
                 // SizedBox(
                 //   width: 1.h,
                 // ),
-                Text("XChat",style: Theme.of(context).textTheme.headline2?.copyWith(
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.primaryColor
-                ),)
+                Text(
+                  "XChat",
+                  style: Theme.of(context).textTheme.headline2?.copyWith(
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.primaryColor),
+                )
               ],
             ),
             SizedBox(
@@ -70,9 +67,7 @@ class _SplashScreenState extends State<SplashScreen> {
             SizedBox(
               height: 4.h,
               width: 4.h,
-              child: const CircularProgressIndicator(
-
-              ),
+              child: const CircularProgressIndicator(),
             )
           ],
         ),
@@ -80,11 +75,3 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
-
-
-
-
-
-
-
-

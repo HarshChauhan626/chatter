@@ -4,9 +4,12 @@ class AppStrings {
   static const String onBoardingTitle2 = "Your space in your dream";
   static const String onBoardingTitle3 = "Perfect chat solution";
 
-  static const String onBoardingSubTitle1 = "Passing of any information on any screen, any device instantly is made simple at its sublime ";
-  static const String onBoardingSubTitle2 = "A lag-free video chat connection between your users is easy and much everywhere on any device";
-  static const String onBoardingSubTitle3 = "Only chat solution you need for connecting with your loved ones.";
+  static const String onBoardingSubTitle1 =
+      "Passing of any information on any screen, any device instantly is made simple at its sublime ";
+  static const String onBoardingSubTitle2 =
+      "A lag-free video chat connection between your users is easy and much everywhere on any device";
+  static const String onBoardingSubTitle3 =
+      "Only chat solution you need for connecting with your loved ones.";
   static const String skip = "Skip";
   static const String username = "Username";
   static const String mobileNumber = "Mobile number";

@@ -69,7 +69,7 @@ class _ChatScreenState extends State<ChatScreen> {
           color: AppColors.whiteColor,
           boxShadow: [
             BoxShadow(
-                offset: Offset(0, 2),
+                offset: const Offset(0, 2),
                 blurRadius: 3,
                 color: Colors.grey.shade300),
           ],
@@ -100,9 +100,9 @@ class _ChatScreenState extends State<ChatScreen> {
                 Text("Online",style: Theme.of(context).textTheme.bodyText2?.copyWith(color: Colors.green),)
               ],
             ),
-            Spacer(),
+            const Spacer(),
             IconButton(
-              icon: Icon(Icons.more_vert,color: Colors.black,),
+              icon: const Icon(Icons.more_vert,color: Colors.black,),
               onPressed: (){
 
               },
@@ -166,7 +166,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 borderRadius: BorderRadius.circular(35.0),
                 boxShadow:  [
                   BoxShadow(
-                      offset: Offset(0, 2),
+                      offset: const Offset(0, 2),
                       blurRadius: 7,
                       color: Colors.grey.shade400)
                 ],
@@ -197,7 +197,7 @@ class _ChatScreenState extends State<ChatScreen> {
           const SizedBox(width: 10),
           Container(
             padding: const EdgeInsets.all(15.0),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 color: AppColors.primaryColor, shape: BoxShape.circle),
             child:inputMessageController.text.isNotEmpty?getSendMessageButton():getVoiceRecordingButton())
         ],

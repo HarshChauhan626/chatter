@@ -1,4 +1,3 @@
-
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -41,11 +40,11 @@ class BottomNavbarState extends State<BottomNavbar> {
         //   itemBuilder: (context, index) => ,
         // ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal:20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              for(int index=0;index<3;index++)
+              for (int index = 0; index < 3; index++)
                 InkWell(
                   onTap: () {
                     setState(() {
@@ -64,24 +63,28 @@ class BottomNavbarState extends State<BottomNavbar> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         AnimatedPadding(
-                          curve: Curves.fastLinearToSlowEaseIn,
-                          padding:index==currentIndex? const EdgeInsets.only(bottom:4.0):const EdgeInsets.only(bottom:0.0),
-                          duration: Duration(seconds: 1),
+                            curve: Curves.fastLinearToSlowEaseIn,
+                            padding: index == currentIndex
+                                ? const EdgeInsets.only(bottom: 4.0)
+                                : const EdgeInsets.only(bottom: 0.0),
+                            duration: Duration(seconds: 1),
                             child: Icon(
-                                index==currentIndex?listOfSelectedIcons[index]:listOfIcons[index],
+                              index == currentIndex
+                                  ? listOfSelectedIcons[index]
+                                  : listOfIcons[index],
                               size: 30.0,
-                              color: index==currentIndex?Colors.black:Color(0xff91a1af),
-                            )
-                        ),
-                        if(index==currentIndex)
+                              color: index == currentIndex
+                                  ? Colors.black
+                                  : Color(0xff91a1af),
+                            )),
+                        if (index == currentIndex)
                           Container(
-                          height: 6.0,
-                          width: 6.0,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4.0),
-                            color: AppColors.primaryColor
-                          ),
-                        )
+                            height: 6.0,
+                            width: 6.0,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4.0),
+                                color: AppColors.primaryColor),
+                          )
                       ],
                     ),
                   ),
@@ -99,10 +102,5 @@ class BottomNavbarState extends State<BottomNavbar> {
     Icons.person_outlined,
   ];
 
-  List<IconData> listOfSelectedIcons=[
-    Icons.home,
-    Icons.search,
-    Icons.person
-  ];
-
+  List<IconData> listOfSelectedIcons = [Icons.home, Icons.search, Icons.person];
 }

@@ -5,16 +5,26 @@ class AnimatedColumn extends StatelessWidget {
   List<Widget> children;
   CrossAxisAlignment? crossAxisAlignment;
   MainAxisAlignment? mainAxisAlignment;
-  AnimatedColumn({Key? key,required this.children,this.crossAxisAlignment,this.mainAxisAlignment}) : super(key: key);
+  AnimatedColumn(
+      {Key? key,
+      required this.children,
+      this.crossAxisAlignment,
+      this.mainAxisAlignment})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AnimationLimiter(
-      child:Column(
-        mainAxisAlignment: mainAxisAlignment??MainAxisAlignment.center,
-        crossAxisAlignment: crossAxisAlignment??CrossAxisAlignment.center,
-        children: AnimationConfiguration.toStaggeredList(duration: const Duration(milliseconds: 600),childAnimationBuilder: (widget)=>SlideAnimation(child: FadeInAnimation(child: widget,)), children: children),
-      )
-    );
+        child: Column(
+      mainAxisAlignment: mainAxisAlignment ?? MainAxisAlignment.center,
+      crossAxisAlignment: crossAxisAlignment ?? CrossAxisAlignment.center,
+      children: AnimationConfiguration.toStaggeredList(
+          duration: const Duration(milliseconds: 600),
+          childAnimationBuilder: (widget) => SlideAnimation(
+                  child: FadeInAnimation(
+                child: widget,
+              )),
+          children: children),
+    ));
   }
 }

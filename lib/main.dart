@@ -20,10 +20,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Sizer(
-      builder: (BuildContext context, Orientation orientation, DeviceType deviceType) {
+      builder: (BuildContext context, Orientation orientation,
+          DeviceType deviceType) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          theme:AppTheme.light,
+          theme: AppTheme.light,
           onGenerateRoute: CustomRouter.onGenerateRoute,
           initialRoute: SplashScreen.routeName,
         );
@@ -31,4 +32,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

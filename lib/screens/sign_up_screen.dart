@@ -18,7 +18,7 @@ class SignUpScreen extends StatefulWidget {
     // return MaterialPageRoute(
     //     settings: const RouteSettings(name: routeName),
     //     builder: (_) => const SignUpScreen());
-    return CustomRouteBuilder(page: const SignUpScreen(),routeName: routeName);
+    return CustomRouteBuilder(page: const SignUpScreen(), routeName: routeName);
   }
 
   @override
@@ -28,26 +28,27 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
-    return CustomSafeArea(child: Scaffold(
+    return CustomSafeArea(
+        child: Scaffold(
       appBar: AppBar(
-        // leading: Padding(
-        //   padding: const EdgeInsets.all(6.0),
-        //   child: InkWell(
-        //     onTap: (){
-        //       Navigator.pop(context);
-        //     },
-        //     child: Container(
-        //       decoration: BoxDecoration(
-        //           border: Border.all(
-        //             color: AppColors.blackTextColor,
-        //           ),
-        //           borderRadius: BorderRadius.circular(10.0)
-        //       ),
-        //       child: const Icon(CupertinoIcons.back,color: AppColors.blackTextColor,),
-        //     ),
-        //   ),
-        // )
-      ),
+          // leading: Padding(
+          //   padding: const EdgeInsets.all(6.0),
+          //   child: InkWell(
+          //     onTap: (){
+          //       Navigator.pop(context);
+          //     },
+          //     child: Container(
+          //       decoration: BoxDecoration(
+          //           border: Border.all(
+          //             color: AppColors.blackTextColor,
+          //           ),
+          //           borderRadius: BorderRadius.circular(10.0)
+          //       ),
+          //       child: const Icon(CupertinoIcons.back,color: AppColors.blackTextColor,),
+          //     ),
+          //   ),
+          // )
+          ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -115,7 +116,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 height: 40.0,
               ),
               ElevatedButton(
-                onPressed: (){},
+                onPressed: () {},
                 child: const Text('Sign up'),
               ),
               const SizedBox(
@@ -131,8 +132,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     children: [
                       SizedBox(
                           height: 30.0,
-                          child:
-                          SvgPicture.asset("assets/icons8-google.svg")),
+                          child: SvgPicture.asset("assets/icons8-google.svg")),
                       Text(
                         "Sign up with Google",
                         style: Theme.of(context).textTheme.button?.copyWith(
@@ -147,12 +147,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Already a member?",style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                      fontWeight: FontWeight.bold
-                  ),),
-                  TextButton(onPressed: (){
-                    Navigator.pushNamed(context, SignInScreen.routeName);
-                  }, child: const Text('Sign In'))
+                  Text(
+                    "Already a member?",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, SignInScreen.routeName);
+                      },
+                      child: const Text('Sign In'))
                 ],
               )
             ],

@@ -20,7 +20,8 @@ class OnboardingScreen extends StatefulWidget {
     //   settings: const RouteSettings(name: routeName),
     //   builder: (_) => const OnboardingScreen(),
     // );
-    return CustomRouteBuilder(page: const OnboardingScreen(),routeName: routeName);
+    return CustomRouteBuilder(
+        page: const OnboardingScreen(), routeName: routeName);
   }
 
   @override
@@ -30,8 +31,7 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _imageController = PageController();
 
-  int nextPage=0;
-
+  int nextPage = 0;
 
   @override
   void initState() {
@@ -42,13 +42,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   void _animateSlider() {
     Future.delayed(const Duration(seconds: 2)).then((_) {
-      if (nextPage <3) {
+      if (nextPage < 3) {
         // nextPage = 0;
         debugPrint(nextPage.toString());
 
         _imageController
             .animateToPage(nextPage,
-            duration: const Duration(seconds: 1), curve: Curves.linear)
+                duration: const Duration(seconds: 1), curve: Curves.linear)
             .then((_) => _animateSlider());
 
         setState(() {
@@ -74,11 +74,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   itemCount: 3,
                   scrollBehavior: const MaterialScrollBehavior(),
                   itemBuilder: (context, index) {
-                    return PageWidget(index:index);
+                    return PageWidget(index: index);
                   }),
             ),
             SizedBox(
-              height:13.h,
+              height: 13.h,
               child: Column(
                 children: [
                   Padding(
@@ -103,11 +103,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal:12.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
                     child: OnboardingButton(
                         function: _animateSlider,
-                        lastIndex:(nextPage-1)>=2
-                    ),
+                        lastIndex: (nextPage - 1) >= 2),
                   )
                 ],
               ),
@@ -129,35 +128,33 @@ class SliderBox extends StatelessWidget {
   }
 }
 
-
 class PageWidget extends StatefulWidget {
   final int index;
-  const PageWidget({Key? key,required this.index}) : super(key: key);
+  const PageWidget({Key? key, required this.index}) : super(key: key);
 
   @override
   _PageWidgetState createState() => _PageWidgetState();
 }
 
-class _PageWidgetState extends State<PageWidget> with AutomaticKeepAliveClientMixin{
-
-  List<String> svgList=[
+class _PageWidgetState extends State<PageWidget>
+    with AutomaticKeepAliveClientMixin {
+  List<String> svgList = [
     "chatting.svg",
     "mobile_messages.svg",
     "online_discussion.svg"
   ];
 
-  List<String> titleList=[
+  List<String> titleList = [
     AppStrings.onBoardingTitle1,
     AppStrings.onBoardingTitle2,
     AppStrings.onBoardingTitle3,
   ];
 
-  List<String> subtitleList=[
+  List<String> subtitleList = [
     AppStrings.onBoardingSubTitle1,
     AppStrings.onBoardingSubTitle2,
     AppStrings.onBoardingSubTitle3,
   ];
-
 
   @override
   Widget build(BuildContext context) {
@@ -179,26 +176,24 @@ class _PageWidgetState extends State<PageWidget> with AutomaticKeepAliveClientMi
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(20.0,10.0,10.0,10.0),
+              padding: const EdgeInsets.fromLTRB(20.0, 10.0, 10.0, 10.0),
               child: SlideFadeTransition(
                   child: Text(
-                    titleList[widget.index],
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline5
-                        ?.copyWith(
-                        color: AppColors.primaryColor,
-                        fontWeight: FontWeight.bold),
-                  )),
+                titleList[widget.index],
+                style: Theme.of(context).textTheme.headline5?.copyWith(
+                    color: AppColors.primaryColor, fontWeight: FontWeight.bold),
+              )),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20.0,10.0,10.0,10.0),
+              padding: const EdgeInsets.fromLTRB(20.0, 10.0, 10.0, 10.0),
               child: SlideFadeTransition(
                   child: Text(
-                    subtitleList[widget.index], style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                        color: Colors.grey[500]
-                    ),
-                  )),
+                subtitleList[widget.index],
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText2
+                    ?.copyWith(color: Colors.grey[500]),
+              )),
             )
           ],
         )
@@ -210,23 +205,21 @@ class _PageWidgetState extends State<PageWidget> with AutomaticKeepAliveClientMi
   bool get wantKeepAlive => true;
 }
 
-
-
-
 class OnboardingButton extends StatefulWidget {
   Function function;
   bool lastIndex;
-  OnboardingButton({Key? key,required this.function,required this.lastIndex}) : super(key: key);
+  OnboardingButton({Key? key, required this.function, required this.lastIndex})
+      : super(key: key);
 
   @override
   _OnboardingButtonState createState() => _OnboardingButtonState();
 }
 
-class _OnboardingButtonState extends State<OnboardingButton> with SingleTickerProviderStateMixin{
-
+class _OnboardingButtonState extends State<OnboardingButton>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
 
-  bool end=false;
+  bool end = false;
 
   @override
   void initState() {
@@ -235,19 +228,15 @@ class _OnboardingButtonState extends State<OnboardingButton> with SingleTickerPr
       vsync: this,
       duration: const Duration(seconds: 2),
     )..addListener(() {
-      setState(() {
-
+        setState(() {});
       });
-    });
     toggleEndButton();
     // <-- Set your duration here.
   }
 
-  void toggleEndButton(){
-    end=widget.lastIndex;
-    setState(() {
-
-    });
+  void toggleEndButton() {
+    end = widget.lastIndex;
+    setState(() {});
   }
 
   @override
@@ -257,39 +246,44 @@ class _OnboardingButtonState extends State<OnboardingButton> with SingleTickerPr
       child: Stack(
         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          !widget.lastIndex?Align(
-            alignment: Alignment.centerLeft,
-            child: TextButton(
-              child: Text("Skip",style: Theme.of(context).textTheme.button?.copyWith(
-                  color: AppColors.greyColor,
-                  fontSize: 18.0
-              ),
-              ),
-              onPressed: (){
-
-              },
-            ),
-          ):const SizedBox(),
+          !widget.lastIndex
+              ? Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton(
+                    child: Text(
+                      "Skip",
+                      style: Theme.of(context).textTheme.button?.copyWith(
+                          color: AppColors.greyColor, fontSize: 18.0),
+                    ),
+                    onPressed: () {},
+                  ),
+                )
+              : const SizedBox(),
           AnimatedAlign(
             duration: const Duration(milliseconds: 300),
-            alignment: widget.lastIndex?Alignment.center:Alignment.centerRight,
+            alignment:
+                widget.lastIndex ? Alignment.center : Alignment.centerRight,
             child: SizedBox(
-              width: widget.lastIndex?92.w:40.w,
+              width: widget.lastIndex ? 92.w : 40.w,
               child: ElevatedButton(
-                onPressed: (){
-                  if(widget.lastIndex){
-                    Navigator.pushReplacementNamed(context, SignInScreen.routeName);
-                  }
-                  else{
+                onPressed: () {
+                  if (widget.lastIndex) {
+                    Navigator.pushReplacementNamed(
+                        context, SignInScreen.routeName);
+                  } else {
                     widget.function();
                   }
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(widget.lastIndex?"Get started":"Next",style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                        color: Colors.white
-                    ),),
+                    Text(
+                      widget.lastIndex ? "Get started" : "Next",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          ?.copyWith(color: Colors.white),
+                    ),
                     SizedBox(
                       width: 2.w,
                     ),
@@ -307,8 +301,4 @@ class _OnboardingButtonState extends State<OnboardingButton> with SingleTickerPr
       ),
     );
   }
-
 }
-
-
-

@@ -23,7 +23,7 @@ class SignInScreen extends StatefulWidget {
     //     settings: const RouteSettings(name: routeName),
     //     builder: (_) => const SignInScreen()
     // );
-    return CustomRouteBuilder(page: const SignInScreen(),routeName: routeName);
+    return CustomRouteBuilder(page: const SignInScreen(), routeName: routeName);
   }
 
   @override
@@ -33,130 +33,129 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
-    return CustomSafeArea(child: Scaffold(
+    return CustomSafeArea(
+        child: Scaffold(
       body: SingleChildScrollView(
-        child: AnimatedColumn(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 30.0),
-              child: SizedBox(
-                height: 120.0,
-                child: SvgPicture.asset("assets/personalization.svg"),
-              ),
+          child: AnimatedColumn(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 30.0),
+            child: SizedBox(
+              height: 120.0,
+              child: SvgPicture.asset("assets/personalization.svg"),
             ),
-            Text(
-              "Welcome Back!",
-              style: Theme.of(context).textTheme.headline5?.copyWith(
-                  fontWeight: FontWeight.w900, color: AppColors.primaryColor),
-            ),
-            const SizedBox(
-              height: 10.0,
-            ),
-            Text(
-              "Please sign in to your account",
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyText1
-                  ?.copyWith(color: AppColors.greyColor),
-            ),
-            const SizedBox(
-              height: 30.0,
-            ),
-            Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 20.0, vertical: 10.0),
-                child: InputTextField(
-                  onChangedValue: (value) {
-                    debugPrint(value);
-                  },
-                  hintText: "Email",
-                  inputTextType: InputTextType.email,
-                )),
-            Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 20.0, vertical: 10.0),
-                child: InputTextField(
-                  onChangedValue: (value) {
-                    debugPrint(value);
-                  },
-                  hintText: "Password",
-                  inputTextType: InputTextType.password,
-                )),
-            // const SizedBox(
-            //   height: 10.0,
-            // ),
-            Container(
-              alignment: Alignment.centerRight,
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(
-                      context, ForgotPasswordScreen.routeName);
+          ),
+          Text(
+            "Welcome Back!",
+            style: Theme.of(context).textTheme.headline5?.copyWith(
+                fontWeight: FontWeight.w900, color: AppColors.primaryColor),
+          ),
+          const SizedBox(
+            height: 10.0,
+          ),
+          Text(
+            "Please sign in to your account",
+            style: Theme.of(context)
+                .textTheme
+                .bodyText1
+                ?.copyWith(color: AppColors.greyColor),
+          ),
+          const SizedBox(
+            height: 30.0,
+          ),
+          Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+              child: InputTextField(
+                onChangedValue: (value) {
+                  debugPrint(value);
                 },
-                child: Text(
-                  AppStrings.forgotPassword,
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle2
-                      ?.copyWith(color: AppColors.primaryColor),
-                ),
+                hintText: "Email",
+                inputTextType: InputTextType.email,
+              )),
+          Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+              child: InputTextField(
+                onChangedValue: (value) {
+                  debugPrint(value);
+                },
+                hintText: "Password",
+                inputTextType: InputTextType.password,
+              )),
+          // const SizedBox(
+          //   height: 10.0,
+          // ),
+          Container(
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, ForgotPasswordScreen.routeName);
+              },
+              child: Text(
+                AppStrings.forgotPassword,
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle2
+                    ?.copyWith(color: AppColors.primaryColor),
               ),
             ),
-            const SizedBox(
-              height: 50.0,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: ElevatedButton(
-                  onPressed: () {}, child: const Text("Sign In")),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 20.0, vertical: 20.0),
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      primary: AppColors.textFieldBackgroundColor,
-                      elevation: 3.0),
-                  onPressed: () {},
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                          height: 30.0,
-                          child:
-                          SvgPicture.asset("assets/icons8-google.svg")),
-                      Text(
-                        "Sign in with Google",
-                        style: Theme.of(context).textTheme.button?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.blackTextColor),
-                      )
-                    ],
-                  )),
-            ),
-            const SizedBox(
-              height: 60.0,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Don't have an account?",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyText2
-                      ?.copyWith(fontWeight: FontWeight.bold),
-                ),
-                TextButton(
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, SignUpScreen.routeName);
-                    },
-                    child: const Text('Sign Up'))
-              ],
-            )
-          ],
-        )
-      ),
+          ),
+          const SizedBox(
+            height: 50.0,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child:
+                ElevatedButton(onPressed: () {}, child: const Text("Sign In")),
+          ),
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: AppColors.textFieldBackgroundColor,
+                    elevation: 3.0),
+                onPressed: () {},
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                        height: 30.0,
+                        child: SvgPicture.asset("assets/icons8-google.svg")),
+                    Text(
+                      "Sign in with Google",
+                      style: Theme.of(context).textTheme.button?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.blackTextColor),
+                    )
+                  ],
+                )),
+          ),
+          const SizedBox(
+            height: 60.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Don't have an account?",
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText2
+                    ?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              TextButton(
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(
+                        context, SignUpScreen.routeName);
+                  },
+                  child: const Text('Sign Up'))
+            ],
+          )
+        ],
+      )),
     ));
   }
 }

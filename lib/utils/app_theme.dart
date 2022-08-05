@@ -6,10 +6,13 @@ class AppTheme {
   static ThemeData get light {
     return ThemeData(
         appBarTheme: const AppBarTheme(
-          elevation: 0,
-          color: AppColors.whiteColor,
-          titleTextStyle: TextStyle(color: Colors.black, fontSize: 24.0, letterSpacing: 0,fontWeight: FontWeight.w900)
-        ),
+            elevation: 0,
+            color: AppColors.whiteColor,
+            titleTextStyle: TextStyle(
+                color: Colors.black,
+                fontSize: 24.0,
+                letterSpacing: 0,
+                fontWeight: FontWeight.w900)),
         textTheme: const TextTheme(
           headline4: TextStyle(
               color: AppColors.blackTextColor,
@@ -46,19 +49,17 @@ class AppTheme {
         // accentColor: Colors.black,
         splashColor: Colors.transparent,
         // Used this for changing active prefix icon color in textfield
-        colorScheme: ThemeData().colorScheme.copyWith(
-          primary: AppColors.primaryColor
-        ),
+        colorScheme:
+            ThemeData().colorScheme.copyWith(primary: AppColors.primaryColor),
         fontFamily: 'IBM',
         inputDecorationTheme: const InputDecorationTheme(),
         elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
-              elevation: 6.0,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(15.0))
-              ),
-                primary: AppColors.primaryColor,
-                minimumSize: const Size(double.infinity, 54.0),
-                )));
+          elevation: 6.0,
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(15.0))),
+          primary: AppColors.primaryColor,
+          minimumSize: const Size(double.infinity, 54.0),
+        )));
   }
 }

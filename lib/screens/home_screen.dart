@@ -7,7 +7,6 @@ import 'package:chat_app/widgets/custom_safe_area.dart';
 import 'package:flutter/material.dart';
 import 'package:random_avatar/random_avatar.dart';
 
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -18,7 +17,7 @@ class HomeScreen extends StatefulWidget {
     //     settings: const RouteSettings(name: routeName),
     //     builder: (_) =>const HomeScreen()
     // );
-    return CustomRouteBuilder(page: const HomeScreen(),routeName: routeName);
+    return CustomRouteBuilder(page: const HomeScreen(), routeName: routeName);
   }
 
   @override
@@ -28,21 +27,15 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return CustomSafeArea(child: Scaffold(
-    body: CustomScrollView(
-        slivers: [
-          getAppBar(),
-          getChatList()
-        ],
-    ),
-        bottomSheet: getBottomNavigation()
-    )
-    );
+    return CustomSafeArea(
+        child: Scaffold(
+            body: CustomScrollView(
+              slivers: [getAppBar(), getChatList()],
+            ),
+            bottomSheet: getBottomNavigation()));
   }
 
-
-
-  Widget getAppBar(){
+  Widget getAppBar() {
     return SliverAppBar(
       floating: true,
       expandedHeight: 200.0,
@@ -57,7 +50,8 @@ class _HomeScreenState extends State<HomeScreen> {
       flexibleSpace: FlexibleSpaceBar(
         background: Container(
             alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 10.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -67,17 +61,25 @@ class _HomeScreenState extends State<HomeScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Hello Harsh",style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                          color: Colors.grey
-                        ),),
-                        Text("Xchat message",style: Theme.of(context).textTheme.headline6?.copyWith(
-                          fontWeight: FontWeight.w900
-                        ),)
+                        Text(
+                          "Hello Harsh",
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              ?.copyWith(color: Colors.grey),
+                        ),
+                        Text(
+                          "Xchat message",
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline6
+                              ?.copyWith(fontWeight: FontWeight.w900),
+                        )
                       ],
                     ),
                     IconButton(
                       icon: const Icon(Icons.edit),
-                      onPressed: (){},
+                      onPressed: () {},
                     )
                   ],
                 ),
@@ -86,22 +88,25 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 SizedBox(
                   height: 60.0,
-                  child:ListView.builder(
+                  child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       shrinkWrap: true,
                       itemCount: 30,
-                      itemBuilder: (context,index){
-                        if(index==0){
+                      itemBuilder: (context, index) {
+                        if (index == 0) {
                           return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
                             child: Container(
                               height: 60.0,
                               width: 60.0,
                               decoration: BoxDecoration(
                                   color: AppColors.lightGreyColor,
-                                  borderRadius: BorderRadius.circular(80.0)
+                                  borderRadius: BorderRadius.circular(80.0)),
+                              child: const Icon(
+                                Icons.search,
+                                color: Colors.black,
                               ),
-                              child: const Icon(Icons.search,color: Colors.black,),
                             ),
                           );
                         }
@@ -112,8 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             width: 80.0,
                             decoration: BoxDecoration(
                                 color: AppColors.lightGreyColor,
-                                borderRadius: BorderRadius.circular(80.0)
-                            ),
+                                borderRadius: BorderRadius.circular(80.0)),
                             child: randomAvatar(
                               DateTime.now().toIso8601String(),
                               trBackground: true,
@@ -122,92 +126,70 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         );
-                      }
-                  ),
+                      }),
                 )
               ],
-            )
-        ),
+            )),
       ),
     );
   }
 
-
-  Widget getChatList(){
-    return
-      SliverList(delegate: SliverChildBuilderDelegate(
-              (context,index){
-            return ListTile(
-              onTap: (){
-                Navigator.pushNamed(context, "/chat");
-              },
-              tileColor: AppColors.whiteColor,
-              leading: randomAvatar(
-                DateTime.now().toIso8601String(),
-                height: 50,
-                width: 52,
-              ),
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Harsh Chauhan",style: Theme.of(context).textTheme.bodyText1?.copyWith(fontWeight: FontWeight.bold),),
-                  Text("5:46 PM",style: Theme.of(context).textTheme.subtitle2?.copyWith(color: Colors.black54))
-                ],
-              ),
-              subtitle: Row(
-                children: [
-                  Text("Latest message",style: Theme.of(context).textTheme.subtitle2?.copyWith(color: Colors.black54))
-                ],
-              ),
-            );
-          }
-          ,childCount: 100
-      ));
+  Widget getChatList() {
+    return SliverList(
+        delegate: SliverChildBuilderDelegate((context, index) {
+      return ListTile(
+        onTap: () {
+          Navigator.pushNamed(context, "/chat");
+        },
+        tileColor: AppColors.whiteColor,
+        leading: randomAvatar(
+          DateTime.now().toIso8601String(),
+          height: 50,
+          width: 52,
+        ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "Harsh Chauhan",
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyText1
+                  ?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            Text("5:46 PM",
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle2
+                    ?.copyWith(color: Colors.black54))
+          ],
+        ),
+        subtitle: Row(
+          children: [
+            Text("Latest message",
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle2
+                    ?.copyWith(color: Colors.black54))
+          ],
+        ),
+      );
+    }, childCount: 100));
   }
 
-  Widget getBottomNavigation(){
+  Widget getBottomNavigation() {
     return Container(
       height: 70.0,
-      decoration: const BoxDecoration(
-          color: AppColors.whiteColor,
-          boxShadow:  [
-            BoxShadow(
-                color: Colors.black,
-                offset: Offset(
-                    10.0,
-                    0.0
-                )
-            ),
-            BoxShadow(
-                color: Colors.white12,
-                offset: Offset(
-                    10.0,
-                    10.0
-                )
-            ),
-          ]
-      ),
+      decoration: const BoxDecoration(color: AppColors.whiteColor, boxShadow: [
+        BoxShadow(color: Colors.black, offset: Offset(10.0, 0.0)),
+        BoxShadow(color: Colors.white12, offset: Offset(10.0, 10.0)),
+      ]),
       alignment: Alignment.center,
       child: Center(child: BottomNavbar(
-        callback: (int index){
+        callback: (int index) {
           debugPrint(index.toString());
         },
       )),
     );
   }
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-

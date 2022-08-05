@@ -55,7 +55,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               SizedBox(
                 height: 5.h,
               ),
-              Padding(padding: EdgeInsets.symmetric(vertical: 4.h,horizontal: 4.w),child: Container(
+              Padding(padding: EdgeInsets.symmetric(vertical: 4.h,horizontal: 4.w),child: SizedBox(
                 height: 22.h,
                 child: SvgPicture.asset("assets/forgot_password.svg"),
               ),),
