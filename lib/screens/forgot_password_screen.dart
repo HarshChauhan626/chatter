@@ -1,5 +1,7 @@
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/utils/enums.dart';
+import 'package:chat_app/widgets/custom_route_builder.dart';
+import 'package:chat_app/widgets/custom_safe_area.dart';
 import 'package:chat_app/widgets/input_text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,10 +14,11 @@ class ForgotPasswordScreen extends StatefulWidget {
   static const String routeName = '/forgot_password';
 
   static Route route() {
-    return MaterialPageRoute(
-        settings: const RouteSettings(name: routeName),
-        builder: (_) =>const ForgotPasswordScreen()
-    );
+    // return MaterialPageRoute(
+    //     settings: const RouteSettings(name: routeName),
+    //     builder: (_) =>const ForgotPasswordScreen()
+    // );
+    return CustomRouteBuilder(page: const ForgotPasswordScreen(),routeName: routeName);
   }
 
   @override
@@ -25,7 +28,7 @@ class ForgotPasswordScreen extends StatefulWidget {
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return CustomSafeArea(
       child: Scaffold(
         appBar: AppBar(
           leading: Padding(

@@ -1,6 +1,8 @@
 import 'package:chat_app/screens/sign_in_screen.dart';
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/utils/app_strings.dart';
+import 'package:chat_app/widgets/custom_route_builder.dart';
+import 'package:chat_app/widgets/custom_safe_area.dart';
 import 'package:chat_app/widgets/slide_fade_transition.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,10 +16,11 @@ class OnboardingScreen extends StatefulWidget {
   static const String routeName = '/onboarding';
 
   static Route route() {
-    return MaterialPageRoute(
-      settings: const RouteSettings(name: routeName),
-      builder: (_) => OnboardingScreen(),
-    );
+    // return MaterialPageRoute(
+    //   settings: const RouteSettings(name: routeName),
+    //   builder: (_) => const OnboardingScreen(),
+    // );
+    return CustomRouteBuilder(page: const OnboardingScreen(),routeName: routeName);
   }
 
   @override
@@ -38,20 +41,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _animateSlider() {
-    Future.delayed(Duration(seconds: 2)).then((_) {
+    Future.delayed(const Duration(seconds: 2)).then((_) {
       if (nextPage <3) {
         // nextPage = 0;
-        print(nextPage);
+        debugPrint(nextPage.toString());
 
         _imageController
             .animateToPage(nextPage,
-            duration: Duration(seconds: 1), curve: Curves.linear)
+            duration: const Duration(seconds: 1), curve: Curves.linear)
             .then((_) => _animateSlider());
 
         setState(() {
-          print(_imageController.page!.round());
+          debugPrint(_imageController.page!.round().toString());
           nextPage = _imageController.page!.round() + 1;
-          print(nextPage);
+          debugPrint(nextPage.toString());
         });
       }
     });
@@ -63,18 +66,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            Container(
+            SizedBox(
               height: 80.h,
               child: PageView.builder(
                   scrollDirection: Axis.horizontal,
                   controller: _imageController,
                   itemCount: 3,
-                  scrollBehavior: MaterialScrollBehavior(),
+                  scrollBehavior: const MaterialScrollBehavior(),
                   itemBuilder: (context, index) {
                     return PageWidget(index:index);
                   }),
             ),
-            Container(
+            SizedBox(
               height:13.h,
               child: Column(
                 children: [
@@ -87,7 +90,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         controller: _imageController,
                         count: 3,
                         axisDirection: Axis.horizontal,
-                        effect: SlideEffect(
+                        effect: const SlideEffect(
                             spacing: 8.0,
                             radius: 10.0,
                             dotWidth: 10.0,
@@ -122,7 +125,7 @@ class SliderBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(padding: EdgeInsets.all(10), child: child);
+    return Container(padding: const EdgeInsets.all(10), child: child);
   }
 }
 
@@ -168,38 +171,36 @@ class _PageWidgetState extends State<PageWidget> with AutomaticKeepAliveClientMi
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: SvgPicture.asset("assets/${svgList[widget.index]}"),
         ),
-        SizedBox(
+        const SizedBox(
           height: 80.0,
         ),
-        Container(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20.0,10.0,10.0,10.0),
-                child: SlideFadeTransition(
-                    child: Text(
-                      titleList[widget.index],
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline5
-                          ?.copyWith(
-                          color: AppColors.primaryColor,
-                          fontWeight: FontWeight.bold),
-                    )),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20.0,10.0,10.0,10.0),
-                child: SlideFadeTransition(
-                    child: Text(
-                      subtitleList[widget.index], style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                          color: Colors.grey[500]
-                      ),
-                    )),
-              )
-            ],
-          ),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20.0,10.0,10.0,10.0),
+              child: SlideFadeTransition(
+                  child: Text(
+                    titleList[widget.index],
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline5
+                        ?.copyWith(
+                        color: AppColors.primaryColor,
+                        fontWeight: FontWeight.bold),
+                  )),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20.0,10.0,10.0,10.0),
+              child: SlideFadeTransition(
+                  child: Text(
+                    subtitleList[widget.index], style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                        color: Colors.grey[500]
+                    ),
+                  )),
+            )
+          ],
         )
       ],
     );
@@ -225,17 +226,14 @@ class _OnboardingButtonState extends State<OnboardingButton> with SingleTickerPr
 
   late final AnimationController _controller;
 
-
   bool end=false;
-
-
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 2),
+      duration: const Duration(seconds: 2),
     )..addListener(() {
       setState(() {
 
@@ -245,7 +243,6 @@ class _OnboardingButtonState extends State<OnboardingButton> with SingleTickerPr
     // <-- Set your duration here.
   }
 
-
   void toggleEndButton(){
     end=widget.lastIndex;
     setState(() {
@@ -253,113 +250,63 @@ class _OnboardingButtonState extends State<OnboardingButton> with SingleTickerPr
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
-    print("Onboarding button called");
-    return Stack(
-      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        !widget.lastIndex?Align(
-          alignment: Alignment.centerLeft,
-          child: TextButton(
-            child: Text("Skip",style: Theme.of(context).textTheme.button?.copyWith(
-                color: AppColors.greyColor,
-                fontSize: 18.0
-            ),
-            ),
-            onPressed: (){
-
-            },
-          ),
-        ):SizedBox(),
-        AnimatedAlign(
-          duration: const Duration(milliseconds: 300),
-          alignment: widget.lastIndex?Alignment.center:Alignment.centerRight,
-          child: SizedBox(
-            width: widget.lastIndex?92.w:40.w,
-            child: ElevatedButton(
+    debugPrint("Onboarding button called");
+    return CustomSafeArea(
+      child: Stack(
+        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          !widget.lastIndex?Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton(
+              child: Text("Skip",style: Theme.of(context).textTheme.button?.copyWith(
+                  color: AppColors.greyColor,
+                  fontSize: 18.0
+              ),
+              ),
               onPressed: (){
-                if(widget.lastIndex){
-                  Navigator.pushReplacementNamed(context, SignInScreen.routeName);
-                }
-                else{
-                  widget.function();
-                }
+
               },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(widget.lastIndex?"Get started":"Next",style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                      color: Colors.white
-                  ),),
-                  SizedBox(
-                    width: 2.w,
-                  ),
-                  const Icon(
-                    Icons.arrow_forward,
-                    color: Colors.white,
-                    size: 25.0,
-                  )
-                ],
+            ),
+          ):const SizedBox(),
+          AnimatedAlign(
+            duration: const Duration(milliseconds: 300),
+            alignment: widget.lastIndex?Alignment.center:Alignment.centerRight,
+            child: SizedBox(
+              width: widget.lastIndex?92.w:40.w,
+              child: ElevatedButton(
+                onPressed: (){
+                  if(widget.lastIndex){
+                    Navigator.pushReplacementNamed(context, SignInScreen.routeName);
+                  }
+                  else{
+                    widget.function();
+                  }
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(widget.lastIndex?"Get started":"Next",style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                        color: Colors.white
+                    ),),
+                    SizedBox(
+                      width: 2.w,
+                    ),
+                    const Icon(
+                      Icons.arrow_forward,
+                      color: Colors.white,
+                      size: 25.0,
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
-        )
-      ],
+          )
+        ],
+      ),
     );
   }
-  //
-  // InkWell(
-  // onTap: (){
-  // if(widget.lastIndex){
-  // Navigator.pushReplacementNamed(context, SignInScreen.routeName);
-  // }
-  // else{
-  // widget.function();
-  // }
-  // },
-  // child: AnimatedContainer(
-  // height:widget.lastIndex?40.0:40.0,
-  // width: widget.lastIndex?140:150.0,
-  // decoration: BoxDecoration(
-  // color: AppColors.primaryColor,
-  // borderRadius: BorderRadius.all(Radius.circular(30.0)),
-  // boxShadow:  [
-  // BoxShadow(
-  // offset: Offset(0, 2),
-  // blurRadius: 7,
-  // color: Colors.grey.shade400)
-  // ],
-  // ),
-  // duration: Duration(
-  // milliseconds: 200
-  // ),
-  // child: Center(
-  // child: widget.lastIndex?Text("Get Started",style: Theme.of(context).textTheme.button?.copyWith(
-  // color: Colors.white
-  // ),):Row(
-  // mainAxisAlignment: MainAxisAlignment.center,
-  // children: [
-  // Text('Next',style: Theme.of(context).textTheme.bodyText1?.copyWith(
-  // color: Colors.white
-  // ),),
-  // SizedBox(
-  // width: 2.w,
-  // ),
-  // Icon(
-  // Icons.arrow_forward,
-  // color: Colors.white,
-  // size: 25.0,
-  // )
-  // ],
-  // ),
-  // ),
-  // ),
-  // )
-
-
-
 
 }
 

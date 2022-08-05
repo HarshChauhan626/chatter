@@ -1,3 +1,5 @@
+import 'package:chat_app/widgets/custom_route_builder.dart';
+import 'package:chat_app/widgets/custom_safe_area.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -19,10 +21,11 @@ class ResetPasswordScreen extends StatefulWidget {
   static const String routeName = '/reset_password';
 
   static Route route() {
-    return MaterialPageRoute(
-        settings: const RouteSettings(name: routeName),
-        builder: (_) =>const ResetPasswordScreen()
-    );
+    // return MaterialPageRoute(
+    //     settings: const RouteSettings(name: routeName),
+    //     builder: (_) =>const ResetPasswordScreen()
+    // );
+    return CustomRouteBuilder(page: const ResetPasswordScreen(),routeName: routeName);
   }
 
   @override
@@ -32,7 +35,7 @@ class ResetPasswordScreen extends StatefulWidget {
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return CustomSafeArea(
       child: Scaffold(
         appBar: AppBar(
           leading: Padding(

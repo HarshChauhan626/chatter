@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/widgets/custom_bottom_navigation_bar_2.dart';
+import 'package:chat_app/widgets/custom_route_builder.dart';
+import 'package:chat_app/widgets/custom_safe_area.dart';
 import 'package:flutter/material.dart';
 import 'package:random_avatar/random_avatar.dart';
 
@@ -12,10 +14,11 @@ class HomeScreen extends StatefulWidget {
   static const String routeName = '/home';
 
   static Route route() {
-    return MaterialPageRoute(
-        settings: const RouteSettings(name: routeName),
-        builder: (_) =>const HomeScreen()
-    );
+    // return MaterialPageRoute(
+    //     settings: const RouteSettings(name: routeName),
+    //     builder: (_) =>const HomeScreen()
+    // );
+    return CustomRouteBuilder(page: const HomeScreen(),routeName: routeName);
   }
 
   @override
@@ -25,7 +28,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(child: Scaffold(
+    return CustomSafeArea(child: Scaffold(
     body: CustomScrollView(
         slivers: [
           getAppBar(),

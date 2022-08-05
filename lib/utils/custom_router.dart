@@ -12,8 +12,6 @@ class CustomRouter {
   static Route onGenerateRoute(RouteSettings settings) {
     debugPrint('Route: ${settings.name}');
     switch (settings.name) {
-      case "/":
-        return HomeScreen.route();
       case SplashScreen.routeName:
         return SplashScreen.route();
       case OnboardingScreen.routeName:

@@ -1,4 +1,6 @@
 import 'package:chat_app/utils/app_colors.dart';
+import 'package:chat_app/widgets/custom_route_builder.dart';
+import 'package:chat_app/widgets/custom_safe_area.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:random_avatar/random_avatar.dart';
@@ -11,10 +13,11 @@ class ChatScreen extends StatefulWidget {
   static const String routeName = '/chat';
 
   static Route route() {
-    return MaterialPageRoute(
-        settings: const RouteSettings(name: routeName),
-        builder: (_) =>const ChatScreen()
-    );
+    // return MaterialPageRoute(
+    //     settings: const RouteSettings(name: routeName),
+    //     builder: (_) =>const ChatScreen()
+    // );
+    return CustomRouteBuilder(page: const ChatScreen(),routeName: routeName);
   }
 
   @override
@@ -49,7 +52,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return CustomSafeArea(
       child: Scaffold(
         backgroundColor: AppColors.whiteColor,
         appBar: getAppBar(),
