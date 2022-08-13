@@ -16,6 +16,8 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
+import '../widgets/alert_dialog.dart';
+import '../widgets/custom_alert_body.dart';
 import 'forgot_password_screen.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -37,6 +39,8 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   bool isLoading = false;
+
+  SignInController signInController=Get.put(SignInController());
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +74,7 @@ class _SignInScreenState extends State<SignInScreen> {
               child: InputTextField(
                 onChangedValue: (value) {
                   debugPrint(value);
+                  signInController.user.value=value;
                 },
                 hintText: "Email",
                 inputTextType: InputTextType.email,
@@ -80,6 +85,7 @@ class _SignInScreenState extends State<SignInScreen> {
               child: InputTextField(
                 onChangedValue: (value) {
                   debugPrint(value);
+                  signInController.password.value=value;
                 },
                 hintText: "Password",
                 inputTextType: InputTextType.password,
@@ -108,48 +114,56 @@ class _SignInScreenState extends State<SignInScreen> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: GetBuilder<SignInController>(
-              init: SignInController(),
-              builder: (SignInController signInController){
-                return ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                            (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.pressed)) {
-                            return AppColors.primaryColor;
-                          } else if (states.contains(MaterialState.disabled)) {
-                            return AppColors.primaryColor.darken(30);
-                          }
-                          return AppColors
-                              .primaryColor; // Use the component's default./ Use the component's default.
-                        },
-                      ),
+            child: Obx(
+                ()=> ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                        if (states.contains(MaterialState.pressed)) {
+                          return AppColors.primaryColor;
+                        } else if (states.contains(MaterialState.disabled)) {
+                          return AppColors.primaryColor.darken(30);
+                        }
+                        return AppColors
+                            .primaryColor; // Use the component's default./ Use the component's default.
+                      },
                     ),
-                    onPressed: signInController.isLoading.value
-                        ? null
-                        : () async {
-                      signInController.signInUser();
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (signInController.isLoading.value)
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10.0),
-                            child: SizedBox(
-                              height: 23.0,
-                              width: 23.0,
-                              child: CircularProgressIndicator(
-                                color: AppColors.whiteColor,
-                                strokeWidth: 3.0,
-                              ),
+                  ),
+                  onPressed: signInController.isLoading.value
+                      ? null
+                      : () async {
+                    // signInController.signInUser();
+                    // Get.to(HomeScreen());
+                    // showCustomDialog(context,CustomAlertBody.alertWithOneButtonAlert(context,imageLoc: "assets/error_lottie.json",title: "Wrong credentials",bodyText:"You have entered an incorrect username or password",actionButtonText: "Got it"));
+                    // showCustomDialog(context,CustomAlertBody.alertWithOneButtonAlert(context,imageLoc: "assets/send_mail.json",title: "Check your inbox",bodyText:"Reset password link has been sent to your mail.",actionButtonText: "Got it"));
+                    // showCustomDialog(context,CustomAlertBody.alertWithOneButtonAlert(context,imageLoc: "assets/success.json",title: "Success",bodyText:"Your new password has been successfully saved.",actionButtonText: "Got it"));
+                    // showCustomDialog(context,CustomAlertBody.alertWithOneButtonAlert(context,imageLoc: "assets/error_lottie.json",title: "OOPS!",bodyText:"Something went wrong. Please try again.",actionButtonText: "OK"));
+                    showCustomDialog(context,CustomAlertBody.alertWithTwoButtons(context,title: "Logout",bodyText:"Are you sure?",actionButtonOneText: "No",actionButtonTwoText: "Yes",onTapActionButtonOneText: (){
+                      Navigator.pop(context);
+                    },onTapActionButtonTwoText: (){
+                      Navigator.pushNamedAndRemoveUntil(context, SignInScreen.routeName, (route) => false);
+                    }));
+
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (signInController.isLoading.value)
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.0),
+                          child: SizedBox(
+                            height: 23.0,
+                            width: 23.0,
+                            child: CircularProgressIndicator(
+                              color: AppColors.whiteColor,
+                              strokeWidth: 3.0,
                             ),
                           ),
-                        if (!(signInController.isLoading.value)) const Text("Sign In")
-                      ],
-                    ));
-              },
-            ),
+                        ),
+                      if (!(signInController.isLoading.value)) const Text("Sign In")
+                    ],
+                  )),
+            )
           ),
           Padding(
             padding:
@@ -157,7 +171,8 @@ class _SignInScreenState extends State<SignInScreen> {
             child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     primary: AppColors.textFieldBackgroundColor,
-                    elevation: 3.0),
+                    elevation: 3.0
+                ),
                 onPressed: () {},
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,

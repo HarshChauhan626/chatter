@@ -15,6 +15,7 @@ class SignInController extends GetxController {
       AuthController authController = Get.find<AuthController>();
       isLoading.value = true;
       bool canLogin=await authController.login(user.value, password.value);
+
       isLoading.value = false;
       if(canLogin){
         Get.to(const HomeScreen());
