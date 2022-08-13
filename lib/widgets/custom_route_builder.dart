@@ -12,8 +12,8 @@ class CustomRouteBuilder extends PageRouteBuilder {
               name: routeName,
             ),
             pageBuilder: (context, animation, anotherAnimation) => page,
-            transitionDuration: const Duration(seconds: 2),
-            reverseTransitionDuration: const Duration(seconds: 2),
+            transitionDuration: const Duration(milliseconds: 400),
+            reverseTransitionDuration: const Duration(milliseconds: 400),
             transitionsBuilder: (context, animation, anotherAnimation, child) {
               animation = CurvedAnimation(
                 curve: Curves.fastLinearToSlowEaseIn,

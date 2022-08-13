@@ -29,6 +29,10 @@ class _ChatScreenState extends State<ChatScreen> {
 
   TextEditingController inputMessageController=TextEditingController();
 
+  List<String> messageList=[
+    for(int i=0;i<100;i++)
+      "My message $i",
+  ];
 
   void callEmoji() {
     debugPrint('Emoji Icon Pressed...');
@@ -84,7 +88,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
             Container(
               child: randomAvatar(
-                DateTime.now().toIso8601String(),
+                "Harsh",
                 height: 40,
                 width: 40,
               ),
@@ -129,7 +133,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return SizedBox(
         height: 82.h,
         child: ListView.builder(
-          itemCount: 16,
+          itemCount: messageList.length,
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
             itemBuilder: (context,index){
@@ -143,7 +147,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       color: (index %2==0?Colors.grey.shade200:AppColors.primaryColor),
                     ),
                     padding: const EdgeInsets.all(16),
-                    child: Text("My message ", style: TextStyle(fontSize: 15,color: index%2==0 ? AppColors.blackTextColor:AppColors.whiteColor),),
+                    child: Text(messageList[index], style: TextStyle(fontSize: 15,color: index%2==0 ? AppColors.blackTextColor:AppColors.whiteColor),),
                   ),
                 ),
               );

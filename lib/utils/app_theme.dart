@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'app_colors.dart';
+import 'extensions.dart';
 
 class AppTheme {
   static ThemeData get light {
@@ -56,10 +57,12 @@ class AppTheme {
         elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
           elevation: 6.0,
+          onSurface: AppColors.primaryColor.darken(),
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(15.0))),
           primary: AppColors.primaryColor,
           minimumSize: const Size(double.infinity, 54.0),
-        )));
+        ))
+    );
   }
 }

@@ -1,3 +1,5 @@
+import 'package:chat_app/constants.dart';
+import 'package:chat_app/controllers/sign_up_controller.dart';
 import 'package:chat_app/screens/sign_in_screen.dart';
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/utils/enums.dart';
@@ -8,6 +10,8 @@ import 'package:chat_app/widgets/input_text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -26,6 +30,19 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+
+
+
+  final SignUpController signUpController = Get.put(SignUpController());
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return CustomSafeArea(
@@ -81,43 +98,72 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 height: 30.0,
               ),
               InputTextField(
-                  onChangedValue: (value) {},
+                  onChangedValue: (value) {
+                    signUpController.userName.value=value;
+                  },
                   hintText: "Username",
                   inputTextType: InputTextType.username),
               const SizedBox(
                 height: 14.0,
               ),
               InputTextField(
-                  onChangedValue: (value) {},
+                  onChangedValue: (value) {
+                    signUpController.firstName.value=value;
+                  },
                   hintText: "First name",
                   inputTextType: InputTextType.username),
               const SizedBox(
                 height: 14.0,
               ),
               InputTextField(
-                  onChangedValue: (value) {},
+                  onChangedValue: (value) {
+
+                  },
                   hintText: "Last name",
                   inputTextType: InputTextType.username),
               const SizedBox(
                 height: 14.0,
               ),
               InputTextField(
-                  onChangedValue: (value) {},
+                  onChangedValue: (value) {
+                    signUpController.email.value=value;
+                  },
                   hintText: "Email",
                   inputTextType: InputTextType.email),
               const SizedBox(
                 height: 14.0,
               ),
               InputTextField(
-                  onChangedValue: (value) {},
+                  onChangedValue: (value) {
+                    signUpController.password.value=value;
+                  },
                   hintText: "Password",
                   inputTextType: InputTextType.password),
               const SizedBox(
                 height: 40.0,
               ),
               ElevatedButton(
-                onPressed: () {},
-                child: const Text('Sign up'),
+                onPressed: () async{
+                  signUpController.registerUser();
+                  },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (signUpController.isLoading.value)
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10.0),
+                        child: SizedBox(
+                          height: 23.0,
+                          width: 23.0,
+                          child: CircularProgressIndicator(
+                            color: AppColors.whiteColor,
+                            strokeWidth: 3.0,
+                          ),
+                        ),
+                      ),
+                    if (!signUpController.isLoading.value) const Text("Submit")
+                  ],
+                ),
               ),
               const SizedBox(
                 height: 14.0,

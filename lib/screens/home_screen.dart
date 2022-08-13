@@ -1,10 +1,12 @@
 import 'dart:ui';
 
 import 'package:chat_app/utils/app_colors.dart';
+import 'package:chat_app/widgets/animated_column_widget.dart';
 import 'package:chat_app/widgets/custom_bottom_navigation_bar_2.dart';
 import 'package:chat_app/widgets/custom_route_builder.dart';
 import 'package:chat_app/widgets/custom_safe_area.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:random_avatar/random_avatar.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -24,7 +26,37 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin{
+
+
+
+  AnimationController? _controller;
+  Animation<Offset>? _animation;
+
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 400),
+      vsync: this,
+    )..forward();
+    _animation = Tween<Offset>(
+      begin: const Offset(-0.3, 0.0),
+      end: const Offset(0.01, 0.0),
+    ).animate(CurvedAnimation(
+      parent: _controller!,
+      curve: Curves.easeInCubic,
+    ));
+  }
+
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return CustomSafeArea(
@@ -61,20 +93,26 @@ class _HomeScreenState extends State<HomeScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "Hello Harsh",
-                          style: Theme.of(context)
-                              .textTheme
-                              .subtitle1
-                              ?.copyWith(color: Colors.grey),
+                        SlideTransition(
+                          position: _animation!,
+                          child: Text(
+                            "Hello Harsh",
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1
+                                ?.copyWith(color: Colors.grey),
+                          ),
                         ),
-                        Text(
-                          "Xchat message",
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline6
-                              ?.copyWith(fontWeight: FontWeight.w900),
-                        )
+                        SlideTransition(
+                          position: _animation!,
+                          child: Text(
+                            "Xchat message",
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline6
+                                ?.copyWith(fontWeight: FontWeight.w900),
+                          ),
+                        ),
                       ],
                     ),
                     IconButton(
@@ -135,46 +173,48 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget getChatList() {
-    return SliverList(
-        delegate: SliverChildBuilderDelegate((context, index) {
-      return ListTile(
-        onTap: () {
-          Navigator.pushNamed(context, "/chat");
-        },
-        tileColor: AppColors.whiteColor,
-        leading: randomAvatar(
-          DateTime.now().toIso8601String(),
-          height: 50,
-          width: 52,
-        ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "Harsh Chauhan",
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyText1
-                  ?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            Text("5:46 PM",
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle2
-                    ?.copyWith(color: Colors.black54))
-          ],
-        ),
-        subtitle: Row(
-          children: [
-            Text("Latest message",
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle2
-                    ?.copyWith(color: Colors.black54))
-          ],
-        ),
-      );
-    }, childCount: 100));
+    return AnimationLimiter(
+      child: SliverList(
+          delegate: SliverChildBuilderDelegate((context, index) {
+            return ListTile(
+              onTap: () {
+                Navigator.pushNamed(context, "/chat");
+              },
+              tileColor: AppColors.whiteColor,
+              leading: randomAvatar(
+                DateTime.now().toIso8601String(),
+                height: 50,
+                width: 52,
+              ),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Harsh Chauhan",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  Text("5:46 PM",
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle2
+                          ?.copyWith(color: Colors.black54))
+                ],
+              ),
+              subtitle: Row(
+                children: [
+                  Text("Latest message",
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle2
+                          ?.copyWith(color: Colors.black54))
+                ],
+              ),
+            );
+          }, childCount: 100)),
+    );
   }
 
   Widget getBottomNavigation() {

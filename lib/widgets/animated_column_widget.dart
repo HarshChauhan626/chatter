@@ -21,6 +21,8 @@ class AnimatedColumn extends StatelessWidget {
       children: AnimationConfiguration.toStaggeredList(
           duration: const Duration(milliseconds: 600),
           childAnimationBuilder: (widget) => SlideAnimation(
+            verticalOffset: 0.0,
+            horizontalOffset: 50.0,
                   child: FadeInAnimation(
                 child: widget,
               )),

@@ -1,3 +1,4 @@
+import 'package:chat_app/screens/home_screen.dart';
 import 'package:chat_app/screens/onboarding_screen.dart';
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/widgets/custom_safe_area.dart';
@@ -23,7 +24,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   void startTimer() {
     Future.delayed(const Duration(seconds: 2), () async {
-      await Navigator.pushReplacementNamed(context, OnboardingScreen.routeName);
+      await Navigator.pushNamedAndRemoveUntil(context, OnboardingScreen.routeName,(route)=>false);
     });
   }
 

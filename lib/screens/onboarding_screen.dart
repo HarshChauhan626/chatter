@@ -33,11 +33,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   int nextPage = 0;
 
+  int index=0;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((_) => _animateSlider());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _animateSlider());
   }
 
   void _animateSlider() {
@@ -48,7 +50,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
         _imageController
             .animateToPage(nextPage,
-                duration: const Duration(seconds: 1), curve: Curves.linear)
+            duration: const Duration(seconds: 1), curve: Curves.linear)
             .then((_) => _animateSlider());
 
         setState(() {
@@ -62,6 +64,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    print("Build called $index");
+    index++;
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -179,21 +185,21 @@ class _PageWidgetState extends State<PageWidget>
               padding: const EdgeInsets.fromLTRB(20.0, 10.0, 10.0, 10.0),
               child: SlideFadeTransition(
                   child: Text(
-                titleList[widget.index],
-                style: Theme.of(context).textTheme.headline5?.copyWith(
-                    color: AppColors.primaryColor, fontWeight: FontWeight.bold),
-              )),
+                    titleList[widget.index],
+                    style: Theme.of(context).textTheme.headline5?.copyWith(
+                        color: AppColors.primaryColor, fontWeight: FontWeight.bold),
+                  )),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20.0, 10.0, 10.0, 10.0),
               child: SlideFadeTransition(
                   child: Text(
-                subtitleList[widget.index],
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText2
-                    ?.copyWith(color: Colors.grey[500]),
-              )),
+                    subtitleList[widget.index],
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        ?.copyWith(color: Colors.grey[500]),
+                  )),
             )
           ],
         )
@@ -228,8 +234,8 @@ class _OnboardingButtonState extends State<OnboardingButton>
       vsync: this,
       duration: const Duration(seconds: 2),
     )..addListener(() {
-        setState(() {});
-      });
+      setState(() {});
+    });
     toggleEndButton();
     // <-- Set your duration here.
   }
@@ -248,21 +254,21 @@ class _OnboardingButtonState extends State<OnboardingButton>
         children: [
           !widget.lastIndex
               ? Align(
-                  alignment: Alignment.centerLeft,
-                  child: TextButton(
-                    child: Text(
-                      "Skip",
-                      style: Theme.of(context).textTheme.button?.copyWith(
-                          color: AppColors.greyColor, fontSize: 18.0),
-                    ),
-                    onPressed: () {},
-                  ),
-                )
+            alignment: Alignment.centerLeft,
+            child: TextButton(
+              child: Text(
+                "Skip",
+                style: Theme.of(context).textTheme.button?.copyWith(
+                    color: AppColors.greyColor, fontSize: 18.0),
+              ),
+              onPressed: () {},
+            ),
+          )
               : const SizedBox(),
           AnimatedAlign(
             duration: const Duration(milliseconds: 300),
             alignment:
-                widget.lastIndex ? Alignment.center : Alignment.centerRight,
+            widget.lastIndex ? Alignment.center : Alignment.centerRight,
             child: SizedBox(
               width: widget.lastIndex ? 92.w : 40.w,
               child: ElevatedButton(
