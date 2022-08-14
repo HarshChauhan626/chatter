@@ -1,17 +1,11 @@
-import 'package:chat_app/models/user_model.dart';
 import 'package:chat_app/screens/sign_in_screen.dart';
 import 'package:chat_app/screens/sign_up_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_rx/src/rx_workers/rx_workers.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:get/get.dart';
 
-import '../constants.dart';
-import '../globals.dart';
+import '../helper/firebase_helper.dart';
 import '../screens/home_screen.dart';
 
 class AuthController extends GetxController {
@@ -26,62 +20,55 @@ class AuthController extends GetxController {
     // auth is comning from the constants.dart file but it is basically FirebaseAuth.instance.
     // Since we have to use that many times I just made a constant file and declared there
 
-    firebaseUser = Rx<User?>(Globals.auth?.currentUser);
-    googleSignInAccount = Rx<GoogleSignInAccount?>(Globals.googleSign?.currentUser);
+    firebaseUser = Rx<User?>(FirebaseHelper.authInstance?.currentUser);
+    googleSignInAccount = Rx<GoogleSignInAccount?>(
+        FirebaseHelper.googleSignInstance?.currentUser);
 
-
-    firebaseUser.bindStream(Globals.auth!.userChanges());
+    firebaseUser.bindStream(FirebaseHelper.authInstance!.userChanges());
     ever(firebaseUser, _setInitialScreen);
 
-
-    googleSignInAccount.bindStream(Globals.googleSign!.onCurrentUserChanged);
+    googleSignInAccount
+        .bindStream(FirebaseHelper.googleSignInstance!.onCurrentUserChanged);
     ever(googleSignInAccount, _setInitialScreenGoogle);
   }
 
   _setInitialScreen(User? user) {
     if (user == null) {
-
       // if the user is not found then the user is navigated to the Login Screen
       Get.offAll(() => const SignInScreen());
-
     } else {
-
       // if the user exists and logged in the the user is navigated to the Home Screen
-      Get.offAll(()=>const HomeScreen());
-
+      Get.offAll(() => const HomeScreen());
     }
   }
 
   _setInitialScreenGoogle(GoogleSignInAccount? googleSignInAccount) {
     if (googleSignInAccount == null) {
-
       // if the user is not found then the user is navigated to the Register Screen
       Get.offAll(() => const SignUpScreen());
-
     } else {
-
       // if the user exists and logged in the the user is navigated to the Home Screen
-      Get.offAll(()=>const SignInScreen());
-
+      Get.offAll(() => const SignInScreen());
     }
   }
 
   void signInWithGoogle() async {
     try {
-      GoogleSignInAccount? googleSignInAccount = await Globals.googleSign!.signIn();
+      GoogleSignInAccount? googleSignInAccount =
+          await FirebaseHelper.googleSignInstance!.signIn();
 
       if (googleSignInAccount != null) {
         GoogleSignInAuthentication googleSignInAuthentication =
-        await googleSignInAccount.authentication;
+            await googleSignInAccount.authentication;
 
         AuthCredential credential = GoogleAuthProvider.credential(
           accessToken: googleSignInAuthentication.accessToken,
           idToken: googleSignInAuthentication.idToken,
         );
 
-        await Globals.auth!
+        await FirebaseHelper.authInstance!
             .signInWithCredential(credential)
-            .catchError((onErr) => print(onErr));
+            .catchError((onErr) => debugPrint(onErr));
       }
     } catch (e) {
       Get.snackbar(
@@ -89,14 +76,14 @@ class AuthController extends GetxController {
         e.toString(),
         snackPosition: SnackPosition.BOTTOM,
       );
-      print(e.toString());
+      debugPrint(e.toString());
     }
   }
 
   Future<void> register(String email, password) async {
     try {
-      await Globals.auth!.createUserWithEmailAndPassword(
-          email: email, password: password);
+      await FirebaseHelper.authInstance!
+          .createUserWithEmailAndPassword(email: email, password: password);
     } catch (firebaseAuthException) {
       debugPrint(firebaseAuthException.toString());
     }
@@ -104,14 +91,23 @@ class AuthController extends GetxController {
 
   Future<bool> login(String email, password) async {
     try {
-      UserCredential userCredential=await Globals.auth!.signInWithEmailAndPassword(email: email, password: password);
-      return userCredential.user!=null?true:false;
+      UserCredential userCredential = await FirebaseHelper.authInstance!
+          .signInWithEmailAndPassword(email: email, password: password);
+      return userCredential.user != null ? true : false;
     } catch (firebaseAuthException) {
       return false;
     }
   }
 
+  Future<void> resetPassword() async {
+    try {
+
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
   void signOut() async {
-    await Globals.auth!.signOut();
+    await FirebaseHelper.authInstance!.signOut();
   }
 }

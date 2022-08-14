@@ -1,3 +1,4 @@
+import 'package:chat_app/helper/firebase_helper.dart';
 import 'package:chat_app/screens/home_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,19 +15,15 @@ class SignInController extends GetxController {
     try {
       AuthController authController = Get.find<AuthController>();
       isLoading.value = true;
-      bool canLogin=await authController.login(user.value, password.value);
-
+      bool canLogin = await authController.login(user.value, password.value);
       isLoading.value = false;
-      if(canLogin){
+      if (canLogin) {
+        FirebaseHelper.user = FirebaseHelper.authInstance?.currentUser;
         Get.to(const HomeScreen());
-      }
-      else{
-        Get.snackbar(
-          "",
-          "Wrong email or password",
-          snackPosition: SnackPosition.BOTTOM,
-          duration: const Duration(seconds: 2)
-        );
+      } else {
+        Get.snackbar("", "Wrong email or password",
+            snackPosition: SnackPosition.BOTTOM,
+            duration: const Duration(seconds: 2));
       }
     } catch (e) {
       isLoading.value = false;

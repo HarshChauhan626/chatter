@@ -132,18 +132,17 @@ class _SignInScreenState extends State<SignInScreen> {
                   onPressed: signInController.isLoading.value
                       ? null
                       : () async {
-                    // signInController.signInUser();
+                    signInController.signInUser();
                     // Get.to(HomeScreen());
                     // showCustomDialog(context,CustomAlertBody.alertWithOneButtonAlert(context,imageLoc: "assets/error_lottie.json",title: "Wrong credentials",bodyText:"You have entered an incorrect username or password",actionButtonText: "Got it"));
                     // showCustomDialog(context,CustomAlertBody.alertWithOneButtonAlert(context,imageLoc: "assets/send_mail.json",title: "Check your inbox",bodyText:"Reset password link has been sent to your mail.",actionButtonText: "Got it"));
                     // showCustomDialog(context,CustomAlertBody.alertWithOneButtonAlert(context,imageLoc: "assets/success.json",title: "Success",bodyText:"Your new password has been successfully saved.",actionButtonText: "Got it"));
                     // showCustomDialog(context,CustomAlertBody.alertWithOneButtonAlert(context,imageLoc: "assets/error_lottie.json",title: "OOPS!",bodyText:"Something went wrong. Please try again.",actionButtonText: "OK"));
-                    showCustomDialog(context,CustomAlertBody.alertWithTwoButtons(context,title: "Logout",bodyText:"Are you sure?",actionButtonOneText: "No",actionButtonTwoText: "Yes",onTapActionButtonOneText: (){
-                      Navigator.pop(context);
-                    },onTapActionButtonTwoText: (){
-                      Navigator.pushNamedAndRemoveUntil(context, SignInScreen.routeName, (route) => false);
-                    }));
-
+                    // showCustomDialog(context,CustomAlertBody.alertWithTwoButtons(context,title: "Logout",bodyText:"Are you sure?",actionButtonOneText: "No",actionButtonTwoText: "Yes",onTapActionButtonOneText: (){
+                    //   Navigator.pop(context);
+                    // },onTapActionButtonTwoText: (){
+                    //   Navigator.pushNamedAndRemoveUntil(context, SignInScreen.routeName, (route) => false);
+                    // }));
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,

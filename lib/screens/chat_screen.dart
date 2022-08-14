@@ -58,19 +58,26 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return CustomSafeArea(
       child: Scaffold(
-        backgroundColor: AppColors.whiteColor,
+        extendBody: true,
+        backgroundColor: AppColors.textFieldBackgroundColor,
         appBar: getAppBar(),
         body: getBody(),
+        bottomSheet:
+        getInputField(),
       ),
     );
   }
 
   PreferredSizeWidget getAppBar(){
     return PreferredSize(
-      preferredSize: const Size(double.infinity,60.0),
+      preferredSize: Size(double.infinity,8.h),
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
+          borderRadius: BorderRadius.only(
+              bottomRight: Radius.circular(4.w),
+              bottomLeft: Radius.circular(4.w)
+          ),
           boxShadow: [
             BoxShadow(
                 offset: const Offset(0, 2),
@@ -123,7 +130,6 @@ class _ChatScreenState extends State<ChatScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           getMessageList(),
-          getInputField()
         ],
       ),
     );
@@ -131,7 +137,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget getMessageList(){
     return SizedBox(
-        height: 82.h,
+        height: 79.h,
         child: ListView.builder(
           itemCount: messageList.length,
             shrinkWrap: true,
@@ -144,7 +150,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      color: (index %2==0?Colors.grey.shade200:AppColors.primaryColor),
+                      color: (index %2==0?Colors.white:AppColors.primaryColor),
                     ),
                     padding: const EdgeInsets.all(16),
                     child: Text(messageList[index], style: TextStyle(fontSize: 15,color: index%2==0 ? AppColors.blackTextColor:AppColors.whiteColor),),
@@ -157,53 +163,67 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget getInputField(){
     return Container(
-      color: AppColors.whiteColor,
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(4.w),
+          topRight: Radius.circular(4.w),
+        )
+      ),
       alignment: Alignment.center,
-      padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 4.0),
-      child: Row(
+      height:10.h,
+      padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 2.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Expanded(
-            child: Container
-              (
-              decoration: BoxDecoration(
-                color: AppColors.whiteColor,
-                borderRadius: BorderRadius.circular(35.0),
-                boxShadow:  [
-                  BoxShadow(
-                      offset: const Offset(0, 2),
-                      blurRadius: 7,
-                      color: Colors.grey.shade400)
-                ],
-              ),
-              child: Row(
-                children: [
-                  getMoodIconButton(),
-                  Expanded(
-                    child: TextField(
-                      onChanged: (value){
-                        setState(() {
-                          debugPrint(value);
-                        });
-                      },
-                      controller: inputMessageController,
-                      decoration: InputDecoration(
-                          hintText: "Message",
-                          hintStyle: Theme.of(context).textTheme.subtitle1?.copyWith(color: AppColors.greyColor),
-                          border: InputBorder.none),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container
+                (
+                height: 7.h,
+                decoration: BoxDecoration(
+                  color: AppColors.whiteColor,
+                  borderRadius: BorderRadius.circular(15.0),
+                  boxShadow:  [
+                    BoxShadow(
+                        offset: const Offset(0, 2),
+                        blurRadius: 7,
+                        color: Colors.grey.shade400)
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    getMoodIconButton(),
+                    Container(
+                      width: 42.w,
+                      child: TextField(
+                        onChanged: (value){
+                          setState(() {
+                            debugPrint(value);
+                          });
+                        },
+                        controller: inputMessageController,
+                        decoration: InputDecoration(
+                            hintText: "Message",
+                            hintStyle: Theme.of(context).textTheme.subtitle1?.copyWith(color: AppColors.greyColor),
+                            border: InputBorder.none),
+                      ),
                     ),
-                  ),
-                  getAttachFileButton(),
-                  inputMessageController.text.isNotEmpty?const SizedBox():getCameraButton(),
-                ],
+                    getAttachFileButton(),
+                    inputMessageController.text.isNotEmpty?const SizedBox():getCameraButton(),
+                  ],
+                ),
               ),
-            ),
-          ),
-          const SizedBox(width: 10),
-          Container(
-            padding: const EdgeInsets.all(15.0),
-            decoration: const BoxDecoration(
-                color: AppColors.primaryColor, shape: BoxShape.circle),
-            child:inputMessageController.text.isNotEmpty?getSendMessageButton():getVoiceRecordingButton())
+              const SizedBox(width: 10),
+              Container(
+                  padding: const EdgeInsets.all(15.0),
+                  decoration: const BoxDecoration(
+                      color: AppColors.primaryColor, borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                  child:inputMessageController.text.isNotEmpty?getSendMessageButton():getVoiceRecordingButton())
+            ],
+          )
         ],
       ),
     );

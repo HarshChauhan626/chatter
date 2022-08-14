@@ -19,17 +19,13 @@ import 'package:sizer/sizer.dart';
 
 import 'controllers/auth_controller.dart';
 import 'globals.dart';
+import 'helper/firebase_helper.dart';
 
 
 void main()async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  // FirebaseAuth auth = FirebaseAuth.instance;
-  Globals.auth=FirebaseAuth.instance;
-  Globals.firestore=FirebaseFirestore.instance;
-  Globals.googleSign=GoogleSignIn();
-  // FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-  // GoogleSignIn googleSign = GoogleSignIn();
+  FirebaseHelper.initInstances();
   runApp(const MyApp());
 }
 
