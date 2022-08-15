@@ -65,7 +65,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin{
             body: CustomScrollView(
               slivers: [getAppBar(), getChatList()],
             ),
-            bottomSheet: getBottomNavigation()));
+            // bottomSheet: getBottomNavigation()
+        ));
   }
 
   Widget getAppBar() {

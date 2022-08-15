@@ -9,7 +9,7 @@ import '../helper/firebase_helper.dart';
 import '../screens/home_screen.dart';
 
 class AuthController extends GetxController {
-  static AuthController instance = Get.find();
+  // static AuthController instance = Get.find();
   late Rx<User?> firebaseUser;
 
   late Rx<GoogleSignInAccount?> googleSignInAccount;
@@ -19,17 +19,18 @@ class AuthController extends GetxController {
     super.onReady();
     // auth is comning from the constants.dart file but it is basically FirebaseAuth.instance.
     // Since we have to use that many times I just made a constant file and declared there
-
+    debugPrint("Going to ready auth controller");
     firebaseUser = Rx<User?>(FirebaseHelper.authInstance?.currentUser);
+    debugPrint("User initialized");
     googleSignInAccount = Rx<GoogleSignInAccount?>(
         FirebaseHelper.googleSignInstance?.currentUser);
 
     firebaseUser.bindStream(FirebaseHelper.authInstance!.userChanges());
-    ever(firebaseUser, _setInitialScreen);
+    // ever(firebaseUser, _setInitialScreen);
 
     googleSignInAccount
         .bindStream(FirebaseHelper.googleSignInstance!.onCurrentUserChanged);
-    ever(googleSignInAccount, _setInitialScreenGoogle);
+    // ever(googleSignInAccount, _setInitialScreenGoogle);
   }
 
   _setInitialScreen(User? user) {
@@ -45,10 +46,10 @@ class AuthController extends GetxController {
   _setInitialScreenGoogle(GoogleSignInAccount? googleSignInAccount) {
     if (googleSignInAccount == null) {
       // if the user is not found then the user is navigated to the Register Screen
-      Get.offAll(() => const SignUpScreen());
+      Get.offAll(() => const SignInScreen());
     } else {
       // if the user exists and logged in the the user is navigated to the Home Screen
-      Get.offAll(() => const SignInScreen());
+      Get.offAll(() => const HomeScreen());
     }
   }
 

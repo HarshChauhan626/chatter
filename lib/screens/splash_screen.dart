@@ -1,8 +1,12 @@
+import 'package:chat_app/controllers/auth_controller.dart';
 import 'package:chat_app/screens/home_screen.dart';
 import 'package:chat_app/screens/onboarding_screen.dart';
+import 'package:chat_app/screens/sign_in_screen.dart';
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/widgets/custom_safe_area.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:sizer/sizer.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -22,10 +26,18 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  void startTimer() {
-    Future.delayed(const Duration(seconds: 2), () async {
-      await Navigator.pushNamedAndRemoveUntil(context, OnboardingScreen.routeName,(route)=>false);
+
+  AuthController authController=Get.put(AuthController(),permanent: true);
+
+  void startTimer() async{
+    await Future.delayed(const Duration(seconds: 6), () async {
     });
+    if(authController.firebaseUser.value!=null){
+      Get.offAllNamed(HomeScreen.routeName);
+    }
+    else{
+      Get.offAllNamed(SignInScreen.routeName);
+    }
   }
 
   @override

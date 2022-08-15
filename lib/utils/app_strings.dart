@@ -49,6 +49,7 @@ class AppStrings {
   static const String dontWorryItHappens =
       "Don't worry it happens. Please enter the address associated with your account";
   static const String comments="Comments";
+  static const String message="Message";
 
   // error handler
   static const String badRequestError = "bad_request_error";
@@ -83,4 +84,11 @@ class AppStrings {
 
   static const String giveFeedback="Please give us your valuable feedback!";
   static const String reviewSaved="Your review is saved. Thanks!";
+
+
+  static const String isOnBoardingDone="isOnBoardingDone";
+  static const String userPreferences="userPreferences";
+
+
+  static const String activeNow="Active now";
 }
