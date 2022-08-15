@@ -7,8 +7,12 @@ import 'package:chat_app/widgets/custom_bottom_navigation_bar_2.dart';
 import 'package:chat_app/widgets/custom_route_builder.dart';
 import 'package:chat_app/widgets/custom_safe_area.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:random_avatar/random_avatar.dart';
+import 'package:sizer/sizer.dart';
+
+import '../utils/app_strings.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -34,7 +38,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin{
   AnimationController? _controller;
   Animation<Offset>? _animation;
 
+  final ScrollController _scrollController=ScrollController();
 
+  bool isScrollingDownwards=false;
 
   @override
   void initState() {
@@ -51,6 +57,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin{
       parent: _controller!,
       curve: Curves.easeInCubic,
     ));
+
+
+    _scrollController.addListener(() {
+      if(_scrollController.position.userScrollDirection==ScrollDirection.reverse){
+        setState(() {
+          isScrollingDownwards=true;
+        });
+      }
+      else{
+        setState(() {
+          isScrollingDownwards=false;
+        });
+      }
+    });
+
   }
 
 
@@ -62,12 +83,64 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin{
   Widget build(BuildContext context) {
     return CustomSafeArea(
         child: Scaffold(
-            body: CustomScrollView(
-              slivers: [getAppBar(), getChatList()],
-            ),
+            body: getBody()
             // bottomSheet: getBottomNavigation()
         ));
   }
+
+
+  Widget getBody(){
+    return Stack(
+      children: [
+        CustomScrollView(
+          controller: _scrollController,
+          slivers: [getAppBar(), getChatList()],
+        ),
+        Positioned(bottom: 4.h,right:4.w,child:
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          height: 8.h,
+          width: isScrollingDownwards?8.h:40.w,
+          decoration: BoxDecoration(
+              color: AppColors.primaryColor,
+            borderRadius: BorderRadius.circular(15.0)
+          ),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Material(
+              elevation: 4.0,
+              color: AppColors.primaryColor,
+              borderRadius: BorderRadius.circular(15.0),
+              child: InkWell(
+                // highlightColor: AppColors.primaryColor.withOpacity(0.4),
+                // splashColor: AppColors.primaryColor.withOpacity(0.5),
+                onTap: (){
+
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  width: isScrollingDownwards?8.h:40.w,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.message_outlined,color: AppColors.whiteColor,),
+                      if(!isScrollingDownwards)
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10.0),
+                          child: Text(AppStrings.startChat,style: Theme.of(context).textTheme.headline6?.copyWith(color: AppColors.whiteColor),),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ))
+      ],
+    );
+  }
+
 
   Widget getAppBar() {
     return SliverAppBar(

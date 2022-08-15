@@ -50,6 +50,7 @@ class AppStrings {
       "Don't worry it happens. Please enter the address associated with your account";
   static const String comments="Comments";
   static const String message="Message";
+  static const String startChat="Start chat";
 
   // error handler
   static const String badRequestError = "bad_request_error";
