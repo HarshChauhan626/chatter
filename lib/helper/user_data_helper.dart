@@ -1,4 +1,3 @@
-class UserDataHelper{
+class UserDataHelper {
   static String? userEmail;
-
 }

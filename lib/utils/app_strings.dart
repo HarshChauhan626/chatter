@@ -33,10 +33,22 @@ class AppStrings {
   static const String haveAccount = "Already have account";
   static const String home = "Home";
   static const String notifications = "Notification";
-  static const String changeLanguage = "change_language";
-  static const String contactUs = "contact_us";
-  static const String inviteYourFriends = "invite_your_friends";
-  static const String logout = "logout";
+  static const String changeLanguage = "Change language";
+  static const String contactUs = "Contact us";
+  static const String inviteYourFriends = "Invite your friends";
+  static const String logout = "Logout";
+  static const String createNewAccount = "Create a new account";
+  static const String signUpToGetStarted = "Sign up to get started";
+  static const String submit = "Submit";
+  static const String gotIt = "Got it";
+  static const String welcomeBack = "Welcome Back!";
+  static const String pleaseSignIn = "Please sign in to your account";
+  static const String signIn = "Sign in";
+  static const String signInWithGoogle = "Sign in with google";
+  static const String dontHaveAccount = "Don't have an account?";
+  static const String dontWorryItHappens =
+      "Don't worry it happens. Please enter the address associated with your account";
+  static const String comments="Comments";
 
   // error handler
   static const String badRequestError = "bad_request_error";
@@ -50,5 +62,25 @@ class AppStrings {
   static const String timeoutError = "timeout_error";
   static const String defaultError = "default_error";
   static const String cacheError = "cache_error";
-  static const String noInternetError = "no_internet_error";
+  static const String noInternetError =
+      "Please check your internet connection.";
+
+  // alert dialog body texts
+  static const String passwordSuccessfullyChanged =
+      "Your password has been successfully changed.";
+  static const String somethingWentWrong =
+      "Something went wrong. Please try again.";
+  static const String resetPasswordLinkSent =
+      "Reset password link has been sent to your mail.";
+  static const String enteredWrongUsernameOrPassword =
+      "You have entered an incorrect username or password";
+  static const String userSuccessfullyCreated =
+      "Your account has been successfully created. Please sign in now.";
+  static const String userNameChangedSuccessfully =
+      "Your username has been changed successfully";
+
+  static const String oopsTitle = "OOPS!";
+
+  static const String giveFeedback="Please give us your valuable feedback!";
+  static const String reviewSaved="Your review is saved. Thanks!";
 }

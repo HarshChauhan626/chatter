@@ -80,12 +80,14 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<void> register(String email, password) async {
+  Future<UserCredential> register(String email, password) async {
     try {
-      await FirebaseHelper.authInstance!
+      UserCredential userCredential = await FirebaseHelper.authInstance!
           .createUserWithEmailAndPassword(email: email, password: password);
+      return userCredential;
     } catch (firebaseAuthException) {
       debugPrint(firebaseAuthException.toString());
+      rethrow;
     }
   }
 
@@ -96,14 +98,6 @@ class AuthController extends GetxController {
       return userCredential.user != null ? true : false;
     } catch (firebaseAuthException) {
       return false;
-    }
-  }
-
-  Future<void> resetPassword() async {
-    try {
-
-    } catch (e) {
-      debugPrint(e.toString());
     }
   }
 

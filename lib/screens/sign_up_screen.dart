@@ -13,6 +13,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
+import '../utils/app_strings.dart';
+
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
 
@@ -30,18 +32,13 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-
-
-
   final SignUpController signUpController = Get.put(SignUpController());
-
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +75,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               Align(
                 alignment: Alignment.center,
                 child: Text(
-                  'Create a new account',
+                  AppStrings.createNewAccount,
                   style: Theme.of(context).textTheme.headline5?.copyWith(
                       color: AppColors.primaryColor,
                       fontWeight: FontWeight.w900),
@@ -87,7 +84,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               Align(
                 alignment: Alignment.center,
                 child: Text(
-                  'Sign up to get started',
+                  AppStrings.signUpToGetStarted,
                   style: Theme.of(context)
                       .textTheme
                       .bodyText2
@@ -99,34 +96,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               InputTextField(
                   onChangedValue: (value) {
-                    signUpController.userName.value=value;
+                    signUpController.userName.value = value;
                   },
-                  hintText: "Username",
+                  hintText: AppStrings.username,
                   inputTextType: InputTextType.username),
               const SizedBox(
                 height: 14.0,
               ),
               InputTextField(
                   onChangedValue: (value) {
-                    signUpController.firstName.value=value;
-                  },
-                  hintText: "First name",
-                  inputTextType: InputTextType.username),
-              const SizedBox(
-                height: 14.0,
-              ),
-              InputTextField(
-                  onChangedValue: (value) {
-
-                  },
-                  hintText: "Last name",
-                  inputTextType: InputTextType.username),
-              const SizedBox(
-                height: 14.0,
-              ),
-              InputTextField(
-                  onChangedValue: (value) {
-                    signUpController.email.value=value;
+                    signUpController.email.value = value;
                   },
                   hintText: "Email",
                   inputTextType: InputTextType.email),
@@ -135,7 +114,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               InputTextField(
                   onChangedValue: (value) {
-                    signUpController.password.value=value;
+                    signUpController.password.value = value;
                   },
                   hintText: "Password",
                   inputTextType: InputTextType.password),
@@ -143,9 +122,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 height: 40.0,
               ),
               ElevatedButton(
-                onPressed: () async{
-                  signUpController.registerUser();
-                  },
+                onPressed: () async {
+                  signUpController.registerUser(context);
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -161,7 +140,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ),
                       ),
-                    if (!signUpController.isLoading.value) const Text("Submit")
+                    if (!signUpController.isLoading.value)
+                      const Text(AppStrings.submit)
                   ],
                 ),
               ),

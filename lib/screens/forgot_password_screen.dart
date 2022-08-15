@@ -8,6 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../utils/app_strings.dart';
+import '../utils/asset_strings.dart';
+
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({Key? key}) : super(key: key);
 
@@ -18,7 +21,8 @@ class ForgotPasswordScreen extends StatefulWidget {
     //     settings: const RouteSettings(name: routeName),
     //     builder: (_) =>const ForgotPasswordScreen()
     // );
-    return CustomRouteBuilder(page: const ForgotPasswordScreen(),routeName: routeName);
+    return CustomRouteBuilder(
+        page: const ForgotPasswordScreen(), routeName: routeName);
   }
 
   @override
@@ -31,60 +35,70 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return CustomSafeArea(
       child: Scaffold(
         appBar: AppBar(
-          leading: Padding(
-            padding: const EdgeInsets.all(6.0),
-            child: InkWell(
-              onTap: (){
-                Navigator.pop(context);
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                    border: Border.all(
-                      color: AppColors.blackTextColor,
-                    ),
-                    borderRadius: BorderRadius.circular(10.0)
-                ),
-                child: const Icon(CupertinoIcons.back,color: AppColors.blackTextColor,),
+            leading: Padding(
+          padding: const EdgeInsets.all(6.0),
+          child: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                  border: Border.all(
+                    color: AppColors.blackTextColor,
+                  ),
+                  borderRadius: BorderRadius.circular(10.0)),
+              child: const Icon(
+                CupertinoIcons.back,
+                color: AppColors.blackTextColor,
               ),
             ),
-          )
-        ),
+          ),
+        )),
         body: SingleChildScrollView(
           child: Column(
             children: [
               SizedBox(
                 height: 5.h,
               ),
-              Padding(padding: EdgeInsets.symmetric(vertical: 4.h,horizontal: 4.w),child: SizedBox(
-                height: 22.h,
-                child: SvgPicture.asset("assets/forgot_password.svg"),
-              ),),
-              Text("Forgot Password?",style: Theme.of(context).textTheme.headline5?.copyWith(
-                color: AppColors.primaryColor,
-                fontWeight: FontWeight.w900
-              ),),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 4.w,vertical: 2.h),
-                child: Text("Don't worry it happens. Please enter the address associated with your account",style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                  color: AppColors.greyColor
-                ),),
+                padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 4.w),
+                child: SizedBox(
+                  height: 22.h,
+                  child: SvgPicture.asset(AssetStrings.forgotPassword),
+                ),
+              ),
+              Text(
+                AppStrings.forgotPassword,
+                style: Theme.of(context).textTheme.headline5?.copyWith(
+                    color: AppColors.primaryColor, fontWeight: FontWeight.w900),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+                child: Text(
+                  AppStrings.dontWorryItHappens,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      ?.copyWith(color: AppColors.greyColor),
+                ),
               ),
               SizedBox(
                 height: 4.h,
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 4.w),
-                child: InputTextField(onChangedValue: (value){
-                }, hintText: "Email", inputTextType: InputTextType.email),
+                child: InputTextField(
+                    onChangedValue: (value) {},
+                    hintText: AppStrings.emailHint,
+                    inputTextType: InputTextType.email),
               ),
               SizedBox(
                 height: 5.h,
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 4.w),
-                child: ElevatedButton(onPressed: (){
-
-                }, child: const Text("Submit")),
+                child: ElevatedButton(
+                    onPressed: () {}, child: const Text(AppStrings.submit)),
               )
             ],
           ),
@@ -93,10 +107,3 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 }
-
-
-
-
-
-
-

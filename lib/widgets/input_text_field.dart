@@ -37,6 +37,8 @@ class _InputTextFieldState extends State<InputTextField> {
           .textTheme
           .bodyText1
           ?.copyWith(fontWeight: FontWeight.bold),
+      maxLines: widget.inputTextType==InputTextType.normal?25:1
+      ,
       decoration: InputDecoration(
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),

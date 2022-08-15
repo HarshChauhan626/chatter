@@ -14,7 +14,7 @@ class ResetPasswordController extends GetxController {
       String oldPassword, String newPassword, BuildContext context) async {
     try {
       final authCredential = EmailAuthProvider.credential(
-          email: UserDataHelper.userEmail!, password: oldPassword);
+          email: FirebaseHelper.user!.email!, password: oldPassword);
       final result = await FirebaseHelper.user!
           .reauthenticateWithCredential(authCredential);
       if (result.user == null) {

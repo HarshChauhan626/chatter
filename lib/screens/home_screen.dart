@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:chat_app/screens/review_popup.dart';
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/widgets/animated_column_widget.dart';
 import 'package:chat_app/widgets/custom_bottom_navigation_bar_2.dart';
@@ -117,7 +118,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin{
                     ),
                     IconButton(
                       icon: const Icon(Icons.edit),
-                      onPressed: () {},
+                      onPressed: () {
+                        showModalBottomSheet(context: context, builder: (context){
+                          return ReviewPopup();
+                        });
+                      },
                     )
                   ],
                 ),

@@ -25,7 +25,7 @@ class AppTheme {
           headline6: TextStyle(
               color: Colors.black,
               fontSize: 20.0,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w900,
               letterSpacing: 0.15),
           subtitle1:
               TextStyle(color: Colors.black, fontSize: 16, letterSpacing: 0.15),

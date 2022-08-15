@@ -16,6 +16,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
+import '../utils/asset_strings.dart';
 import '../widgets/alert_dialog.dart';
 import '../widgets/custom_alert_body.dart';
 import 'forgot_password_screen.dart';
@@ -40,7 +41,7 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   bool isLoading = false;
 
-  SignInController signInController=Get.put(SignInController());
+  SignInController signInController = Get.put(SignInController());
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +52,7 @@ class _SignInScreenState extends State<SignInScreen> {
         children: [
           getHeaderImageWidget(),
           Text(
-            "Welcome Back!",
+            AppStrings.welcomeBack,
             style: Theme.of(context).textTheme.headline5?.copyWith(
                 fontWeight: FontWeight.w900, color: AppColors.primaryColor),
           ),
@@ -59,7 +60,7 @@ class _SignInScreenState extends State<SignInScreen> {
             height: 10.0,
           ),
           Text(
-            "Please sign in to your account",
+            AppStrings.pleaseSignIn,
             style: Theme.of(context)
                 .textTheme
                 .bodyText1
@@ -74,9 +75,9 @@ class _SignInScreenState extends State<SignInScreen> {
               child: InputTextField(
                 onChangedValue: (value) {
                   debugPrint(value);
-                  signInController.user.value=value;
+                  signInController.user.value = value;
                 },
-                hintText: "Email",
+                hintText: AppStrings.emailHint,
                 inputTextType: InputTextType.email,
               )),
           Padding(
@@ -85,9 +86,9 @@ class _SignInScreenState extends State<SignInScreen> {
               child: InputTextField(
                 onChangedValue: (value) {
                   debugPrint(value);
-                  signInController.password.value=value;
+                  signInController.password.value = value;
                 },
-                hintText: "Password",
+                hintText: AppStrings.password,
                 inputTextType: InputTextType.password,
               )),
           // const SizedBox(
@@ -113,74 +114,63 @@ class _SignInScreenState extends State<SignInScreen> {
             height: 50.0,
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Obx(
-                ()=> ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.pressed)) {
-                          return AppColors.primaryColor;
-                        } else if (states.contains(MaterialState.disabled)) {
-                          return AppColors.primaryColor.darken(30);
-                        }
-                        return AppColors
-                            .primaryColor; // Use the component's default./ Use the component's default.
-                      },
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Obx(
+                () => ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                        (Set<MaterialState> states) {
+                          if (states.contains(MaterialState.pressed)) {
+                            return AppColors.primaryColor;
+                          } else if (states.contains(MaterialState.disabled)) {
+                            return AppColors.primaryColor.darken(30);
+                          }
+                          return AppColors
+                              .primaryColor; // Use the component's default./ Use the component's default.
+                        },
+                      ),
                     ),
-                  ),
-                  onPressed: signInController.isLoading.value
-                      ? null
-                      : () async {
-                    signInController.signInUser();
-                    // Get.to(HomeScreen());
-                    // showCustomDialog(context,CustomAlertBody.alertWithOneButtonAlert(context,imageLoc: "assets/error_lottie.json",title: "Wrong credentials",bodyText:"You have entered an incorrect username or password",actionButtonText: "Got it"));
-                    // showCustomDialog(context,CustomAlertBody.alertWithOneButtonAlert(context,imageLoc: "assets/send_mail.json",title: "Check your inbox",bodyText:"Reset password link has been sent to your mail.",actionButtonText: "Got it"));
-                    // showCustomDialog(context,CustomAlertBody.alertWithOneButtonAlert(context,imageLoc: "assets/success.json",title: "Success",bodyText:"Your new password has been successfully saved.",actionButtonText: "Got it"));
-                    // showCustomDialog(context,CustomAlertBody.alertWithOneButtonAlert(context,imageLoc: "assets/error_lottie.json",title: "OOPS!",bodyText:"Something went wrong. Please try again.",actionButtonText: "OK"));
-                    // showCustomDialog(context,CustomAlertBody.alertWithTwoButtons(context,title: "Logout",bodyText:"Are you sure?",actionButtonOneText: "No",actionButtonTwoText: "Yes",onTapActionButtonOneText: (){
-                    //   Navigator.pop(context);
-                    // },onTapActionButtonTwoText: (){
-                    //   Navigator.pushNamedAndRemoveUntil(context, SignInScreen.routeName, (route) => false);
-                    // }));
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      if (signInController.isLoading.value)
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10.0),
-                          child: SizedBox(
-                            height: 23.0,
-                            width: 23.0,
-                            child: CircularProgressIndicator(
-                              color: AppColors.whiteColor,
-                              strokeWidth: 3.0,
+                    onPressed: signInController.isLoading.value
+                        ? null
+                        : () async {
+                            signInController.signInUser(context);
+                          },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (signInController.isLoading.value)
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10.0),
+                            child: SizedBox(
+                              height: 23.0,
+                              width: 23.0,
+                              child: CircularProgressIndicator(
+                                color: AppColors.whiteColor,
+                                strokeWidth: 3.0,
+                              ),
                             ),
                           ),
-                        ),
-                      if (!(signInController.isLoading.value)) const Text("Sign In")
-                    ],
-                  )),
-            )
-          ),
+                        if (!(signInController.isLoading.value))
+                          const Text(AppStrings.signIn)
+                      ],
+                    )),
+              )),
           Padding(
             padding:
                 const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
             child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     primary: AppColors.textFieldBackgroundColor,
-                    elevation: 3.0
-                ),
+                    elevation: 3.0),
                 onPressed: () {},
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
                         height: 30.0,
-                        child: SvgPicture.asset("assets/icons8-google.svg")),
+                        child: SvgPicture.asset(AssetStrings.icons8Google)),
                     Text(
-                      "Sign in with Google",
+                      AppStrings.signInWithGoogle,
                       style: Theme.of(context).textTheme.button?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: AppColors.blackTextColor),
@@ -202,7 +192,7 @@ class _SignInScreenState extends State<SignInScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "Don't have an account?",
+          AppStrings.dontHaveAccount,
           style: Theme.of(context)
               .textTheme
               .bodyText2
@@ -212,7 +202,7 @@ class _SignInScreenState extends State<SignInScreen> {
             onPressed: () {
               Navigator.pushReplacementNamed(context, SignUpScreen.routeName);
             },
-            child: const Text('Sign Up'))
+            child: const Text(AppStrings.register))
       ],
     );
   }
@@ -222,7 +212,7 @@ class _SignInScreenState extends State<SignInScreen> {
       padding: const EdgeInsets.symmetric(vertical: 30.0),
       child: SizedBox(
         height: 120.0,
-        child: SvgPicture.asset("assets/personalization.svg"),
+        child: SvgPicture.asset(AssetStrings.personalization),
       ),
     );
   }

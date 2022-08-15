@@ -1,1 +1,1 @@
-enum InputTextType { email, password, username }
+enum InputTextType { email, password, username,normal }
