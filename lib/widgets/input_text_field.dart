@@ -1,14 +1,17 @@
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/utils/enums.dart';
+import 'package:chat_app/utils/extensions.dart';
 import 'package:flutter/material.dart';
 
 class InputTextField extends StatefulWidget {
   final Function onChangedValue;
   final String hintText;
   final InputTextType inputTextType;
+  final Function? onTap;
 
   const InputTextField(
       {Key? key,
+        this.onTap,
       required this.onChangedValue,
       required this.hintText,
       required this.inputTextType})
@@ -30,6 +33,11 @@ class _InputTextFieldState extends State<InputTextField> {
       onChanged: (value) {
         widget.onChangedValue(value);
       },
+      onTap: (){
+        if(widget.onTap!=null){
+          widget.onTap!();
+        }
+      },
       obscureText: getTextVisibility(),
       textAlignVertical: TextAlignVertical.center,
       textAlign: TextAlign.left,
@@ -37,12 +45,13 @@ class _InputTextFieldState extends State<InputTextField> {
           .textTheme
           .bodyText1
           ?.copyWith(fontWeight: FontWeight.bold),
-      maxLines: widget.inputTextType==InputTextType.normal?25:1
-      ,
+      maxLines: widget.inputTextType==InputTextType.normal?25:1,
       decoration: InputDecoration(
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
           hintText: widget.hintText,
+          prefixIcon: widget.inputTextType==InputTextType.search?Icon(Icons.search,color: AppColors.blackTextColor.lighten(30)
+            ,):null,
           filled: true,
           hintStyle: const TextStyle(color: Colors.grey),
           fillColor: AppColors.textFieldBackgroundColor,

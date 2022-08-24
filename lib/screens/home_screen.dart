@@ -1,18 +1,24 @@
 import 'dart:ui';
 
+import 'package:animations/animations.dart';
 import 'package:chat_app/screens/review_popup.dart';
+import 'package:chat_app/screens/search_conversation_screen.dart';
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/widgets/animated_column_widget.dart';
 import 'package:chat_app/widgets/custom_bottom_navigation_bar_2.dart';
 import 'package:chat_app/widgets/custom_route_builder.dart';
 import 'package:chat_app/widgets/custom_safe_area.dart';
+import 'package:chat_app/widgets/input_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:random_avatar/random_avatar.dart';
 import 'package:sizer/sizer.dart';
 
 import '../utils/app_strings.dart';
+import '../utils/enums.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -103,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin{
           width: isScrollingDownwards?8.h:40.w,
           decoration: BoxDecoration(
               color: AppColors.primaryColor,
-            borderRadius: BorderRadius.circular(15.0)
+            borderRadius: BorderRadius.circular(20.0)
           ),
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -128,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin{
                       if(!isScrollingDownwards)
                         Padding(
                           padding: const EdgeInsets.only(left: 10.0),
-                          child: Text(AppStrings.startChat,style: Theme.of(context).textTheme.headline6?.copyWith(color: AppColors.whiteColor),),
+                          child: Text(AppStrings.startChat,style: Theme.of(context).textTheme.headline6?.copyWith(color: AppColors.whiteColor,fontSize: 17.0),),
                         ),
                     ],
                   ),
@@ -145,15 +151,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin{
   Widget getAppBar() {
     return SliverAppBar(
       floating: true,
-      expandedHeight: 200.0,
+      expandedHeight: 140.0,
       // pinned: true,
       elevation: 0.0,
       automaticallyImplyLeading: false,
       backgroundColor: AppColors.whiteColor,
-      bottom: PreferredSize(
-        preferredSize: const Size(double.infinity, 5),
-        child: Divider(color: Colors.grey.shade500),
-      ),
+      // bottom: PreferredSize(
+      //   preferredSize: const Size(double.infinity, 5),
+      //   child: Divider(color: Colors.grey.shade500),
+      // ),
       flexibleSpace: FlexibleSpaceBar(
         background: Container(
             alignment: Alignment.centerLeft,
@@ -162,89 +168,130 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin{
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SlideTransition(
-                          position: _animation!,
-                          child: Text(
-                            "Hello Harsh",
-                            style: Theme.of(context)
-                                .textTheme
-                                .subtitle1
-                                ?.copyWith(color: Colors.grey),
-                          ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom:15.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Chatter",style: Theme.of(context).textTheme.headline5?.copyWith(
+                        color: AppColors.blackTextColor,
+                        fontWeight: FontWeight.w900
+                      ),),
+                      InkWell(
+                        child: randomAvatar(
+                          "Harsh Chauhan",
+                          height: 30,
+                          width: 30,
                         ),
-                        SlideTransition(
-                          position: _animation!,
-                          child: Text(
-                            "Xchat message",
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline6
-                                ?.copyWith(fontWeight: FontWeight.w900),
-                          ),
-                        ),
-                      ],
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () {
-                        showModalBottomSheet(context: context, builder: (context){
-                          return ReviewPopup();
-                        });
-                      },
-                    )
-                  ],
+                        onTap: (){
+                          Get.toNamed('/profile');
+                        },
+                      )
+                    ],
+                  ),
                 ),
-                const SizedBox(
-                  height: 30.0,
-                ),
-                SizedBox(
-                  height: 60.0,
-                  child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      shrinkWrap: true,
-                      itemCount: 30,
-                      itemBuilder: (context, index) {
-                        if (index == 0) {
-                          return Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Container(
-                              height: 60.0,
-                              width: 60.0,
-                              decoration: BoxDecoration(
-                                  color: AppColors.lightGreyColor,
-                                  borderRadius: BorderRadius.circular(80.0)),
-                              child: const Icon(
-                                Icons.search,
-                                color: Colors.black,
-                              ),
-                            ),
-                          );
-                        }
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Container(
-                            height: 80.0,
-                            width: 80.0,
-                            decoration: BoxDecoration(
-                                color: AppColors.lightGreyColor,
-                                borderRadius: BorderRadius.circular(80.0)),
-                            child: randomAvatar(
-                              DateTime.now().toIso8601String(),
-                              trBackground: true,
-                              height: 50,
-                              width: 52,
-                            ),
-                          ),
-                        );
-                      }),
+                OpenContainer(
+                  transitionDuration: const Duration(milliseconds: 600),
+                  transitionType: ContainerTransitionType.fade,
+                  openBuilder: (context,closedContainer){
+                    return SearchConversationScreen();
+                  },
+                  closedShape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                  ),
+                  closedElevation: 0,
+                  closedColor: AppColors.textFieldBackgroundColor,
+                  closedBuilder: (context,openContainer){
+                    return
+                      InputTextField(inputTextType: InputTextType.search, onChangedValue: (){}, hintText: AppStrings.searchConversation,onTap: (){
+                        // Get.toNamed(SearchConversationScreen.routeName);
+                        openContainer();
+                      },);
+                  },
                 )
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     Column(
+                //       crossAxisAlignment: CrossAxisAlignment.start,
+                //       children: [
+                //         SlideTransition(
+                //           position: _animation!,
+                //           child: Text(
+                //             "Hello Harsh",
+                //             style: Theme.of(context)
+                //                 .textTheme
+                //                 .subtitle1
+                //                 ?.copyWith(color: Colors.grey),
+                //           ),
+                //         ),
+                //         SlideTransition(
+                //           position: _animation!,
+                //           child: Text(
+                //             "Xchat message",
+                //             style: Theme.of(context)
+                //                 .textTheme
+                //                 .headline6
+                //                 ?.copyWith(fontWeight: FontWeight.w900),
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //     IconButton(
+                //       icon: const Icon(Icons.edit),
+                //       onPressed: () {
+                //         showModalBottomSheet(context: context, builder: (context){
+                //           return ReviewPopup();
+                //         });
+                //       },
+                //     )
+                //   ],
+                // ),
+                // const SizedBox(
+                //   height: 30.0,
+                // ),
+                // SizedBox(
+                //   height: 60.0,
+                //   child: ListView.builder(
+                //       scrollDirection: Axis.horizontal,
+                //       shrinkWrap: true,
+                //       itemCount: 30,
+                //       itemBuilder: (context, index) {
+                //         if (index == 0) {
+                //           return Padding(
+                //             padding:
+                //                 const EdgeInsets.symmetric(horizontal: 8.0),
+                //             child: Container(
+                //               height: 60.0,
+                //               width: 60.0,
+                //               decoration: BoxDecoration(
+                //                   color: AppColors.lightGreyColor,
+                //                   borderRadius: BorderRadius.circular(80.0)),
+                //               child: const Icon(
+                //                 Icons.search,
+                //                 color: Colors.black,
+                //               ),
+                //             ),
+                //           );
+                //         }
+                //         return Padding(
+                //           padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                //           child: Container(
+                //             height: 80.0,
+                //             width: 80.0,
+                //             decoration: BoxDecoration(
+                //                 color: AppColors.lightGreyColor,
+                //                 borderRadius: BorderRadius.circular(80.0)),
+                //             child: randomAvatar(
+                //               DateTime.now().toIso8601String(),
+                //               trBackground: true,
+                //               height: 50,
+                //               width: 52,
+                //             ),
+                //           ),
+                //         );
+                //       }),
+                // )
               ],
             )),
       ),
@@ -255,41 +302,44 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin{
     return AnimationLimiter(
       child: SliverList(
           delegate: SliverChildBuilderDelegate((context, index) {
-            return ListTile(
-              onTap: () {
-                Navigator.pushNamed(context, "/chat");
-              },
-              tileColor: AppColors.whiteColor,
-              leading: randomAvatar(
-                DateTime.now().toIso8601String(),
-                height: 50,
-                width: 52,
-              ),
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Harsh Chauhan",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyText1
-                        ?.copyWith(fontWeight: FontWeight.bold),
-                  ),
-                  Text("5:46 PM",
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              child: ListTile(
+                onTap: () {
+                  Navigator.pushNamed(context, "/chat");
+                },
+                tileColor: AppColors.whiteColor,
+                leading: randomAvatar(
+                  index.toString(),
+                  height: 50,
+                  width: 52,
+                ),
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Harsh Chauhan",
                       style: Theme.of(context)
                           .textTheme
-                          .subtitle2
-                          ?.copyWith(color: Colors.black54))
-                ],
-              ),
-              subtitle: Row(
-                children: [
-                  Text("Latest message",
-                      style: Theme.of(context)
-                          .textTheme
-                          .subtitle2
-                          ?.copyWith(color: Colors.black54))
-                ],
+                          .bodyText1
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    Text("5:46 PM",
+                        style: Theme.of(context)
+                            .textTheme
+                            .subtitle2
+                            ?.copyWith(color: Colors.black54))
+                  ],
+                ),
+                subtitle: Row(
+                  children: [
+                    Text("Latest message",
+                        style: Theme.of(context)
+                            .textTheme
+                            .subtitle2
+                            ?.copyWith(color: Colors.black54))
+                  ],
+                ),
               ),
             );
           }, childCount: 100)),

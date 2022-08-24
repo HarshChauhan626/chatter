@@ -11,7 +11,7 @@ class AppTheme {
             color: AppColors.whiteColor,
             titleTextStyle: TextStyle(
                 color: Colors.black,
-                fontSize: 24.0,
+                fontSize: 22.0,
                 letterSpacing: 0,
                 fontWeight: FontWeight.w900)),
         textTheme: const TextTheme(

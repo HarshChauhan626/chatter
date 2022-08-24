@@ -48,9 +48,34 @@ class AppStrings {
   static const String dontHaveAccount = "Don't have an account?";
   static const String dontWorryItHappens =
       "Don't worry it happens. Please enter the address associated with your account";
-  static const String comments="Comments";
-  static const String message="Message";
-  static const String startChat="Start chat";
+  static const String comments = "Comments";
+  static const String message = "Message";
+  static const String startChat = "Start chat";
+  static const String searchConversation = "Search conversations";
+
+  static const String reachOutToUs="Reach out to us";
+
+
+
+
+  // Profile screen strings
+
+  static const String editProfile = "Edit profile";
+  static const String profileSettings="Profile Settings";
+  static const String updateProfile="Update and modify your profile";
+
+  static const String privacy="Privacy";
+  static const String changeYourPassword="Change your password";
+  static const String aboutUs="About us";
+  static const String knowMoreAboutUs="Know more about us and our goal";
+  static const String settings="Settings";
+  static const String personaliseAndChange="Manage your app preferences";
+  static const String help="Help";
+  static const String reportAProblem="Report a problem";
+
+  static const String spreadTheWord="Spread the word";
+  static const String inviteFriends="Invite your friends on chatter";
+
 
   // error handler
   static const String badRequestError = "bad_request_error";
@@ -83,13 +108,11 @@ class AppStrings {
 
   static const String oopsTitle = "OOPS!";
 
-  static const String giveFeedback="Please give us your valuable feedback!";
-  static const String reviewSaved="Your review is saved. Thanks!";
+  static const String giveFeedback = "Please give us your valuable feedback!";
+  static const String reviewSaved = "Your review is saved. Thanks!";
 
+  static const String isOnBoardingDone = "isOnBoardingDone";
+  static const String userPreferences = "userPreferences";
 
-  static const String isOnBoardingDone="isOnBoardingDone";
-  static const String userPreferences="userPreferences";
-
-
-  static const String activeNow="Active now";
+  static const String activeNow = "Active now";
 }
