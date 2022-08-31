@@ -19,6 +19,9 @@ class AuthController extends GetxController {
     super.onReady();
     // auth is comning from the constants.dart file but it is basically FirebaseAuth.instance.
     // Since we have to use that many times I just made a constant file and declared there
+
+
+
     debugPrint("Going to ready auth controller");
     firebaseUser = Rx<User?>(FirebaseHelper.authInstance?.currentUser);
     debugPrint("User initialized");
@@ -102,7 +105,8 @@ class AuthController extends GetxController {
     }
   }
 
-  void signOut() async {
+  Future<void> signOut() async {
+    // showLoader();
     await FirebaseHelper.authInstance!.signOut();
   }
 }

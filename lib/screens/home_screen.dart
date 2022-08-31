@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:animations/animations.dart';
 import 'package:chat_app/screens/review_popup.dart';
 import 'package:chat_app/screens/search_conversation_screen.dart';
+import 'package:chat_app/screens/search_people_screen.dart';
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/widgets/animated_column_widget.dart';
 import 'package:chat_app/widgets/custom_bottom_navigation_bar_2.dart';
@@ -121,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin{
                 // highlightColor: AppColors.primaryColor.withOpacity(0.4),
                 // splashColor: AppColors.primaryColor.withOpacity(0.5),
                 onTap: (){
-
+                  Get.toNamed(SearchPeopleScreen.routeName);
                 },
                 child: Container(
                   alignment: Alignment.center,
@@ -302,47 +303,52 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin{
     return AnimationLimiter(
       child: SliverList(
           delegate: SliverChildBuilderDelegate((context, index) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4.0),
-              child: ListTile(
-                onTap: () {
-                  Navigator.pushNamed(context, "/chat");
-                },
-                tileColor: AppColors.whiteColor,
-                leading: randomAvatar(
-                  index.toString(),
-                  height: 50,
-                  width: 52,
-                ),
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Harsh Chauhan",
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText1
-                          ?.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    Text("5:46 PM",
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle2
-                            ?.copyWith(color: Colors.black54))
-                  ],
-                ),
-                subtitle: Row(
-                  children: [
-                    Text("Latest message",
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle2
-                            ?.copyWith(color: Colors.black54))
-                  ],
-                ),
-              ),
-            );
+            return AnimationConfiguration.staggeredList(duration: const Duration(milliseconds: 400),position: index, child: getChatListItem(index));
           }, childCount: 100)),
+    );
+  }
+
+
+  Widget getChatListItem(int index){
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      child: ListTile(
+        onTap: () {
+          Navigator.pushNamed(context, "/chat");
+        },
+        tileColor: AppColors.whiteColor,
+        leading: randomAvatar(
+          index.toString(),
+          height: 50,
+          width: 52,
+        ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "Harsh Chauhan",
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyText1
+                  ?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            Text("5:46 PM",
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle2
+                    ?.copyWith(color: Colors.black54))
+          ],
+        ),
+        subtitle: Row(
+          children: [
+            Text("Latest message",
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle2
+                    ?.copyWith(color: Colors.black54))
+          ],
+        ),
+      ),
     );
   }
 

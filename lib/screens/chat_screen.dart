@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:random_avatar/random_avatar.dart';
 import 'package:sizer/sizer.dart';
 import 'package:chat_app/utils/extensions.dart';
+import 'package:uuid/uuid.dart';
+import '../helper/firebase_helper.dart';
 import '../utils/app_strings.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -155,45 +157,50 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget getMessageList() {
     return SizedBox(
       height: 79.h,
-      child: ListView.builder(
-          itemCount: messageList.length,
-          shrinkWrap: true,
-          scrollDirection: Axis.vertical,
-          itemBuilder: (context, index) {
-            return Container(
-              padding: const EdgeInsets.only(
-                  left: 14, right: 14, top: 10, bottom: 10),
-              child: Align(
-                alignment:
+      child: StreamBuilder(
+        builder: (context,snapshot){
+          return  ListView.builder(
+              itemCount: messageList.length,
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              itemBuilder: (context, index) {
+                return Container(
+                  padding: const EdgeInsets.only(
+                      left: 14, right: 14, top: 10, bottom: 10),
+                  child: Align(
+                    alignment:
                     (index % 2 == 0 ? Alignment.topLeft : Alignment.topRight),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topRight: const Radius.circular(12.0),
-                        topLeft: const Radius.circular(12.0),
-                        bottomLeft: (index % 2 == 0)
-                            ? const Radius.circular(0.0)
-                            : const Radius.circular(12.0),
-                        bottomRight: (index % 2 == 0)
-                            ? const Radius.circular(12.0)
-                            : const Radius.circular(0.0)),
-                    color: (index % 2 == 0
-                        ? AppColors.textFieldBackgroundColor
-                        : AppColors.primaryColor),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            topRight: const Radius.circular(12.0),
+                            topLeft: const Radius.circular(12.0),
+                            bottomLeft: (index % 2 == 0)
+                                ? const Radius.circular(0.0)
+                                : const Radius.circular(12.0),
+                            bottomRight: (index % 2 == 0)
+                                ? const Radius.circular(12.0)
+                                : const Radius.circular(0.0)),
+                        color: (index % 2 == 0
+                            ? AppColors.textFieldBackgroundColor
+                            : AppColors.primaryColor),
+                      ),
+                      padding: const EdgeInsets.all(16),
+                      child: Text(
+                        messageList[index],
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: index % 2 == 0
+                                ? AppColors.blackTextColor
+                                : AppColors.whiteColor),
+                      ),
+                    ),
                   ),
-                  padding: const EdgeInsets.all(16),
-                  child: Text(
-                    messageList[index],
-                    style: TextStyle(
-                        fontSize: 15,
-                        color: index % 2 == 0
-                            ? AppColors.blackTextColor
-                            : AppColors.whiteColor),
-                  ),
-                ),
-              ),
-            );
-          }),
+                );
+              });
+
+        },
+      ),
     );
   }
 
@@ -324,4 +331,20 @@ class _ChatScreenState extends State<ChatScreen> {
       onTap: () => callSendMessage(),
     );
   }
+
+
+  void sendMessage()async{
+
+    String groupChatId=const Uuid().v1();
+
+
+
+  }
+
+
 }
+
+
+
+
+// https://stackoverflow.com/questions/54702778/how-to-show-typing-indicator-in-android-firebase-chat

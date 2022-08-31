@@ -6,6 +6,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:random_avatar/random_avatar.dart';
 import 'package:sizer/sizer.dart';
 
+import '../controllers/auth_controller.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_strings.dart';
 import '../widgets/custom_route_builder.dart';
@@ -111,7 +112,11 @@ class ProfileScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 20.0,vertical: 1.3.h),
                 child: ElevatedButton(
                   child: const Text(AppStrings.logout),
-                  onPressed: () {},
+                  onPressed: () {
+                    debugPrint("Logging out");
+                    Get.find<AuthController>().signOut();
+                    debugPrint("Logout complete");
+                  },
                 ),
               ),
             ],

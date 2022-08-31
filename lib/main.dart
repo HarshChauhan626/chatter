@@ -31,7 +31,8 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           theme: AppTheme.light,
-          onGenerateRoute: CustomRouter.onGenerateRoute,
+          // onGenerateRoute: CustomRouter.onGenerateRoute,
+          getPages: GetXRouter.getXPages(),
           initialRoute: SplashScreen.routeName,
           // initialBinding: AuthBinding(),
         );

@@ -41,6 +41,7 @@ class _InputTextFieldState extends State<InputTextField> {
       obscureText: getTextVisibility(),
       textAlignVertical: TextAlignVertical.center,
       textAlign: TextAlign.left,
+      keyboardType: widget.inputTextType==InputTextType.search?TextInputType.none:TextInputType.text,
       style: Theme.of(context)
           .textTheme
           .bodyText1
