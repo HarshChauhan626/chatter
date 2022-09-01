@@ -13,6 +13,8 @@ import 'package:chat_app/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../controllers/chat_controller.dart';
+
 class CustomRouter {
   static Route onGenerateRoute(RouteSettings settings) {
     debugPrint('Route: ${settings.name}');
@@ -66,70 +68,73 @@ class GetXRouter {
         name: SplashScreen.routeName,
         page: () => SplashScreen(),
         middlewares: [MyMiddleware()],
-        transition: Transition.leftToRight,
+        transition: Transition.rightToLeft,
         transitionDuration: const Duration(milliseconds: 500),
       ),
       GetPage(
         name: HomeScreen.routeName,
         page: () => HomeScreen(),
         middlewares: [MyMiddleware()],
-        transition: Transition.leftToRight,
+        transition: Transition.rightToLeft,
         transitionDuration: const Duration(milliseconds: 500),
       ),
       GetPage(
         name: OnboardingScreen.routeName,
         page: () => OnboardingScreen(),
         middlewares: [MyMiddleware()],
-        transition: Transition.leftToRight,
+        transition: Transition.rightToLeft,
         transitionDuration: const Duration(milliseconds: 500),
       ),
       GetPage(
         name: ChatScreen.routeName,
         page: () => ChatScreen(),
         middlewares: [MyMiddleware()],
-        transition: Transition.leftToRight,
+        binding: BindingsBuilder(() {
+          Get.put<ChatController>(ChatController());
+        }),
+        transition: Transition.rightToLeft,
         transitionDuration: const Duration(milliseconds: 300),
       ),
       GetPage(
         name: SignInScreen.routeName,
         page: () => SignInScreen(),
         middlewares: [MyMiddleware()],
-        transition: Transition.leftToRight,
+        transition: Transition.rightToLeft,
         transitionDuration: const Duration(milliseconds: 500),
       ),
       GetPage(
         name: SignUpScreen.routeName,
         page: () => SignUpScreen(),
         middlewares: [MyMiddleware()],
-        transition: Transition.leftToRight,
+        transition: Transition.rightToLeft,
         transitionDuration: const Duration(milliseconds: 500),
       ),
       GetPage(
         name: ForgotPasswordScreen.routeName,
         page: () => ForgotPasswordScreen(),
         middlewares: [MyMiddleware()],
-        transition: Transition.leftToRight,
+        transition: Transition.rightToLeft,
         transitionDuration: const Duration(milliseconds: 500),
       ),
       GetPage(
         name: ResetPasswordScreen.routeName,
         page: () => ResetPasswordScreen(),
         middlewares: [MyMiddleware()],
-        transition: Transition.leftToRight,
+        transition: Transition.rightToLeft,
         transitionDuration: const Duration(milliseconds: 500),
       ),
       GetPage(
         name: ProfileScreen.routeName,
         page: () => ProfileScreen(),
         middlewares: [MyMiddleware()],
-        transition: Transition.leftToRight,
+        transition: Transition.rightToLeft,
         transitionDuration: const Duration(milliseconds: 500),
       ),
       GetPage(
         name: SearchConversationScreen.routeName,
         page: () => SearchConversationScreen(),
         middlewares: [MyMiddleware()],
-        transition: Transition.leftToRight,
+        transition: Transition.rightToLeft,
         transitionDuration: const Duration(milliseconds: 500),
       ),
       GetPage(

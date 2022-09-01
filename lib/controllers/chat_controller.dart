@@ -4,6 +4,7 @@ import 'package:uuid/uuid.dart';
 
 import '../helper/firebase_helper.dart';
 import '../models/group_model.dart';
+import '../models/user_model.dart';
 
 class ChatController extends GetxController {
   String? user1Id;
@@ -11,7 +12,44 @@ class ChatController extends GetxController {
   String? roomId;
 
   RxList messages=[].obs;
+
+  UserModel? receiverModel;
+
+  String? groupId;
+
+  RxBool isTyping=false.obs;
+
   Rx<GroupModel>? groupModel;
+
+  @override
+  void onReady() {
+    // TODO: implement onReady
+    super.onReady();
+  }
+
+  @override
+  void onInit(){
+    super.onInit();
+    debugPrint("Printing userModel");
+    debugPrint(Get.arguments['receiverModel'].toString());
+    print(Get.arguments['receiverModel'].runtimeType);
+    final userModel=Get.arguments['receiverModel'] as UserModel;
+    receiverModel=userModel;
+    groupId=Get.arguments['groupId'];
+  }
+
+
+  Future<bool> getIsTypingStream()async{
+    try{
+      return true;
+    }
+        catch(e){
+      return false;
+        }
+
+  }
+
+
 
   void sendMessage(String message) async {
     try {

@@ -62,9 +62,20 @@ class SearchPeopleScreen extends StatelessWidget {
   }
 
   Widget getSearchResultItem(UserModel userModel) {
+    String? groupId;
+    SearchPeopleController searchPeopleController=Get.find<SearchPeopleController>();
+
+    Map<String,dynamic> arguments={};
+
+    if(groupId!=null){
+      arguments["groupId"]=groupId;
+    }
+    arguments["receiverModel"]=userModel;
+
     return ListTile(
-      onTap: (){
-        Get.toNamed(ChatScreen.routeName);
+      onTap: ()async{
+        groupId=await searchPeopleController.getRoomId();
+        Get.toNamed(ChatScreen.routeName,arguments: arguments);
       },
       title: Text(userModel.userName.toString()),
       leading: randomAvatar(
@@ -117,3 +128,5 @@ class SearchPeopleScreen extends StatelessWidget {
 // https://stackoverflow.com/questions/64906620/flutter-passing-multiple-data-with-getx
 
 // https://stackoverflow.com/questions/72433897/flutter-how-to-create-this-kind-of-animated-search-bar
+
+// https://stackoverflow.com/questions/63233521/how-to-populate-list-with-firestore-stream-using-getx

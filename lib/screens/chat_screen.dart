@@ -1,8 +1,10 @@
+import 'package:chat_app/controllers/chat_controller.dart';
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/widgets/custom_route_builder.dart';
 import 'package:chat_app/widgets/custom_safe_area.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:random_avatar/random_avatar.dart';
 import 'package:sizer/sizer.dart';
 import 'package:chat_app/utils/extensions.dart';
@@ -10,8 +12,26 @@ import 'package:uuid/uuid.dart';
 import '../helper/firebase_helper.dart';
 import '../utils/app_strings.dart';
 
-class ChatScreen extends StatefulWidget {
-  const ChatScreen({Key? key}) : super(key: key);
+// class ChatScreen extends StatefulWidget {
+//   const ChatScreen({Key? key}) : super(key: key);
+//
+//   static const String routeName = '/chat';
+//
+//   static Route route() {
+//     // return MaterialPageRoute(
+//     //     settings: const RouteSettings(name: routeName),
+//     //     builder: (_) =>const ChatScreen()
+//     // );
+//     return CustomRouteBuilder(page: const ChatScreen(), routeName: routeName);
+//   }
+//
+//   @override
+//   State<ChatScreen> createState() => _ChatScreenState();
+// }
+
+class ChatScreen extends StatelessWidget {
+
+  ChatScreen({Key? key}) : super(key: key);
 
   static const String routeName = '/chat';
 
@@ -20,15 +40,13 @@ class ChatScreen extends StatefulWidget {
     //     settings: const RouteSettings(name: routeName),
     //     builder: (_) =>const ChatScreen()
     // );
-    return CustomRouteBuilder(page: const ChatScreen(), routeName: routeName);
+    return CustomRouteBuilder(page: ChatScreen(), routeName: routeName);
   }
 
-  @override
-  State<ChatScreen> createState() => _ChatScreenState();
-}
-
-class _ChatScreenState extends State<ChatScreen> {
   TextEditingController inputMessageController = TextEditingController();
+
+
+  ChatController controller = Get.find<ChatController>();
 
   List<String> messageList = [
     for (int i = 0; i < 100; i++) "My message $i",
@@ -60,14 +78,19 @@ class _ChatScreenState extends State<ChatScreen> {
       child: Scaffold(
         extendBody: true,
         backgroundColor: AppColors.whiteColor,
-        appBar: getAppBar(),
+        appBar: getAppBar(context),
         body: getBody(),
-        bottomSheet: getInputField(),
+        bottomSheet: getInputField(context),
       ),
     );
   }
 
-  PreferredSizeWidget getAppBar() {
+  PreferredSizeWidget getAppBar(BuildContext context) {
+
+    final chatController=Get.find<ChatController>();
+
+    print("Username coming is ${chatController.receiverModel}");
+
     return PreferredSize(
       preferredSize: Size(double.infinity, 8.h),
       child: Container(
@@ -94,7 +117,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
             Container(
               child: randomAvatar(
-                "Harsh",
+                chatController.receiverModel?.userName??"",
                 height: 40,
                 width: 40,
               ),
@@ -107,7 +130,7 @@ class _ChatScreenState extends State<ChatScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Harsh Chauhan",
+                  chatController.receiverModel?.userName??"",
                   style: Theme.of(context)
                       .textTheme
                       .bodyText1
@@ -144,14 +167,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget getBody() {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          getMessageList(),
-        ],
-      ),
-    );
+    return getMessageList();
   }
 
   Widget getMessageList() {
@@ -204,7 +220,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget getInputField() {
+  Widget getInputField(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
           color: AppColors.whiteColor,
@@ -243,9 +259,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           // width: 42.w,
                           child: TextField(
                             onChanged: (value) {
-                              setState(() {
-                                debugPrint(value);
-                              });
+
                             },
                             controller: inputMessageController,
                             decoration: InputDecoration(
@@ -332,18 +346,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-
-  void sendMessage()async{
-
-    String groupChatId=const Uuid().v1();
-
-
-
-  }
-
-
 }
-
 
 
 
