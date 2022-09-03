@@ -96,44 +96,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Widget getBody() {
     return Stack(
       children: [
-        StreamBuilder(
-          stream: homeController?.chatList,
-          builder: (context, snapshot) {
-            List<Widget> sliverList = [getAppBar()];
-
-            if (snapshot.connectionState == ConnectionState.none) {
-              sliverList.add(const SliverToBoxAdapter(
-                child: SizedBox(),
-              ));
-            }
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              sliverList.add(const SliverToBoxAdapter(
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ));
-            }
-            if (snapshot.connectionState == ConnectionState.active &&
-                snapshot.hasData) {
-              final chatList = snapshot.data as QuerySnapshot;
-
-              final roomModelList = chatList.docs.map((e) {
-                debugPrint("Message data coming is ${e.data()}");
-                return RoomModel.fromJson(e.data() as Map<String, dynamic>);
-              }).toList();
-
-              debugPrint(roomModelList.toString());
-
-              sliverList.add(getChatList(roomModelList));
-            }
-
-            return CustomScrollView(
-              controller: _scrollController,
-              // slivers: [getAppBar(), getChatList()],
-              slivers: sliverList,
-            );
-          },
-        ),
+        getChatBuilder(),
         Positioned(
             bottom: 4.h,
             right: 4.w,
@@ -189,6 +152,60 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ))
       ],
     );
+  }
+
+  Widget getChatBuilder(){
+    return StreamBuilder(
+      stream: homeController?.chatList,
+      builder: (context, snapshot) {
+        List<Widget> sliverList = [getAppBar()];
+
+        if (snapshot.connectionState == ConnectionState.none) {
+          sliverList.add(const SliverToBoxAdapter(
+            child: SizedBox(),
+          ));
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          sliverList.add(const SliverToBoxAdapter(
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          ));
+        }
+        if (snapshot.connectionState == ConnectionState.active &&
+            snapshot.hasData) {
+          final chatList = snapshot.data as QuerySnapshot;
+
+          final roomModelList = chatList.docs.map((e) {
+            debugPrint("Message data coming is ${e.data()}");
+            return RoomModel.fromJson(e.data() as Map<String, dynamic>);
+          }).toList();
+
+          debugPrint(roomModelList.toString());
+
+          sliverList.add(getChatList(roomModelList));
+        }
+
+        return CustomScrollView(
+          controller: _scrollController,
+          // slivers: [getAppBar(), getChatList()],
+          slivers: sliverList,
+        );
+      },
+    );
+
+    // return Obx((){
+    //   if(homeController.isLoading){
+    //
+    //   }
+    //   if(homeController.errorComing){
+    //
+    //   }
+    //   if(homeController.roomList){
+    //
+    //   }
+    // });
+    //
   }
 
   Widget getAppBar() {
