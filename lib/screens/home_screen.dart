@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:animations/animations.dart';
 import 'package:chat_app/controllers/home_controller.dart';
+import 'package:chat_app/screens/chat_screen.dart';
 import 'package:chat_app/screens/review_popup.dart';
 import 'package:chat_app/screens/search_conversation_screen.dart';
 import 'package:chat_app/screens/search_people_screen.dart';
@@ -177,26 +178,32 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             snapshot.hasData) {
           final chatList = snapshot.data as QuerySnapshot;
 
-          final roomModelList = chatList.docs.map((e) async{
+          // final roomModelList = chatList.docs.map((e) async{
+          //   debugPrint("Message data coming is ${e.data()}");
+          //   final roomData = e.data() as Map<String, dynamic>;
+          //   final userInfoList = [];
+          //   if (roomData["userList"] != null &&
+          //       roomData["userList"].length != 0) {
+          //     for (int i = 0; i < roomData["userList"].length; i++) {
+          //       if(roomData["userList"][i]!=homeController?.senderId){
+          //         final userInfo = await homeController?.getUserInfo(roomData["userList"][i]);
+          //         if (userInfo != null) {
+          //           userInfoList.add(userInfo);
+          //         }
+          //       }
+          //     }
+          //     }
+          //     roomData["userInfoList"] = userInfoList;
+          //   return RoomModel.fromJson(roomData);
+          //   }
+          //   // return RoomModel.fromJson(e.data() as Map<String, dynamic>);
+          // ).toList();
+
+          final roomModelList = chatList.docs.map((e) {
             debugPrint("Message data coming is ${e.data()}");
-            final roomData = e.data() as Map<String, dynamic>;
-            final userInfoList = [];
-            if (roomData["userList"] != null &&
-                roomData["userList"].length != 0) {
-              for (int i = 0; i < roomData["userList"].length; i++) {
-                if(roomData["userList"][i]!=homeController?.senderId){
-                  final userInfo = await homeController?.getUserInfo(roomData["userList"][i]);
-                  if (userInfo != null) {
-                    userInfoList.add(userInfo);
-                  }
-                }
-              }
-              }
-              roomData["userInfoList"] = userInfoList;
-            return RoomModel.fromJson(roomData);
-            }
-            // return RoomModel.fromJson(e.data() as Map<String, dynamic>);
-          ).toList();
+            return RoomModel.fromJson(e.data() as Map<String, dynamic>);
+          }).toList();
+
 
           debugPrint(roomModelList.toString());
 
@@ -394,11 +401,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       padding: const EdgeInsets.symmetric(horizontal: 4.0),
       child: ListTile(
         onTap: () {
-          Navigator.pushNamed(context, "/chat");
+          Get.toNamed(ChatScreen.routeName,arguments: {"roomId":roomModel.roomId,"receiverModel":roomModel.userInfoList?[0]});
         },
         tileColor: AppColors.whiteColor,
         leading: randomAvatar(
-          index.toString(),
+          roomModel.userInfoList?[0].userName??"$index",
           height: 50,
           width: 52,
         ),

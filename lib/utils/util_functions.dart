@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
+import '../helper/firebase_helper.dart';
+import '../models/user_model.dart';
+
 
 class UtilFunctions{
   String getRoomId(String senderId,String recieverId){
@@ -22,6 +25,26 @@ class UtilFunctions{
       return "";
         }
   }
+
+
+  Future<UserModel?> getUserInfo(String userId)async{
+    try{
+      final userCollectionRef =
+      FirebaseHelper.fireStoreInstance!.collection("user");
+
+      final result = await userCollectionRef.doc(userId).get();
+
+      if(!result.exists && result.data()==null){
+        null;
+      }
+      return UserModel.fromJson(result.data()!);
+
+    }
+    catch(e,s){
+      debugPrint("Exception coming in fetching userModel is ${e.toString()}\n${s.toString()}");
+    }
+  }
+
 
 
 }

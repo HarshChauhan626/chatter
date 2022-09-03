@@ -1,3 +1,4 @@
+import 'package:chat_app/utils/util_functions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
@@ -90,11 +91,23 @@ class ChatController extends GetxController {
         roomId.value = uniqueRoomId;
         final groupDocReference = chatCollectionRef.doc(uniqueRoomId);
 
+        UserModel? senderUserInfo;
+
+        if(user1Id!=null){
+          senderUserInfo=await UtilFunctions().getUserInfo(user1Id!);
+        }
+
+
         await groupDocReference.set({
+          "roomId":roomId.value,
           "userList": [user1Id, receiverModel?.uid],
           "isTyping": [],
           "adminList": [],
-          "latestMessage":messageData
+          "latestMessage":messageData,
+          "userInfoList":[
+            // senderUserInfo?.toJson(),
+            receiverModel?.toJson()
+          ]
         });
         await groupDocReference
             .collection(uniqueRoomId)

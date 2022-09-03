@@ -42,25 +42,6 @@ class HomeController extends GetxController {
   }
 
 
-  Future<UserModel?> getUserInfo(String userId)async{
-    try{
-      final userCollectionRef =
-      FirebaseHelper.fireStoreInstance!.collection("user");
-
-      final result = await userCollectionRef
-          .where("uid",isEqualTo: userId)
-          .get();
-
-      if(result.docs.isEmpty){
-        null;
-      }
-      return UserModel.fromJson(result.docs.first.data());
-
-    }
-        catch(e,s){
-      debugPrint("Exception coming in fetching userModel is ${e.toString()}\n${s.toString()}");
-        }
-  }
 
 
 
