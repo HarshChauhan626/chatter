@@ -6,6 +6,7 @@ import 'package:chat_app/screens/review_popup.dart';
 import 'package:chat_app/screens/search_conversation_screen.dart';
 import 'package:chat_app/screens/search_people_screen.dart';
 import 'package:chat_app/utils/app_colors.dart';
+import 'package:chat_app/utils/util_functions.dart';
 import 'package:chat_app/widgets/animated_column_widget.dart';
 import 'package:chat_app/widgets/custom_bottom_navigation_bar_2.dart';
 import 'package:chat_app/widgets/custom_route_builder.dart';
@@ -154,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget getChatBuilder(){
+  Widget getChatBuilder() {
     return StreamBuilder(
       stream: homeController?.chatList,
       builder: (context, snapshot) {
@@ -176,10 +177,26 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             snapshot.hasData) {
           final chatList = snapshot.data as QuerySnapshot;
 
-          final roomModelList = chatList.docs.map((e) {
+          final roomModelList = chatList.docs.map((e) async{
             debugPrint("Message data coming is ${e.data()}");
-            return RoomModel.fromJson(e.data() as Map<String, dynamic>);
-          }).toList();
+            final roomData = e.data() as Map<String, dynamic>;
+            final userInfoList = [];
+            if (roomData["userList"] != null &&
+                roomData["userList"].length != 0) {
+              for (int i = 0; i < roomData["userList"].length; i++) {
+                if(roomData["userList"][i]!=homeController?.senderId){
+                  final userInfo = await homeController?.getUserInfo(roomData["userList"][i]);
+                  if (userInfo != null) {
+                    userInfoList.add(userInfo);
+                  }
+                }
+              }
+              }
+              roomData["userInfoList"] = userInfoList;
+            return RoomModel.fromJson(roomData);
+            }
+            // return RoomModel.fromJson(e.data() as Map<String, dynamic>);
+          ).toList();
 
           debugPrint(roomModelList.toString());
 
@@ -368,11 +385,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     return SliverList(
         delegate: SliverChildBuilderDelegate((context, index) {
       // return AnimationConfiguration.staggeredList(duration: const Duration(milliseconds: 400),position: index, child: getChatListItem(index));
-      return getChatListItem(index);
+      return getChatListItem(roomModelList[index],index);
     }, childCount: roomModelList.length));
   }
 
-  Widget getChatListItem(int index) {
+  Widget getChatListItem(RoomModel roomModel,int index) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4.0),
       child: ListTile(
@@ -389,13 +406,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "Harsh Chauhan",
+              roomModel.userInfoList?[0].userName??"",
               style: Theme.of(context)
                   .textTheme
                   .bodyText1
                   ?.copyWith(fontWeight: FontWeight.bold),
             ),
-            Text("5:46 PM",
+            Text(UtilFunctions().parseTimeStamp(roomModel.latestMessage?.timestamp),
                 style: Theme.of(context)
                     .textTheme
                     .subtitle2
@@ -404,7 +421,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         ),
         subtitle: Row(
           children: [
-            Text("Latest message",
+            Text(roomModel.latestMessage?.content??"",
                 style: Theme.of(context)
                     .textTheme
                     .subtitle2

@@ -70,8 +70,6 @@ class SearchPeopleScreen extends StatelessWidget {
 
         roomId=await searchPeopleController.getRoomId(userModel.uid);
 
-
-
         Map<String,dynamic> arguments={};
 
         if(roomId!=null){
