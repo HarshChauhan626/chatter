@@ -4,7 +4,7 @@ class MessageModel {
   int? timestamp;
   String? contentType;
   String? replyTo;
-  List<String>? isLikedBy;
+  List<dynamic>? isLikedBy;
 
   MessageModel(
       {this.content,
@@ -16,8 +16,8 @@ class MessageModel {
 
   MessageModel.fromJson(Map<String, dynamic> data) {
     content = data["content"];
-    senderId = data["senderId"];
-    timestamp = data["timestamp"];
+    senderId = data["sender"];
+    timestamp = int.parse(data["timestamp"]);
     contentType = data["contentType"];
     replyTo = data["replyTo"];
     isLikedBy = data["isLikedBy"];

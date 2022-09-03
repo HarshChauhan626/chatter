@@ -1,7 +1,9 @@
+import 'package:chat_app/controllers/auth_controller.dart';
 import 'package:chat_app/controllers/chat_controller.dart';
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/widgets/custom_route_builder.dart';
 import 'package:chat_app/widgets/custom_safe_area.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,6 +12,7 @@ import 'package:sizer/sizer.dart';
 import 'package:chat_app/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
 import '../helper/firebase_helper.dart';
+import '../models/message_model.dart';
 import '../utils/app_strings.dart';
 
 // class ChatScreen extends StatefulWidget {
@@ -30,7 +33,6 @@ import '../utils/app_strings.dart';
 // }
 
 class ChatScreen extends StatelessWidget {
-
   ChatScreen({Key? key}) : super(key: key);
 
   static const String routeName = '/chat';
@@ -44,7 +46,6 @@ class ChatScreen extends StatelessWidget {
   }
 
   TextEditingController inputMessageController = TextEditingController();
-
 
   ChatController controller = Get.find<ChatController>();
 
@@ -69,7 +70,7 @@ class ChatScreen extends StatelessWidget {
   }
 
   void callSendMessage() {
-    debugPrint('Send message pressed');
+    controller.sendMessage();
   }
 
   @override
@@ -86,10 +87,9 @@ class ChatScreen extends StatelessWidget {
   }
 
   PreferredSizeWidget getAppBar(BuildContext context) {
+    final chatController = Get.find<ChatController>();
 
-    final chatController=Get.find<ChatController>();
-
-    print("Username coming is ${chatController.receiverModel}");
+    debugPrint("Username coming is ${chatController.receiverModel}");
 
     return PreferredSize(
       preferredSize: Size(double.infinity, 8.h),
@@ -117,7 +117,7 @@ class ChatScreen extends StatelessWidget {
             ),
             Container(
               child: randomAvatar(
-                chatController.receiverModel?.userName??"",
+                chatController.receiverModel?.userName ?? "",
                 height: 40,
                 width: 40,
               ),
@@ -130,7 +130,7 @@ class ChatScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  chatController.receiverModel?.userName??"",
+                  chatController.receiverModel?.userName ?? "",
                   style: Theme.of(context)
                       .textTheme
                       .bodyText1
@@ -167,60 +167,91 @@ class ChatScreen extends StatelessWidget {
   }
 
   Widget getBody() {
-    return getMessageList();
+    return Obx(() => controller.showChat.value?getMessageList():const SizedBox());
   }
 
   Widget getMessageList() {
     return SizedBox(
       height: 79.h,
-      child: StreamBuilder(
-        builder: (context,snapshot){
-          return  ListView.builder(
-              itemCount: messageList.length,
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              itemBuilder: (context, index) {
-                return Container(
-                  padding: const EdgeInsets.only(
-                      left: 14, right: 14, top: 10, bottom: 10),
-                  child: Align(
-                    alignment:
-                    (index % 2 == 0 ? Alignment.topLeft : Alignment.topRight),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            topRight: const Radius.circular(12.0),
-                            topLeft: const Radius.circular(12.0),
-                            bottomLeft: (index % 2 == 0)
-                                ? const Radius.circular(0.0)
-                                : const Radius.circular(12.0),
-                            bottomRight: (index % 2 == 0)
-                                ? const Radius.circular(12.0)
-                                : const Radius.circular(0.0)),
-                        color: (index % 2 == 0
-                            ? AppColors.textFieldBackgroundColor
-                            : AppColors.primaryColor),
-                      ),
-                      padding: const EdgeInsets.all(16),
-                      child: Text(
-                        messageList[index],
-                        style: TextStyle(
-                            fontSize: 15,
-                            color: index % 2 == 0
-                                ? AppColors.blackTextColor
-                                : AppColors.whiteColor),
-                      ),
-                    ),
-                  ),
-                );
-              });
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: StreamBuilder(
+          stream: controller.dataList,
+          builder: (context, snapshot) {
 
-        },
+            print("Connection state coming is ${snapshot.connectionState}");
+
+            print(snapshot.hasData);
+
+            print(snapshot.hasData);
+
+            if(snapshot.hasData && snapshot.connectionState==ConnectionState.active){
+
+              final chatList=snapshot.data as QuerySnapshot;
+
+
+              final list=chatList.docs.map((e){
+                print("Message data coming is ${e.data()}");
+                return MessageModel.fromJson(e.data() as Map<String,dynamic>);
+              }).toList();
+
+              return ListView.builder(
+                  itemCount: list.length,
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  itemBuilder: (context, index) {
+                    final userId=Get.find<AuthController>().firebaseUser.value?.uid;
+
+                    bool isSender=list[index].senderId==userId;
+
+                    debugPrint("Is Sender coming is $isSender");
+
+                    return Container(
+                      padding: EdgeInsets.only(
+                          left: isSender?50:14, right: isSender?14:50, top: 10, bottom: 10),
+                      child: Align(
+                        alignment: (isSender
+                            ? Alignment.topRight:Alignment.topLeft
+                            ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topRight: const Radius.circular(12.0),
+                                topLeft: const Radius.circular(12.0),
+                                bottomLeft: isSender
+                                    ? const Radius.circular(12.0):const Radius.circular(0.0)
+                                    ,
+                                bottomRight: isSender
+                                    ? const Radius.circular(0.0): const Radius.circular(12.0)
+                                    ),
+                            color: (isSender
+                                ? AppColors.primaryColor:AppColors.textFieldBackgroundColor
+                                ),
+                          ),
+                          padding: const EdgeInsets.all(16),
+                          child: Text(
+                            list[index].content??"",
+                            style: TextStyle(
+                                fontSize: 15,
+                                color: isSender
+                                    ? AppColors.whiteColor
+                                    : AppColors.blackTextColor),
+                          ),
+                        ),
+                      ),
+                    );
+                  });
+            }
+            return const Center(child: CircularProgressIndicator(),);
+          },
+        ),
       ),
     );
   }
 
   Widget getInputField(BuildContext context) {
+    final chatController = Get.find<ChatController>();
+
     return Container(
       decoration: BoxDecoration(
           color: AppColors.whiteColor,
@@ -259,9 +290,9 @@ class ChatScreen extends StatelessWidget {
                           // width: 42.w,
                           child: TextField(
                             onChanged: (value) {
-
+                              chatController.message.value = value;
                             },
-                            controller: inputMessageController,
+                            controller: chatController.messageFieldController,
                             decoration: InputDecoration(
                                 filled: true,
                                 fillColor: AppColors.textFieldBackgroundColor,
@@ -269,15 +300,16 @@ class ChatScreen extends StatelessWidget {
                                 hintStyle: Theme.of(context)
                                     .textTheme
                                     .subtitle1
-                                    ?.copyWith(color: AppColors.greyColor?.darken(30)),
+                                    ?.copyWith(
+                                        color: AppColors.greyColor?.darken(30)),
                                 border: InputBorder.none),
                           ),
                         ),
                       ),
                       getAttachFileButton(),
-                      inputMessageController.text.isNotEmpty
+                      Obx(() => chatController.message.value.isNotEmpty
                           ? const SizedBox()
-                          : getCameraButton(),
+                          : getCameraButton()),
                     ],
                   ),
                 ),
@@ -288,9 +320,9 @@ class ChatScreen extends StatelessWidget {
                   decoration: const BoxDecoration(
                       color: AppColors.primaryColor,
                       borderRadius: BorderRadius.all(Radius.circular(12.0))),
-                  child: inputMessageController.text.isNotEmpty
+                  child: Obx(() => chatController.message.value.isNotEmpty
                       ? getSendMessageButton()
-                      : getVoiceRecordingButton())
+                      : getVoiceRecordingButton()))
             ],
           )
         ],
@@ -345,9 +377,6 @@ class ChatScreen extends StatelessWidget {
       onTap: () => callSendMessage(),
     );
   }
-
 }
-
-
 
 // https://stackoverflow.com/questions/54702778/how-to-show-typing-indicator-in-android-firebase-chat

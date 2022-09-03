@@ -1,5 +1,9 @@
 import 'dart:ui';
 
+import 'package:firebase_auth/firebase_auth.dart';
+
+import '../models/user_model.dart';
+
 extension ColorTintGenerator on Color{
   Color darken([int percent=10]){
     assert(1 <= percent && percent <= 100);
@@ -25,3 +29,12 @@ extension ColorTintGenerator on Color{
 
 
 }
+
+// extension FirebaseUserToUserModel on User{
+//   UserModel toUserModel(){
+//     return UserModel(
+//       email: email,
+//       userName: this.displayName
+//     );
+//   }
+// }

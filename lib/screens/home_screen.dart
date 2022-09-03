@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:animations/animations.dart';
+import 'package:chat_app/controllers/home_controller.dart';
 import 'package:chat_app/screens/review_popup.dart';
 import 'package:chat_app/screens/search_conversation_screen.dart';
 import 'package:chat_app/screens/search_people_screen.dart';
@@ -10,6 +11,7 @@ import 'package:chat_app/widgets/custom_bottom_navigation_bar_2.dart';
 import 'package:chat_app/widgets/custom_route_builder.dart';
 import 'package:chat_app/widgets/custom_safe_area.dart';
 import 'package:chat_app/widgets/input_text_field.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -18,6 +20,9 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:random_avatar/random_avatar.dart';
 import 'package:sizer/sizer.dart';
 
+import '../controllers/auth_controller.dart';
+import '../helper/firebase_helper.dart';
+import '../models/room_model.dart';
 import '../utils/app_strings.dart';
 import '../utils/enums.dart';
 
@@ -38,16 +43,15 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin{
-
-
-
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   AnimationController? _controller;
   Animation<Offset>? _animation;
 
-  final ScrollController _scrollController=ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
-  bool isScrollingDownwards=false;
+  bool isScrollingDownwards = false;
+
+  HomeController? homeController;
 
   @override
   void initState() {
@@ -65,89 +69,127 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin{
       curve: Curves.easeInCubic,
     ));
 
+    homeController = Get.find<HomeController>();
 
     _scrollController.addListener(() {
-      if(_scrollController.position.userScrollDirection==ScrollDirection.reverse){
+      if (_scrollController.position.userScrollDirection ==
+          ScrollDirection.reverse) {
         setState(() {
-          isScrollingDownwards=true;
+          isScrollingDownwards = true;
         });
-      }
-      else{
+      } else {
         setState(() {
-          isScrollingDownwards=false;
+          isScrollingDownwards = false;
         });
       }
     });
-
   }
-
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
     return CustomSafeArea(
-        child: Scaffold(
-            body: getBody()
+        child: Scaffold(body: getBody()
             // bottomSheet: getBottomNavigation()
-        ));
+            ));
   }
 
-
-  Widget getBody(){
+  Widget getBody() {
     return Stack(
       children: [
-        CustomScrollView(
-          controller: _scrollController,
-          slivers: [getAppBar(), getChatList()],
+        StreamBuilder(
+          stream: homeController?.chatList,
+          builder: (context, snapshot) {
+            List<Widget> sliverList = [getAppBar()];
+
+            if (snapshot.connectionState == ConnectionState.none) {
+              sliverList.add(const SliverToBoxAdapter(
+                child: SizedBox(),
+              ));
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              sliverList.add(const SliverToBoxAdapter(
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ));
+            }
+            if (snapshot.connectionState == ConnectionState.active &&
+                snapshot.hasData) {
+              final chatList = snapshot.data as QuerySnapshot;
+
+              final roomModelList = chatList.docs.map((e) {
+                debugPrint("Message data coming is ${e.data()}");
+                return RoomModel.fromJson(e.data() as Map<String, dynamic>);
+              }).toList();
+
+              debugPrint(roomModelList.toString());
+
+              sliverList.add(getChatList(roomModelList));
+            }
+
+            return CustomScrollView(
+              controller: _scrollController,
+              // slivers: [getAppBar(), getChatList()],
+              slivers: sliverList,
+            );
+          },
         ),
-        Positioned(bottom: 4.h,right:4.w,child:
-        AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          height: 8.h,
-          width: isScrollingDownwards?8.h:40.w,
-          decoration: BoxDecoration(
-              color: AppColors.primaryColor,
-            borderRadius: BorderRadius.circular(20.0)
-          ),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Material(
-              elevation: 4.0,
-              color: AppColors.primaryColor,
-              borderRadius: BorderRadius.circular(15.0),
-              child: InkWell(
-                // highlightColor: AppColors.primaryColor.withOpacity(0.4),
-                // splashColor: AppColors.primaryColor.withOpacity(0.5),
-                onTap: (){
-                  Get.toNamed(SearchPeopleScreen.routeName);
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  width: isScrollingDownwards?8.h:40.w,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.message_outlined,color: AppColors.whiteColor,),
-                      if(!isScrollingDownwards)
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10.0),
-                          child: Text(AppStrings.startChat,style: Theme.of(context).textTheme.headline6?.copyWith(color: AppColors.whiteColor,fontSize: 17.0),),
-                        ),
-                    ],
+        Positioned(
+            bottom: 4.h,
+            right: 4.w,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              height: 8.h,
+              width: isScrollingDownwards ? 8.h : 40.w,
+              decoration: BoxDecoration(
+                  color: AppColors.primaryColor,
+                  borderRadius: BorderRadius.circular(20.0)),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Material(
+                  elevation: 4.0,
+                  color: AppColors.primaryColor,
+                  borderRadius: BorderRadius.circular(15.0),
+                  child: InkWell(
+                    // highlightColor: AppColors.primaryColor.withOpacity(0.4),
+                    // splashColor: AppColors.primaryColor.withOpacity(0.5),
+                    onTap: () {
+                      Get.toNamed(SearchPeopleScreen.routeName);
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: isScrollingDownwards ? 8.h : 40.w,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.message_outlined,
+                            color: AppColors.whiteColor,
+                          ),
+                          if (!isScrollingDownwards)
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10.0),
+                              child: Text(
+                                AppStrings.startChat,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    ?.copyWith(
+                                        color: AppColors.whiteColor,
+                                        fontSize: 17.0),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
-        ))
+            ))
       ],
     );
   }
-
 
   Widget getAppBar() {
     return SliverAppBar(
@@ -170,21 +212,23 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin{
               mainAxisSize: MainAxisSize.min,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(bottom:15.0),
+                  padding: const EdgeInsets.only(bottom: 15.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("Chatter",style: Theme.of(context).textTheme.headline5?.copyWith(
-                        color: AppColors.blackTextColor,
-                        fontWeight: FontWeight.w900
-                      ),),
+                      Text(
+                        "Chatter",
+                        style: Theme.of(context).textTheme.headline5?.copyWith(
+                            color: AppColors.blackTextColor,
+                            fontWeight: FontWeight.w900),
+                      ),
                       InkWell(
                         child: randomAvatar(
                           "Harsh Chauhan",
                           height: 30,
                           width: 30,
                         ),
-                        onTap: (){
+                        onTap: () {
                           Get.toNamed('/profile');
                         },
                       )
@@ -194,7 +238,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin{
                 OpenContainer(
                   transitionDuration: const Duration(milliseconds: 600),
                   transitionType: ContainerTransitionType.fade,
-                  openBuilder: (context,closedContainer){
+                  openBuilder: (context, closedContainer) {
                     return SearchConversationScreen();
                   },
                   closedShape: const RoundedRectangleBorder(
@@ -202,12 +246,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin{
                   ),
                   closedElevation: 0,
                   closedColor: AppColors.textFieldBackgroundColor,
-                  closedBuilder: (context,openContainer){
-                    return
-                      InputTextField(inputTextType: InputTextType.search, onChangedValue: (){}, hintText: AppStrings.searchConversation,onTap: (){
+                  closedBuilder: (context, openContainer) {
+                    return InputTextField(
+                      inputTextType: InputTextType.search,
+                      onChangedValue: () {},
+                      hintText: AppStrings.searchConversation,
+                      onTap: () {
                         // Get.toNamed(SearchConversationScreen.routeName);
                         openContainer();
-                      },);
+                      },
+                    );
                   },
                 )
                 // Row(
@@ -299,17 +347,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin{
     );
   }
 
-  Widget getChatList() {
-    return AnimationLimiter(
-      child: SliverList(
-          delegate: SliverChildBuilderDelegate((context, index) {
-            return AnimationConfiguration.staggeredList(duration: const Duration(milliseconds: 400),position: index, child: getChatListItem(index));
-          }, childCount: 100)),
-    );
+  Widget getChatList(List<RoomModel> roomModelList) {
+    return SliverList(
+        delegate: SliverChildBuilderDelegate((context, index) {
+      // return AnimationConfiguration.staggeredList(duration: const Duration(milliseconds: 400),position: index, child: getChatListItem(index));
+      return getChatListItem(index);
+    }, childCount: roomModelList.length));
   }
 
-
-  Widget getChatListItem(int index){
+  Widget getChatListItem(int index) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4.0),
       child: ListTile(

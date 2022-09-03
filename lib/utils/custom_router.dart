@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controllers/chat_controller.dart';
+import '../controllers/home_controller.dart';
 
 class CustomRouter {
   static Route onGenerateRoute(RouteSettings settings) {
@@ -66,21 +67,24 @@ class GetXRouter {
     return [
       GetPage(
         name: SplashScreen.routeName,
-        page: () => SplashScreen(),
+        page: () => const SplashScreen(),
         middlewares: [MyMiddleware()],
         transition: Transition.rightToLeft,
         transitionDuration: const Duration(milliseconds: 500),
       ),
       GetPage(
         name: HomeScreen.routeName,
-        page: () => HomeScreen(),
+        page: () => const HomeScreen(),
         middlewares: [MyMiddleware()],
+        binding: BindingsBuilder(() {
+          Get.put<HomeController>(HomeController());
+        }),
         transition: Transition.rightToLeft,
         transitionDuration: const Duration(milliseconds: 500),
       ),
       GetPage(
         name: OnboardingScreen.routeName,
-        page: () => OnboardingScreen(),
+        page: () => const OnboardingScreen(),
         middlewares: [MyMiddleware()],
         transition: Transition.rightToLeft,
         transitionDuration: const Duration(milliseconds: 500),
@@ -97,35 +101,35 @@ class GetXRouter {
       ),
       GetPage(
         name: SignInScreen.routeName,
-        page: () => SignInScreen(),
+        page: () => const SignInScreen(),
         middlewares: [MyMiddleware()],
         transition: Transition.rightToLeft,
         transitionDuration: const Duration(milliseconds: 500),
       ),
       GetPage(
         name: SignUpScreen.routeName,
-        page: () => SignUpScreen(),
+        page: () => const SignUpScreen(),
         middlewares: [MyMiddleware()],
         transition: Transition.rightToLeft,
         transitionDuration: const Duration(milliseconds: 500),
       ),
       GetPage(
         name: ForgotPasswordScreen.routeName,
-        page: () => ForgotPasswordScreen(),
+        page: () => const ForgotPasswordScreen(),
         middlewares: [MyMiddleware()],
         transition: Transition.rightToLeft,
         transitionDuration: const Duration(milliseconds: 500),
       ),
       GetPage(
         name: ResetPasswordScreen.routeName,
-        page: () => ResetPasswordScreen(),
+        page: () => const ResetPasswordScreen(),
         middlewares: [MyMiddleware()],
         transition: Transition.rightToLeft,
         transitionDuration: const Duration(milliseconds: 500),
       ),
       GetPage(
         name: ProfileScreen.routeName,
-        page: () => ProfileScreen(),
+        page: () => const ProfileScreen(),
         middlewares: [MyMiddleware()],
         transition: Transition.rightToLeft,
         transitionDuration: const Duration(milliseconds: 500),
@@ -153,10 +157,21 @@ class GetXRouter {
 }
 
 class MyMiddleware extends GetMiddleware {
+
+  GetPage? getPage;
+
   @override
   GetPage? onPageCalled(GetPage? page) {
     debugPrint("Navigating to page ${page?.name}");
+    getPage=page;
     return super.onPageCalled(page);
+  }
+
+  @override
+  void onPageDispose() {
+    // TODO: implement onPageDispose
+    super.onPageDispose();
+    debugPrint("Disposing page ${getPage?.name}");
   }
 
 }

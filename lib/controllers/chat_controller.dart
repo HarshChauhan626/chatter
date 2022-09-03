@@ -1,66 +1,83 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 
 import '../helper/firebase_helper.dart';
-import '../models/group_model.dart';
+import '../models/room_model.dart';
 import '../models/user_model.dart';
+import 'auth_controller.dart';
 
 class ChatController extends GetxController {
   String? user1Id;
   String? user2Id;
-  String? roomId;
+  // final roomId=Rxn<String>();
 
-  RxList messages=[].obs;
+  RxString roomId = "".obs;
+
+  RxList messages = [].obs;
+
+  RxBool showChat=false.obs;
+
+  TextEditingController messageFieldController = TextEditingController();
+
+  RxString message = "".obs;
 
   UserModel? receiverModel;
 
-  String? groupId;
+  RxBool isTyping = false.obs;
 
-  RxBool isTyping=false.obs;
+  Rx<RoomModel>? roomModel;
 
-  Rx<GroupModel>? groupModel;
-
-  @override
-  void onReady() {
-    // TODO: implement onReady
-    super.onReady();
-  }
+  Stream? dataList;
 
   @override
-  void onInit(){
+  void onInit() {
     super.onInit();
-    debugPrint("Printing userModel");
+    debugPrint("debugPrinting userModel");
     debugPrint(Get.arguments['receiverModel'].toString());
-    print(Get.arguments['receiverModel'].runtimeType);
-    final userModel=Get.arguments['receiverModel'] as UserModel;
-    receiverModel=userModel;
-    groupId=Get.arguments['groupId'];
-  }
+    debugPrint(Get.arguments['receiverModel'].runtimeType.toString());
+    final userModel = Get.arguments['receiverModel'] as UserModel;
+    receiverModel = userModel;
+    roomId.value = Get.arguments['roomId'] ?? "";
 
-
-  Future<bool> getIsTypingStream()async{
-    try{
-      return true;
+    debugPrint("Room id coming is ${roomId.value}");
+    user1Id = Get.find<AuthController>().firebaseUser.value?.uid;
+    debugPrint("Sender id coming is $user1Id");
+    if(roomId.value.isNotEmpty){
+      getChatStream();
     }
-        catch(e){
-      return false;
-        }
-
   }
 
-
-
-  void sendMessage(String message) async {
+  void getIsTypingStream() async {
     try {
       final chatCollectionRef =
           FirebaseHelper.fireStoreInstance!.collection("chats");
 
+      chatCollectionRef.snapshots().listen((QuerySnapshot querySnapshot) {
+        for (var element in querySnapshot.docs) {
+          final roomData = element.data();
+          debugPrint("Room data coming is${roomData.toString()}");
+        }
+      });
+    } catch (e) {
+      isTyping.value = false;
+    }
+  }
+
+  void sendMessage() async {
+    try {
+      final chatCollectionRef =
+          FirebaseHelper.fireStoreInstance!.collection("chats");
+
+      final userCollectionReference=FirebaseHelper.fireStoreInstance!.collection("users");
+
 
       final dateTimeNow = DateTime.now().millisecondsSinceEpoch.toString();
 
-      final messageData={
-        "content": message,
+      final messageData = {
+        "content": message.value,
         "sender": user1Id,
         "timestamp": dateTimeNow,
         "contentType": "Text",
@@ -68,21 +85,55 @@ class ChatController extends GetxController {
         "isLikedBy": []
       };
 
-      if (roomId == null) {
+      if (roomId.value.isEmpty) {
         final uniqueRoomId = const Uuid().v1();
+        roomId.value = uniqueRoomId;
         final groupDocReference = chatCollectionRef.doc(uniqueRoomId);
+
         await groupDocReference.set({
-          "userList": [user1Id, user2Id],
+          "userList": [user1Id, receiverModel?.uid],
           "isTyping": [],
-          "adminList": []
+          "adminList": [],
+          "latestMessage":messageData
         });
-        await groupDocReference.collection(uniqueRoomId).doc(dateTimeNow).set(messageData);
+        await groupDocReference
+            .collection(uniqueRoomId)
+            .doc(dateTimeNow)
+            .set(messageData);
+        getChatStream();
       } else {
-        final groupDocReference = chatCollectionRef.doc(roomId);
-        groupDocReference.collection(roomId!).doc(dateTimeNow).update(messageData);
+        final groupDocReference = chatCollectionRef.doc(roomId.value);
+        await groupDocReference.update({"latestMessage":messageData});
+        groupDocReference
+            .collection(roomId.value)
+            .doc(dateTimeNow)
+            .set(messageData);
       }
-    } catch (e) {
-      debugPrint(e.toString());
+    } catch (e,s) {
+      debugPrint("Exception coming in sending message is ${e.toString()} ${s.toString()}");
+    }
+
+    messageFieldController.clear();
+    message.value = "";
+  }
+
+  Future<void> getChatStream() async {
+    try {
+      final chatCollectionRef =
+          FirebaseHelper.fireStoreInstance!.collection("chats");
+
+      final groupDocReference = chatCollectionRef.doc(roomId.value);
+
+      dataList = groupDocReference
+          .collection(roomId.value)
+          .orderBy("timestamp")
+          .snapshots();
+
+      showChat.value=true;
+    } catch (e, s) {
+      showChat.value=false;
+      debugPrint(
+          "Exception coming in getting chat list is ${e.toString()} ${s.toString()}");
     }
   }
 }

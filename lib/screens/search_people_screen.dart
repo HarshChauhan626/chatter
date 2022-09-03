@@ -62,19 +62,22 @@ class SearchPeopleScreen extends StatelessWidget {
   }
 
   Widget getSearchResultItem(UserModel userModel) {
-    String? groupId;
-    SearchPeopleController searchPeopleController=Get.find<SearchPeopleController>();
-
-    Map<String,dynamic> arguments={};
-
-    if(groupId!=null){
-      arguments["groupId"]=groupId;
-    }
-    arguments["receiverModel"]=userModel;
 
     return ListTile(
       onTap: ()async{
-        groupId=await searchPeopleController.getRoomId();
+        String? roomId;
+        SearchPeopleController searchPeopleController=Get.find<SearchPeopleController>();
+
+        roomId=await searchPeopleController.getRoomId(userModel.uid);
+
+
+
+        Map<String,dynamic> arguments={};
+
+        if(roomId!=null){
+          arguments["roomId"]=roomId;
+        }
+        arguments["receiverModel"]=userModel;
         Get.toNamed(ChatScreen.routeName,arguments: arguments);
       },
       title: Text(userModel.userName.toString()),

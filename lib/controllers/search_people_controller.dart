@@ -24,6 +24,7 @@ class SearchPeopleController extends GetxController {
               isGreaterThanOrEqualTo: searchText.value,
               isLessThan: searchText.value + "z")
           .get();
+
       userList.value =
           result.docs.map((e) => UserModel.fromJson(e.data())).toList();
       isLoading.value = false;
@@ -33,24 +34,24 @@ class SearchPeopleController extends GetxController {
     }
   }
 
-  Future<String?> getRoomId() async {
+  Future<String?> getRoomId(String? receiverId) async {
     try {
       AuthController authController = Get.find<AuthController>();
 
       String? senderId = authController.firebaseUser.value?.uid;
 
-      String? receiverId = authController.firebaseUser.value?.uid;
+      // String? receiverId = authController.firebaseUser.value?.uid;
 
       final chatCollectionRef =
           FirebaseHelper.fireStoreInstance!.collection("chats");
 
-      final chatDocument = await chatCollectionRef.where("users", whereIn: [
+      final chatDocument = await chatCollectionRef.where("userList", whereIn: [
         [senderId, receiverId]
       ]).get();
 
       return chatDocument.docs.first.reference.id;
-    } catch (e) {
-      debugPrint("Exception coming in getting roomId ${e.toString()}");
+    } catch (e,s) {
+      debugPrint("Exception coming in getting roomId ${e.toString()}${s.toString()}");
     }
 
     return null;

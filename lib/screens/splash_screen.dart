@@ -26,16 +26,13 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  AuthController authController = Get.put(AuthController(), permanent: true);
 
-  AuthController authController=Get.put(AuthController(),permanent: true);
-
-  void startTimer() async{
-    await Future.delayed(const Duration(seconds: 6), () async {
-    });
-    if(authController.firebaseUser.value!=null){
+  void startTimer() async {
+    await Future.delayed(const Duration(seconds: 6), () async {});
+    if (authController.firebaseUser.value != null) {
       Get.offAllNamed(HomeScreen.routeName);
-    }
-    else{
+    } else {
       Get.offAllNamed(SignInScreen.routeName);
     }
   }

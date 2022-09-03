@@ -23,7 +23,7 @@ class SignInController extends GetxController {
       isLoading.value = false;
       if (canLogin) {
         FirebaseHelper.user = FirebaseHelper.authInstance?.currentUser;
-        Get.to(const HomeScreen());
+        Get.toNamed(HomeScreen.routeName);
       } else {
         showCustomDialog(
             context,
