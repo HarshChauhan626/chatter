@@ -1,14 +1,43 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 
 import '../utils/app_strings.dart';
 import 'package:path_provider/path_provider.dart' as pathProvider;
 
-class HiveDBHelper {
+class HiveDBHelper extends GetxController{
   Box? userPreferenceBox;
+
+  bool _onboardingDone=false;
+
+  bool get onboardingDone=>_onboardingDone;
+
+  set onboardingDone(bool onboardingDone){
+    _onboardingDone=onboardingDone;
+    userPreferenceBox?.put(AppStrings.isOnBoardingDone,onboardingDone);
+  }
+
+  @override
+  void onInit(){
+    super.onInit();
+    initData();
+  }
+
+
+
+
   void initData() async {
+    await initBoxes();
+    await setUpData();
+  }
+
+  Future<void> setUpData()async{
+    _onboardingDone=userPreferenceBox?.get(AppStrings.isOnBoardingDone)??false;
+  }
+
+  Future<void> initBoxes()async{
     List<int> generatedKey = [
       213,
       61,
@@ -46,9 +75,7 @@ class HiveDBHelper {
     debugPrint(generatedKey.toString());
     Directory directory = await pathProvider.getApplicationDocumentsDirectory();
     Hive.init(directory.path);
-    var userPreferenceBox = await Hive.openBox(AppStrings.userPreferences,
+    userPreferenceBox = await Hive.openBox(AppStrings.userPreferences,
         encryptionCipher: HiveAesCipher(generatedKey));
-    userPreferenceBox.put(AppStrings.isOnBoardingDone, true);
-    debugPrint(userPreferenceBox.get(AppStrings.isOnBoardingDone).toString());
   }
 }

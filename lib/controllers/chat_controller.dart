@@ -23,6 +23,8 @@ class ChatController extends GetxController {
 
   TextEditingController messageFieldController = TextEditingController();
 
+  ScrollController scrollController=ScrollController();
+
   RxString message = "".obs;
 
   UserModel? receiverModel;
@@ -49,6 +51,18 @@ class ChatController extends GetxController {
     if(roomId.value.isNotEmpty){
       getChatStream();
     }
+
+  }
+
+  @override
+  void onReady() {
+    // TODO: implement onReady
+    // scrollController.animateTo(
+    //   scrollController.position.maxScrollExtent,
+    //   duration: const Duration(milliseconds: 100),
+    //   curve: Curves.easeIn,
+    // );
+    super.onReady();
   }
 
   void getIsTypingStream() async {
@@ -105,7 +119,7 @@ class ChatController extends GetxController {
           "adminList": [],
           "latestMessage":messageData,
           "userInfoList":[
-            // senderUserInfo?.toJson(),
+            senderUserInfo?.toJson(),
             receiverModel?.toJson()
           ]
         });

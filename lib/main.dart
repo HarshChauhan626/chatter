@@ -15,7 +15,7 @@ void main()async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseHelper.initInstances();
-  HiveDBHelper().initData();
+  Get.put(HiveDBHelper());
   runApp(const MyApp());
 }
 

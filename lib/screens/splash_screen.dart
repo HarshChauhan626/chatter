@@ -1,4 +1,5 @@
 import 'package:chat_app/controllers/auth_controller.dart';
+import 'package:chat_app/helper/hive_db_helper.dart';
 import 'package:chat_app/screens/home_screen.dart';
 import 'package:chat_app/screens/onboarding_screen.dart';
 import 'package:chat_app/screens/sign_in_screen.dart';
@@ -30,10 +31,15 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void startTimer() async {
     await Future.delayed(const Duration(seconds: 6), () async {});
-    if (authController.firebaseUser.value != null) {
-      Get.offAllNamed(HomeScreen.routeName);
-    } else {
-      Get.offAllNamed(SignInScreen.routeName);
+    if(Get.find<HiveDBHelper>().onboardingDone){
+      if (authController.firebaseUser.value != null) {
+        Get.offAllNamed(HomeScreen.routeName);
+      } else {
+        Get.offAllNamed(SignInScreen.routeName);
+      }
+    }
+    else{
+      Get.offAllNamed(OnboardingScreen.routeName);
     }
   }
 

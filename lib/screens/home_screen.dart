@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:animations/animations.dart';
 import 'package:chat_app/controllers/home_controller.dart';
+import 'package:chat_app/models/user_model.dart';
 import 'package:chat_app/screens/chat_screen.dart';
 import 'package:chat_app/screens/review_popup.dart';
 import 'package:chat_app/screens/search_conversation_screen.dart';
@@ -204,7 +205,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             return RoomModel.fromJson(e.data() as Map<String, dynamic>);
           }).toList();
 
-
           debugPrint(roomModelList.toString());
 
           sliverList.add(getChatList(roomModelList));
@@ -397,15 +397,35 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget getChatListItem(RoomModel roomModel,int index) {
+
+    final userId=Get.find<AuthController>().firebaseUser.value?.uid;
+
+    // final receiverModel=roomModel.userInfoList?.map((e) {
+    //   if(e.uid.toString()!=userId?.toString()){
+    //     return e;
+    //   }
+    // }).toList()[0];
+
+    UserModel? receiverModel;
+
+    for(var element in roomModel.userInfoList!){
+      print("Element id coming is ${element.uid}");
+      if(element.uid.toString()!=userId?.toString()){
+        receiverModel=element;
+      }
+    }
+
+
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4.0),
       child: ListTile(
         onTap: () {
-          Get.toNamed(ChatScreen.routeName,arguments: {"roomId":roomModel.roomId,"receiverModel":roomModel.userInfoList?[0]});
+          Get.toNamed(ChatScreen.routeName,arguments: {"roomId":roomModel.roomId,"receiverModel":receiverModel});
         },
         tileColor: AppColors.whiteColor,
         leading: randomAvatar(
-          roomModel.userInfoList?[0].userName??"$index",
+          receiverModel?.userName??"$index",
           height: 50,
           width: 52,
         ),
@@ -413,11 +433,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              roomModel.userInfoList?[0].userName??"",
+              receiverModel?.userName??"",
               style: Theme.of(context)
                   .textTheme
                   .bodyText1
-                  ?.copyWith(fontWeight: FontWeight.bold),
+                  ?.copyWith(fontWeight: FontWeight.bold,color: AppColors.blackTextColor),
             ),
             Text(UtilFunctions().parseTimeStamp(roomModel.latestMessage?.timestamp),
                 style: Theme.of(context)
@@ -428,11 +448,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         ),
         subtitle: Row(
           children: [
-            Text(roomModel.latestMessage?.content??"",
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle2
-                    ?.copyWith(color: Colors.black54))
+            Container(
+              width: 65.w,
+              child:
+              Text(roomModel.latestMessage?.content??"",
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle2
+                      ?.copyWith(color: Colors.black54,overflow: TextOverflow.ellipsis)),
+            )
           ],
         ),
       ),

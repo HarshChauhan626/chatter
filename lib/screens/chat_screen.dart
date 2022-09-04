@@ -193,12 +193,14 @@ class ChatScreen extends StatelessWidget {
               final list=chatList.docs.map((e){
                 print("Message data coming is ${e.data()}");
                 return MessageModel.fromJson(e.data() as Map<String,dynamic>);
-              }).toList();
+              }).toList().reversed.toList();
 
               return ListView.builder(
+                reverse: true,
                   itemCount: list.length,
                   shrinkWrap: true,
                   scrollDirection: Axis.vertical,
+                  controller: controller.scrollController,
                   itemBuilder: (context, index) {
                     final userId=Get.find<AuthController>().firebaseUser.value?.uid;
 
@@ -315,14 +317,24 @@ class ChatScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 10),
-              Container(
-                  padding: const EdgeInsets.all(15.0),
-                  decoration: const BoxDecoration(
-                      color: AppColors.primaryColor,
-                      borderRadius: BorderRadius.all(Radius.circular(12.0))),
-                  child: Obx(() => chatController.message.value.isNotEmpty
-                      ? getSendMessageButton()
-                      : getVoiceRecordingButton()))
+              InkWell(
+                onTap: (){
+                  if(chatController.message.value.isNotEmpty){
+                    callSendMessage();
+                  }
+                  else{
+                    print("Voice recording tapped");
+                  }
+                },
+                child: Container(
+                    padding: const EdgeInsets.all(15.0),
+                    decoration: const BoxDecoration(
+                        color: AppColors.primaryColor,
+                        borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                    child: Obx(() => chatController.message.value.isNotEmpty
+                        ? getSendMessageButton()
+                        : getVoiceRecordingButton())),
+              )
             ],
           )
         ],
@@ -369,12 +381,9 @@ class ChatScreen extends StatelessWidget {
   }
 
   Widget getSendMessageButton() {
-    return InkWell(
-      child: const Icon(
-        Icons.send,
-        color: AppColors.whiteColor,
-      ),
-      onTap: () => callSendMessage(),
+    return const Icon(
+      Icons.send,
+      color: AppColors.whiteColor,
     );
   }
 }

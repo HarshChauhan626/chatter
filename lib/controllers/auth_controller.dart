@@ -6,6 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:get/get.dart';
 
 import '../helper/firebase_helper.dart';
+import '../helper/hive_db_helper.dart';
 import '../screens/home_screen.dart';
 
 class AuthController extends GetxController {
@@ -29,21 +30,35 @@ class AuthController extends GetxController {
         FirebaseHelper.googleSignInstance?.currentUser);
 
     firebaseUser.bindStream(FirebaseHelper.authInstance!.userChanges());
-    // ever(firebaseUser, _setInitialScreen);
+    ever(firebaseUser, _setInitialScreen);
 
-    googleSignInAccount
-        .bindStream(FirebaseHelper.googleSignInstance!.onCurrentUserChanged);
+    // googleSignInAccount
+    //     .bindStream(FirebaseHelper.googleSignInstance!.onCurrentUserChanged);
     // ever(googleSignInAccount, _setInitialScreenGoogle);
   }
 
   _setInitialScreen(User? user) {
-    if (user == null) {
-      // if the user is not found then the user is navigated to the Login Screen
-      Get.offAll(() => const SignInScreen());
-    } else {
-      // if the user exists and logged in the the user is navigated to the Home Screen
-      Get.offAll(() => const HomeScreen());
+
+    if(Get.find<HiveDBHelper>().onboardingDone){
+      // if (user != null) {
+      //   Get.offAllNamed(HomeScreen.routeName);
+      // } else {
+      //   Get.offAllNamed(SignInScreen.routeName);
+      // }
+      if (user == null) {
+        // if the user is not found then the user is navigated to the Login Screen
+        Get.offAllNamed(SignInScreen.routeName);
+      }
     }
+
+    // if (user == null) {
+    //   // if the user is not found then the user is navigated to the Login Screen
+    //   Get.offAllNamed(SignInScreen.routeName);
+    // }
+    // else {
+    //   // if the user exists and logged in the the user is navigated to the Home Screen
+    //   Get.offAllNamed(HomeScreen.routeName);
+    // }
   }
 
   _setInitialScreenGoogle(GoogleSignInAccount? googleSignInAccount) {
