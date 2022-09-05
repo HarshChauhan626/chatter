@@ -32,6 +32,8 @@ class ChatController extends GetxController {
 
   RxBool isTyping = false.obs;
 
+  RxBool isUserOnlineVal=false.obs;
+
   Rx<RoomModel>? roomModel;
 
   Stream? dataList;
@@ -39,6 +41,22 @@ class ChatController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+
+    initData();
+  }
+  @override
+  void onReady() {
+    // TODO: implement onReady
+    // scrollController.animateTo(
+    //   scrollController.position.maxScrollExtent,
+    //   duration: const Duration(milliseconds: 100),
+    //   curve: Curves.easeIn,
+    // );
+    super.onReady();
+  }
+
+
+  void initData()async{
     debugPrint("debugPrinting userModel");
     debugPrint(Get.arguments['receiverModel'].toString());
     debugPrint(Get.arguments['receiverModel'].runtimeType.toString());
@@ -52,17 +70,27 @@ class ChatController extends GetxController {
     if (roomId.value.isNotEmpty) {
       getChatStream();
     }
+
+    if(receiverModel!=null){
+      isUserOnline();
+    }
   }
 
-  @override
-  void onReady() {
-    // TODO: implement onReady
-    // scrollController.animateTo(
-    //   scrollController.position.maxScrollExtent,
-    //   duration: const Duration(milliseconds: 100),
-    //   curve: Curves.easeIn,
-    // );
-    super.onReady();
+  Future<void> isUserOnline()async{
+    try{
+      final userCollectionRef =
+      FirebaseHelper.fireStoreInstance!.collection("user");
+
+      final userDocStream=userCollectionRef.doc(receiverModel?.uid).snapshots();
+
+      userDocStream.listen((event) {
+        debugPrint(event.toString());
+      });
+
+    }
+    catch(e,s){
+      debugPrint("Exception coming in getting user active status ${e.toString()} ${s.toString()}");
+    }
   }
 
   void getIsTypingStream() async {
@@ -181,4 +209,6 @@ class ChatController extends GetxController {
           "Exception coming in getting chat list is ${e.toString()} ${s.toString()}");
     }
   }
+
+
 }

@@ -136,13 +136,13 @@ class ChatScreen extends StatelessWidget {
                       .bodyText1
                       ?.copyWith(fontWeight: FontWeight.bold),
                 ),
-                Text(
+                Obx(() => controller.isUserOnlineVal.value?Text(
                   AppStrings.activeNow,
                   style: Theme.of(context)
                       .textTheme
                       .bodyText2
                       ?.copyWith(color: Colors.green),
-                )
+                ):const SizedBox())
               ],
             ),
             const Spacer(),

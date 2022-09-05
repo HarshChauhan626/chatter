@@ -56,8 +56,6 @@ class AppStrings {
   static const String reachOutToUs="Reach out to us";
 
 
-
-
   // Profile screen strings
 
   static const String editProfile = "Edit profile";
@@ -75,6 +73,11 @@ class AppStrings {
 
   static const String spreadTheWord="Spread the word";
   static const String inviteFriends="Invite your friends on chatter";
+
+
+  // Edit profile strings
+
+  static const String save="Save";
 
 
   // error handler

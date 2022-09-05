@@ -10,6 +10,7 @@ import 'package:chat_app/screens/search_people_screen.dart';
 import 'package:chat_app/screens/sign_in_screen.dart';
 import 'package:chat_app/screens/sign_up_screen.dart';
 import 'package:chat_app/screens/splash_screen.dart';
+import 'package:chat_app/screens/update_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -151,7 +152,19 @@ class GetXRouter {
         transition: Transition.native,
         // customTransition: SizeTransition(),
         transitionDuration: const Duration(milliseconds: 500),
-      )
+      ),
+      GetPage(
+        name: UpdateProfileScreen.routeName,
+        page: () => const UpdateProfileScreen(),
+        middlewares: [MyMiddleware()],
+        binding: BindingsBuilder(() {
+          Get.put<SearchPeopleController>(SearchPeopleController());
+        }),
+        transition: Transition.native,
+        // customTransition: SizeTransition(),
+        transitionDuration: const Duration(milliseconds: 500),
+      ),
+
     ];
   }
 }

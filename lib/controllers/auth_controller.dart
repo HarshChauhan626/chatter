@@ -29,6 +29,10 @@ class AuthController extends GetxController {
     googleSignInAccount = Rx<GoogleSignInAccount?>(
         FirebaseHelper.googleSignInstance?.currentUser);
 
+    if(firebaseUser.value!=null){
+      updateUserLogin(isDisposing: false);
+    }
+
     firebaseUser.bindStream(FirebaseHelper.authInstance!.userChanges());
     ever(firebaseUser, _setInitialScreen);
 
@@ -36,6 +40,15 @@ class AuthController extends GetxController {
     //     .bindStream(FirebaseHelper.googleSignInstance!.onCurrentUserChanged);
     // ever(googleSignInAccount, _setInitialScreenGoogle);
   }
+
+
+  @override
+  void onClose(){
+    if(firebaseUser.value!=null){
+      updateUserLogin(isDisposing: true);
+    }
+  }
+
 
   _setInitialScreen(User? user) {
 
@@ -124,4 +137,23 @@ class AuthController extends GetxController {
     // showLoader();
     await FirebaseHelper.authInstance!.signOut();
   }
+
+  Future<void> updateUserLogin({required bool isDisposing})async{
+    final userCollectionRef = FirebaseHelper.fireStoreInstance!.collection("user");
+
+    final documentReference=userCollectionRef.doc(firebaseUser.value?.uid);
+
+    final userDocument=await documentReference.get();
+
+    if(userDocument.exists){
+      if(isDisposing){
+        await documentReference.update({"isOnline":false,"lastOnline":DateTime.now().millisecondsSinceEpoch.toString()});
+      }
+      else{
+        await documentReference.update({"isOnline":true});
+      }
+    }
+
+  }
+
 }

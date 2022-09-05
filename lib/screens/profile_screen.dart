@@ -1,3 +1,5 @@
+import 'package:chat_app/screens/reset_password.dart';
+import 'package:chat_app/screens/update_profile_screen.dart';
 import 'package:chat_app/utils/extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,8 +25,8 @@ class ListTileItem{
 
 
 List<ListTileItem> generalList=[
-  ListTileItem(AppStrings.profileSettings,AppStrings.updateProfile,'/update_profile'),
-  ListTileItem(AppStrings.privacy,AppStrings.changeYourPassword,'/reset_password'),
+  ListTileItem(AppStrings.profileSettings,AppStrings.updateProfile,UpdateProfileScreen.routeName),
+  ListTileItem(AppStrings.privacy,AppStrings.changeYourPassword,ResetPasswordScreen.routeName),
   ListTileItem(AppStrings.settings,AppStrings.personaliseAndChange,'/settings'),
   ListTileItem(AppStrings.spreadTheWord, AppStrings.inviteYourFriends, '/invite_friends'),
 ];
@@ -144,6 +146,9 @@ class ProfileScreen extends StatelessWidget {
                 itemCount: tileItemList.length,
                   itemBuilder: (context,index){
                 return ListTile(
+                  onTap: (){
+                    Get.toNamed(tileItemList[index].routeName);
+                  },
                   title: Text(tileItemList[index].title,style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w900
                   ),),
