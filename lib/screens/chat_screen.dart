@@ -206,7 +206,7 @@ class ChatScreen extends StatelessWidget {
 
                     bool isSender=list[index].senderId==userId;
 
-                    debugPrint("Is Sender coming is $isSender");
+                    // debugPrint("Is Sender coming is $isSender");
 
                     return Container(
                       padding: EdgeInsets.only(

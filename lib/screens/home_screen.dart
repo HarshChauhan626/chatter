@@ -408,13 +408,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
     UserModel? receiverModel;
 
+    String messageContent=roomModel.latestMessage?.content??"";
+
+    bool isSeen=roomModel.latestMessage?.isSeenBy?.where((element) => element.uid==userId).isNotEmpty??true;
+
     for(var element in roomModel.userInfoList!){
       print("Element id coming is ${element.uid}");
       if(element.uid.toString()!=userId?.toString()){
         receiverModel=element;
       }
     }
-
 
 
     return Padding(
@@ -451,11 +454,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             Container(
               width: 65.w,
               child:
-              Text(roomModel.latestMessage?.content??"",
+              Text(messageContent,
                   style: Theme.of(context)
                       .textTheme
                       .subtitle2
-                      ?.copyWith(color: Colors.black54,overflow: TextOverflow.ellipsis)),
+                      ?.copyWith(color: isSeen?Colors.black54:AppColors.blackTextColor,overflow: TextOverflow.ellipsis)),
             )
           ],
         ),

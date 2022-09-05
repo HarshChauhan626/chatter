@@ -1,3 +1,4 @@
+import 'package:chat_app/models/message_model.dart';
 import 'package:chat_app/utils/util_functions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -19,11 +20,11 @@ class ChatController extends GetxController {
 
   RxList messages = [].obs;
 
-  RxBool showChat=false.obs;
+  RxBool showChat = false.obs;
 
   TextEditingController messageFieldController = TextEditingController();
 
-  ScrollController scrollController=ScrollController();
+  ScrollController scrollController = ScrollController();
 
   RxString message = "".obs;
 
@@ -48,10 +49,9 @@ class ChatController extends GetxController {
     debugPrint("Room id coming is ${roomId.value}");
     user1Id = Get.find<AuthController>().firebaseUser.value?.uid;
     debugPrint("Sender id coming is $user1Id");
-    if(roomId.value.isNotEmpty){
+    if (roomId.value.isNotEmpty) {
       getChatStream();
     }
-
   }
 
   @override
@@ -86,8 +86,8 @@ class ChatController extends GetxController {
       final chatCollectionRef =
           FirebaseHelper.fireStoreInstance!.collection("chats");
 
-      final userCollectionReference=FirebaseHelper.fireStoreInstance!.collection("users");
-
+      final userCollectionReference =
+          FirebaseHelper.fireStoreInstance!.collection("users");
 
       final dateTimeNow = DateTime.now().millisecondsSinceEpoch.toString();
 
@@ -97,7 +97,10 @@ class ChatController extends GetxController {
         "timestamp": dateTimeNow,
         "contentType": "Text",
         "replyTo": "", // Message Id
-        "isLikedBy": []
+        "isLikedBy": [],
+        "isSeenBy": [
+            {"uid": "$user1Id", "messageSeenAt": dateTimeNow}
+        ],
       };
 
       if (roomId.value.isEmpty) {
@@ -107,21 +110,17 @@ class ChatController extends GetxController {
 
         UserModel? senderUserInfo;
 
-        if(user1Id!=null){
-          senderUserInfo=await UtilFunctions().getUserInfo(user1Id!);
+        if (user1Id != null) {
+          senderUserInfo = await UtilFunctions().getUserInfo(user1Id!);
         }
 
-
         await groupDocReference.set({
-          "roomId":roomId.value,
+          "roomId": roomId.value,
           "userList": [user1Id, receiverModel?.uid],
           "isTyping": [],
           "adminList": [],
-          "latestMessage":messageData,
-          "userInfoList":[
-            senderUserInfo?.toJson(),
-            receiverModel?.toJson()
-          ]
+          "latestMessage": messageData,
+          "userInfoList": [senderUserInfo?.toJson(), receiverModel?.toJson()]
         });
         await groupDocReference
             .collection(uniqueRoomId)
@@ -130,14 +129,15 @@ class ChatController extends GetxController {
         getChatStream();
       } else {
         final groupDocReference = chatCollectionRef.doc(roomId.value);
-        await groupDocReference.update({"latestMessage":messageData});
+        await groupDocReference.update({"latestMessage": messageData});
         groupDocReference
             .collection(roomId.value)
             .doc(dateTimeNow)
             .set(messageData);
       }
-    } catch (e,s) {
-      debugPrint("Exception coming in sending message is ${e.toString()} ${s.toString()}");
+    } catch (e, s) {
+      debugPrint(
+          "Exception coming in sending message is ${e.toString()} ${s.toString()}");
     }
 
     messageFieldController.clear();
@@ -151,43 +151,34 @@ class ChatController extends GetxController {
 
       final groupDocReference = chatCollectionRef.doc(roomId.value);
 
+      final groupData=await groupDocReference.get();
+
+      if(groupData.exists){
+        bool isAlreadySeen=false;
+        final groupDataMap=groupData.data();
+        final isSeenByList=groupDataMap!["latestMessage"]["isSeenBy"];
+        for(int i=0;i<isSeenByList.length;i++){
+          if(isSeenByList[i]["uid"]==user1Id){
+            isAlreadySeen=true;
+            break;
+          }
+        }
+        if(!isAlreadySeen){
+          groupDataMap["latestMessage"]["isSeenBy"].add({"uid":user1Id,"messageSeenAt":DateTime.now().millisecondsSinceEpoch.toString()});
+        }
+        groupDocReference.update({"latestMessage":groupDataMap["latestMessage"]});
+      }
+
       dataList = groupDocReference
           .collection(roomId.value)
           .orderBy("timestamp")
           .snapshots();
 
-      showChat.value=true;
+      showChat.value = true;
     } catch (e, s) {
-      showChat.value=false;
+      showChat.value = false;
       debugPrint(
           "Exception coming in getting chat list is ${e.toString()} ${s.toString()}");
     }
   }
 }
-
-/*     users:[
-user1:dsfad,
-user2:sdfa,
-],
-          'isGroup':false,
-          'admin':[
-          dsfad,
-          sdfa
-          ],
-          messages:[
-          {
-          content:"",
-          sender:"",
-          timestamp:"",
-          contentType:"",
-          replyTo:"messageId",
-          isLikedBy:[
-
-          ],
-          }
-          ],
-          'isTyping':[
-          "user1":true,
-          "user2":false
-          ]
-                              */
