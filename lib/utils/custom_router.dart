@@ -1,8 +1,10 @@
 import 'package:chat_app/controllers/search_people_controller.dart';
+import 'package:chat_app/controllers/update_profile_controller.dart';
 import 'package:chat_app/screens/chat_screen.dart';
 import 'package:chat_app/screens/forgot_password_screen.dart';
 import 'package:chat_app/screens/home_screen.dart';
 import 'package:chat_app/screens/onboarding_screen.dart';
+import 'package:chat_app/screens/profile_picture_screen.dart';
 import 'package:chat_app/screens/profile_screen.dart';
 import 'package:chat_app/screens/reset_password.dart';
 import 'package:chat_app/screens/search_conversation_screen.dart';
@@ -71,7 +73,7 @@ class GetXRouter {
         page: () => const SplashScreen(),
         middlewares: [MyMiddleware()],
         transition: Transition.rightToLeft,
-        transitionDuration: const Duration(milliseconds: 500),
+        transitionDuration: const Duration(milliseconds: 400),
       ),
       GetPage(
         name: HomeScreen.routeName,
@@ -81,14 +83,14 @@ class GetXRouter {
           Get.put<HomeController>(HomeController());
         }),
         transition: Transition.rightToLeft,
-        transitionDuration: const Duration(milliseconds: 500),
+        transitionDuration: const Duration(milliseconds: 400),
       ),
       GetPage(
         name: OnboardingScreen.routeName,
         page: () => const OnboardingScreen(),
         middlewares: [MyMiddleware()],
         transition: Transition.rightToLeft,
-        transitionDuration: const Duration(milliseconds: 500),
+        transitionDuration: const Duration(milliseconds: 400),
       ),
       GetPage(
         name: ChatScreen.routeName,
@@ -105,42 +107,42 @@ class GetXRouter {
         page: () => const SignInScreen(),
         middlewares: [MyMiddleware()],
         transition: Transition.rightToLeft,
-        transitionDuration: const Duration(milliseconds: 500),
+        transitionDuration: const Duration(milliseconds: 400),
       ),
       GetPage(
         name: SignUpScreen.routeName,
         page: () => const SignUpScreen(),
         middlewares: [MyMiddleware()],
         transition: Transition.rightToLeft,
-        transitionDuration: const Duration(milliseconds: 500),
+        transitionDuration: const Duration(milliseconds: 400),
       ),
       GetPage(
         name: ForgotPasswordScreen.routeName,
         page: () => const ForgotPasswordScreen(),
         middlewares: [MyMiddleware()],
         transition: Transition.rightToLeft,
-        transitionDuration: const Duration(milliseconds: 500),
+        transitionDuration: const Duration(milliseconds: 400),
       ),
       GetPage(
         name: ResetPasswordScreen.routeName,
         page: () => const ResetPasswordScreen(),
         middlewares: [MyMiddleware()],
         transition: Transition.rightToLeft,
-        transitionDuration: const Duration(milliseconds: 500),
+        transitionDuration: const Duration(milliseconds: 400),
       ),
       GetPage(
         name: ProfileScreen.routeName,
         page: () => const ProfileScreen(),
         middlewares: [MyMiddleware()],
         transition: Transition.rightToLeft,
-        transitionDuration: const Duration(milliseconds: 500),
+        transitionDuration: const Duration(milliseconds: 400),
       ),
       GetPage(
         name: SearchConversationScreen.routeName,
         page: () => SearchConversationScreen(),
         middlewares: [MyMiddleware()],
         transition: Transition.rightToLeft,
-        transitionDuration: const Duration(milliseconds: 500),
+        transitionDuration: const Duration(milliseconds: 400),
       ),
       GetPage(
         name: SearchPeopleScreen.routeName,
@@ -151,20 +153,27 @@ class GetXRouter {
         }),
         transition: Transition.native,
         // customTransition: SizeTransition(),
-        transitionDuration: const Duration(milliseconds: 500),
+        transitionDuration: const Duration(milliseconds: 400),
       ),
       GetPage(
         name: UpdateProfileScreen.routeName,
-        page: () => const UpdateProfileScreen(),
+        page: () => UpdateProfileScreen(),
         middlewares: [MyMiddleware()],
         binding: BindingsBuilder(() {
-          Get.put<SearchPeopleController>(SearchPeopleController());
+          Get.put<UpdateProfileController>(UpdateProfileController());
         }),
+        transition: Transition.rightToLeft,
+        // customTransition: SizeTransition(),
+        transitionDuration: const Duration(milliseconds: 400),
+      ),
+      GetPage(
+        name: ProfilePictureScreen.routeName,
+        page: () => const ProfilePictureScreen(),
+        middlewares: [MyMiddleware()],
         transition: Transition.native,
         // customTransition: SizeTransition(),
-        transitionDuration: const Duration(milliseconds: 500),
+        transitionDuration: const Duration(milliseconds: 400),
       ),
-
     ];
   }
 }

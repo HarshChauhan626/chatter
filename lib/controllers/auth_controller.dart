@@ -1,3 +1,4 @@
+import 'package:chat_app/models/user_model.dart';
 import 'package:chat_app/screens/sign_in_screen.dart';
 import 'package:chat_app/screens/sign_up_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,15 +14,13 @@ class AuthController extends GetxController {
   // static AuthController instance = Get.find();
   late Rx<User?> firebaseUser;
 
+  UserModel? userInfo;
+
   late Rx<GoogleSignInAccount?> googleSignInAccount;
 
   @override
   void onReady() {
     super.onReady();
-    // auth is comning from the constants.dart file but it is basically FirebaseAuth.instance.
-    // Since we have to use that many times I just made a constant file and declared there
-
-
 
     debugPrint("Going to ready auth controller");
     firebaseUser = Rx<User?>(FirebaseHelper.authInstance?.currentUser);
@@ -32,6 +31,8 @@ class AuthController extends GetxController {
     if(firebaseUser.value!=null){
       updateUserLogin(isDisposing: false);
     }
+
+    setUserInfo();
 
     firebaseUser.bindStream(FirebaseHelper.authInstance!.userChanges());
     ever(firebaseUser, _setInitialScreen);
@@ -127,8 +128,15 @@ class AuthController extends GetxController {
     try {
       UserCredential userCredential = await FirebaseHelper.authInstance!
           .signInWithEmailAndPassword(email: email, password: password);
-      return userCredential.user != null ? true : false;
+      if(userCredential.user!=null){
+        await setUserInfo();
+        return true;
+      }
+      else{
+        return false;
+      }
     } catch (firebaseAuthException) {
+      print("Firebase auth exception coming is ${firebaseAuthException.toString()}");
       return false;
     }
   }
@@ -155,5 +163,23 @@ class AuthController extends GetxController {
     }
 
   }
+
+  Future<void> setUserInfo()async{
+    try{
+      final userCollectionRef =
+      FirebaseHelper.fireStoreInstance!.collection("user");
+
+      final docReference=await userCollectionRef.doc(firebaseUser.value?.uid).get();
+
+      if(docReference.exists){
+        userInfo=UserModel.fromJson(docReference.data() as Map<String,dynamic>);
+      }
+    }
+    catch(e,s){
+      print("Exception coming in set user info ${e.toString()} ${s.toString()}");
+    }
+  }
+
+
 
 }

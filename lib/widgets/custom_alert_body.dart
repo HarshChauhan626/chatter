@@ -8,9 +8,11 @@ import '../utils/app_colors.dart';
 class CustomAlertBody{
   static Widget alertWithOneButtonAlert(BuildContext context,{String? imageLoc,String? title,String? bodyText,String? actionButtonText}){
     return SizedBox(
-      height: 47.h,
+      height: imageLoc!=null?47.h:30.h,
       width: 80.w,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           if(imageLoc!=null)
             Padding(
@@ -113,6 +115,7 @@ class CustomAlertBody{
       ),
     );
   }
+
 }
 
 

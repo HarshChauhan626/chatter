@@ -98,6 +98,7 @@ class AppStrings {
   // alert dialog body texts
   static const String passwordSuccessfullyChanged =
       "Your password has been successfully changed.";
+  static const String profileUpdatedSuccessfully="Your profile has been updated successfully";
   static const String somethingWentWrong =
       "Something went wrong. Please try again.";
   static const String resetPasswordLinkSent =

@@ -3,7 +3,12 @@ class UserModel{
   String? userName;
   String? password;
   String? uid;
-  UserModel({this.email,this.userName,this.password,this.uid});
+  String? lastSeenAt;
+  bool? isOnline;
+  String? bio;
+  String? firstName;
+  String? lastName;
+  UserModel({this.email,this.userName,this.password,this.uid,this.lastSeenAt,this.isOnline,this.firstName,this.lastName,this.bio});
 
 
   UserModel.fromJson(Map<String,dynamic> userModelJson){
@@ -11,6 +16,11 @@ class UserModel{
     userName=userModelJson["userName"]??"";
     uid=userModelJson["uid"]??"";
     password=userModelJson["password"]??"";
+    lastSeenAt=userModelJson["lastSeenAt"]??"";
+    isOnline=userModelJson["isOnline"]??"";
+    bio=userModelJson["bio"]??"";
+    firstName=userModelJson["firstName"]??"";
+    lastName=userModelJson["lastName"]??"";
   }
 
   Map<String,dynamic> toJson(){
@@ -18,7 +28,12 @@ class UserModel{
       "email":email,
       "userName":userName,
       "password":password,
-      "uid":uid
+      "uid":uid,
+      "bio":bio,
+      "firstName":firstName,
+      "lastName":lastName,
+      "isOnline":isOnline,
+      "lastSeenAt":lastSeenAt,
     };
   }
 

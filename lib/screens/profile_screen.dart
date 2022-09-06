@@ -81,7 +81,7 @@ class ProfileScreen extends StatelessWidget {
                   width: 120,
                 ),
                 onTap: () {
-                  Get.toNamed('/edit_profile');
+
                 },
               ),
               Padding(
