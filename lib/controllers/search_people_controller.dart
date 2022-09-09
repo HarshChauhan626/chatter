@@ -25,8 +25,12 @@ class SearchPeopleController extends GetxController {
               isLessThan: searchText.value + "z")
           .get();
 
-      userList.value =
-          result.docs.map((e) => UserModel.fromJson(e.data())).toList();
+      final currentUserId = Get.find<AuthController>().userInfo.value?.uid;
+
+      userList.value = result.docs
+          .map((e) => UserModel.fromJson(e.data()))
+          .where((element) => element.uid.toString() != currentUserId)
+          .toList();
       isLoading.value = false;
     } catch (e) {
       isLoading.value = false;
@@ -50,8 +54,9 @@ class SearchPeopleController extends GetxController {
       ]).get();
 
       return chatDocument.docs.first.reference.id;
-    } catch (e,s) {
-      debugPrint("Exception coming in getting roomId ${e.toString()}${s.toString()}");
+    } catch (e, s) {
+      debugPrint(
+          "Exception coming in getting roomId ${e.toString()}${s.toString()}");
     }
 
     return null;

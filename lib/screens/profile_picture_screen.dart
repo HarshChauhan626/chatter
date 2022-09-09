@@ -1,9 +1,13 @@
+import 'package:chat_app/controllers/update_profile_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:lottie/lottie.dart';
 import 'package:random_avatar/random_avatar.dart';
+import 'package:sizer/sizer.dart';
 
+import '../controllers/auth_controller.dart';
 import '../utils/app_strings.dart';
 import '../utils/asset_strings.dart';
 import '../widgets/alert_dialog.dart';
@@ -20,6 +24,13 @@ class ProfilePictureScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final updateProfileController = Get.find<UpdateProfileController>();
+    final authController =Get.find<AuthController>();
+
+    print("Update profile controller $updateProfileController");
+    print("Update profile controller ${updateProfileController.currentUserInfo.toJson()}");
+
     return CustomSafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -35,7 +46,11 @@ class ProfilePictureScreen extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.edit,color: Colors.black,),
               onPressed: (){
+                showCustomDialog(context,CustomAlertBody.photoSelectionAlert(context,onTapSelectNew: (){
+                  updateProfileController.uploadImage();
+                },onTapTakeNew: (){},onTapRemove: (){
 
+                }));
               },
             ),
             IconButton(
@@ -54,14 +69,38 @@ class ProfilePictureScreen extends StatelessWidget {
               width: double.infinity,
             ),
             Container(
+              height: 70.h,
               child: Hero(
                 tag: "ProfilePictureTag",
-                child: randomAvatar(
-                  "Harsh",
-                  height: 300,
-                  width: double.infinity,
-                  trBackground: true
-                ),
+                child:  Obx(() => Image.network(
+                  authController.userInfo.value?.profilePicture??"",
+                  errorBuilder: (context,error,stacktrace){
+                    debugPrint(error.toString());
+                    return Center(
+                      // child: CircularProgressIndicator(
+                      //   value: loadingProgress.expectedTotalBytes != null
+                      //       ? loadingProgress.cumulativeBytesLoaded /
+                      //       loadingProgress.expectedTotalBytes!
+                      //       : null,
+                      // ),
+                      child: Lottie.asset("assets/image_loading.json",repeat: false),
+                    );
+                  },
+                  fit: BoxFit.fill,
+                  loadingBuilder: (BuildContext context, Widget child,
+                      ImageChunkEvent? loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Center(
+                      // child: CircularProgressIndicator(
+                      //   value: loadingProgress.expectedTotalBytes != null
+                      //       ? loadingProgress.cumulativeBytesLoaded /
+                      //       loadingProgress.expectedTotalBytes!
+                      //       : null,
+                      // ),
+                      child: Lottie.asset("assets/image_loading.json",repeat: true),
+                    );
+                  },
+                )),
               ),
             )
           ],

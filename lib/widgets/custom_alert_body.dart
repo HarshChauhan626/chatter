@@ -1,58 +1,88 @@
 import 'package:chat_app/screens/sign_in_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:lottie/lottie.dart';
 import 'package:sizer/sizer.dart';
 
 import '../utils/app_colors.dart';
 
-class CustomAlertBody{
-  static Widget alertWithOneButtonAlert(BuildContext context,{String? imageLoc,String? title,String? bodyText,String? actionButtonText}){
+class CustomAlertBody {
+  static Widget alertWithOneButtonAlert(BuildContext context,
+      {String? imageLoc,
+      String? title,
+      String? bodyText,
+      String? actionButtonText}) {
     return SizedBox(
-      height: imageLoc!=null?47.h:30.h,
+      height: imageLoc != null ? 47.h : 30.h,
       width: 80.w,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          if(imageLoc!=null)
+          if (imageLoc != null)
             Padding(
-              padding: EdgeInsets.only(top: 4.h,bottom: 2.h),
+              padding: EdgeInsets.only(top: 4.h, bottom: 2.h),
               child: SizedBox(
                   height: 15.h,
                   width: 15.h,
-                  child: Lottie.asset(imageLoc,repeat: false)
-              ),
+                  child: Lottie.asset(imageLoc, repeat: false)),
             ),
           Padding(
-            padding: EdgeInsets.only(left:5.w),
+            padding: EdgeInsets.only(left: 5.w),
             child: Align(
-                alignment:Alignment.center,child: Text(title??"Alert",style: Theme.of(context).textTheme.headline5?.copyWith(fontWeight: FontWeight.w900),)),
+                alignment: Alignment.center,
+                child: Text(
+                  title ?? "Alert",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5
+                      ?.copyWith(fontWeight: FontWeight.w900),
+                )),
           ),
           SizedBox(
             height: 1.h,
           ),
-          Padding(padding: EdgeInsets.symmetric(horizontal: 5.w),child: Align(
-            alignment: Alignment.center,
-            child: Text(bodyText??"Body Text",textAlign: TextAlign.center,style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                color: AppColors.greyColor
-            ),),
-          ),),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 5.w),
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                bodyText ?? "Body Text",
+                textAlign: TextAlign.center,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    ?.copyWith(color: AppColors.greyColor),
+              ),
+            ),
+          ),
           SizedBox(
             height: 4.h,
           ),
-          Padding(padding: EdgeInsets.symmetric(horizontal: 5.w,),child: ElevatedButton(
-            onPressed: (){
-              Navigator.pop(context);
-            },
-            child: Text(actionButtonText??"Ok"),
-          ),)
-
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 5.w,
+            ),
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text(actionButtonText ?? "Ok"),
+            ),
+          )
         ],
       ),
     );
   }
 
-  static Widget alertWithTwoButtons(BuildContext context,{String? title,String? bodyText,String? actionButtonOneText,String? actionButtonTwoText,Function? onTapActionButtonOneText,Function? onTapActionButtonTwoText}){
+  static Widget alertWithTwoButtons(BuildContext context,
+      {String? title,
+      String? bodyText,
+      String? actionButtonOneText,
+      String? actionButtonTwoText,
+      Function? onTapActionButtonOneText,
+      Function? onTapActionButtonTwoText}) {
     return Container(
       width: 80.w,
       padding: EdgeInsets.symmetric(vertical: 4.h),
@@ -62,18 +92,26 @@ class CustomAlertBody{
         children: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 5.w),
-            child: Text(title??"Alert",style: Theme.of(context).textTheme.headline5?.copyWith(fontWeight: FontWeight.w900)),
+            child: Text(title ?? "Alert",
+                style: Theme.of(context)
+                    .textTheme
+                    .headline5
+                    ?.copyWith(fontWeight: FontWeight.w900)),
           ),
           SizedBox(
             height: 2.h,
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 5.w),
-            child: Text(bodyText??"",style: Theme.of(context).textTheme.bodyText1?.copyWith(color: AppColors.greyColor),),
+            child: Text(
+              bodyText ?? "",
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyText1
+                  ?.copyWith(color: AppColors.greyColor),
+            ),
           ),
-          SizedBox(
-            height:6.h
-          ),
+          SizedBox(height: 6.h),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 5.w),
             child: Row(
@@ -86,12 +124,12 @@ class CustomAlertBody{
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           primary: AppColors.textFieldBackgroundColor,
-                          elevation: 3.0
+                          elevation: 3.0),
+                      child: Text(
+                        actionButtonOneText ?? "",
+                        style: const TextStyle(color: Colors.black),
                       ),
-                      child: Text(actionButtonOneText??"",style: const TextStyle(
-                        color: Colors.black
-                      ),),
-                      onPressed: (){
+                      onPressed: () {
                         Navigator.pop(context);
                       },
                     ),
@@ -101,9 +139,10 @@ class CustomAlertBody{
                   child: Padding(
                     padding: const EdgeInsets.only(left: 10.0),
                     child: ElevatedButton(
-                      child: Text(actionButtonTwoText??""),
-                      onPressed: (){
-                        Navigator.pushNamedAndRemoveUntil(context, SignInScreen.routeName, (route) => false);
+                      child: Text(actionButtonTwoText ?? ""),
+                      onPressed: () {
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, SignInScreen.routeName, (route) => false);
                       },
                     ),
                   ),
@@ -116,6 +155,86 @@ class CustomAlertBody{
     );
   }
 
+  static Widget photoSelectionAlert(BuildContext context,
+      {required Function onTapSelectNew, Function? onTapRemove,required Function onTapTakeNew}) {
+    return SizedBox(
+      height: 30.h,
+      width: 80.w,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(left: 5.w, bottom: 2.h, top: 2.h),
+            child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Change photo" ?? "Alert",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5
+                      ?.copyWith(fontWeight: FontWeight.w900),
+                )),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 5.w, top: 1.h),
+            child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Remove photo" ?? "Alert",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge
+                      ?.copyWith(fontWeight: FontWeight.w400),
+                )),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 5.w, top: 2.h),
+            child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Take new photo" ?? "Alert",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge
+                      ?.copyWith(fontWeight: FontWeight.w400),
+                )),
+          ),
+          InkWell(
+            onTap: () {
+              onTapSelectNew();
+            },
+            child: Padding(
+              padding: EdgeInsets.only(left: 5.w, top: 2.h, bottom: 2.h),
+              child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Select new photo" ?? "Alert",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge
+                        ?.copyWith(fontWeight: FontWeight.w400),
+                  )),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(right: 4.w, bottom: 2.h),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                width: 30.w,
+                height: 5.h,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text("Cancel"),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
 }
-
-

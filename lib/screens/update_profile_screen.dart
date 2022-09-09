@@ -1,3 +1,4 @@
+import 'package:chat_app/controllers/auth_controller.dart';
 import 'package:chat_app/controllers/update_profile_controller.dart';
 import 'package:chat_app/screens/profile_picture_screen.dart';
 import 'package:chat_app/utils/extensions.dart';
@@ -61,6 +62,9 @@ class UpdateProfileScreen extends StatelessWidget {
 
 
   Widget getProfileView(BuildContext context){
+
+
+
     return AnimatedColumn(
       animationType: AnimationType.vertical,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -72,10 +76,26 @@ class UpdateProfileScreen extends StatelessWidget {
         InkWell(
           child: Hero(
             tag: "ProfilePictureTag",
-            child: randomAvatar(
-              "Harsh",
+            child:Container(
               height: 120,
               width: 120,
+              child: Obx((){
+
+                final profilePicture=Get.find<AuthController>().userInfo.value?.profilePicture??"";
+
+                if(profilePicture.isNotEmpty){
+                  return CircleAvatar(
+                    backgroundImage: NetworkImage(
+                      updateProfileController.currentUserInfo.value?.profilePicture??"",
+                    ),
+                  );
+                }
+                return randomAvatar(
+                  "Harsh",
+                  height: 120,
+                  width: 120,
+                );
+              }),
             ),
           ),
           onTap: () {
@@ -183,3 +203,9 @@ class UpdateProfileScreen extends StatelessWidget {
 
 
 }
+
+
+
+
+// https://fidev.io/ok-google-flutter/
+

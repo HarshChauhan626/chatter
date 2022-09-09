@@ -52,6 +52,8 @@ dependencies:
   path_provider: ^2.0.11
   uuid: ^3.0.6
   get:
+  image_picker:
+  permission_handler:
 
 dev_dependencies:
   flutter_test:

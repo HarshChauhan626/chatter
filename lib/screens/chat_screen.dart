@@ -3,6 +3,7 @@ import 'package:chat_app/controllers/chat_controller.dart';
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/widgets/custom_route_builder.dart';
 import 'package:chat_app/widgets/custom_safe_area.dart';
+import 'package:chat_app/widgets/profile_picture_avatar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -89,7 +90,11 @@ class ChatScreen extends StatelessWidget {
   PreferredSizeWidget getAppBar(BuildContext context) {
     final chatController = Get.find<ChatController>();
 
+    final receiverModel=chatController.receiverModel;
+
     debugPrint("Username coming is ${chatController.receiverModel}");
+
+    final receiverProfilePicture=receiverModel?.profilePicture??"";
 
     return PreferredSize(
       preferredSize: Size(double.infinity, 8.h),
@@ -115,13 +120,7 @@ class ChatScreen extends StatelessWidget {
                 Navigator.pop(context);
               },
             ),
-            Container(
-              child: randomAvatar(
-                chatController.receiverModel?.userName ?? "",
-                height: 40,
-                width: 40,
-              ),
-            ),
+            ProfilePictureAvatar(profilePictureLink: receiverProfilePicture),
             const SizedBox(
               width: 8.0,
             ),

@@ -233,6 +233,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget getAppBar() {
+
+    final currentUserInfo=Get.find<AuthController>().userInfo.value;
+    final currentUserProfilePicture=currentUserInfo?.profilePicture??"";
+
     return SliverAppBar(
       floating: true,
       expandedHeight: 140.0,
@@ -264,8 +268,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             fontWeight: FontWeight.w900),
                       ),
                       InkWell(
-                        child: randomAvatar(
-                          "Harsh Chauhan",
+                        child: currentUserProfilePicture.isNotEmpty?CircleAvatar(
+                          backgroundImage: NetworkImage(currentUserProfilePicture,
+                          ),
+                        ):randomAvatar(
+                          "Harsh",
                           height: 30,
                           width: 30,
                         ),

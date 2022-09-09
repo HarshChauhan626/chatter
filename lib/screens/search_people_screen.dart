@@ -79,10 +79,20 @@ class SearchPeopleScreen extends StatelessWidget {
         Get.toNamed(ChatScreen.routeName,arguments: arguments);
       },
       title: Text(userModel.userName.toString()),
-      leading: randomAvatar(
-        userModel.userName.toString(),
-        height: 35,
-        width: 35,
+      leading: CircleAvatar(
+        radius: 20.0,
+        child:
+
+          userModel.profilePicture!.isNotEmpty
+            ?CircleAvatar(
+              backgroundImage: NetworkImage(userModel.profilePicture!,
+              ),
+            )
+          :randomAvatar(
+            "Harsh",
+            height: 30,
+            width: 30,
+          )
       ),
     );
   }

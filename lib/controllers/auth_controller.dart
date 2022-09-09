@@ -14,7 +14,7 @@ class AuthController extends GetxController {
   // static AuthController instance = Get.find();
   late Rx<User?> firebaseUser;
 
-  UserModel? userInfo;
+  final userInfo=Rxn<UserModel>();
 
   late Rx<GoogleSignInAccount?> googleSignInAccount;
 
@@ -28,7 +28,7 @@ class AuthController extends GetxController {
     googleSignInAccount = Rx<GoogleSignInAccount?>(
         FirebaseHelper.googleSignInstance?.currentUser);
 
-    if(firebaseUser.value!=null){
+    if (firebaseUser.value != null) {
       updateUserLogin(isDisposing: false);
     }
 
@@ -42,18 +42,15 @@ class AuthController extends GetxController {
     // ever(googleSignInAccount, _setInitialScreenGoogle);
   }
 
-
   @override
-  void onClose(){
-    if(firebaseUser.value!=null){
+  void onClose() {
+    if (firebaseUser.value != null) {
       updateUserLogin(isDisposing: true);
     }
   }
 
-
   _setInitialScreen(User? user) {
-
-    if(Get.find<HiveDBHelper>().onboardingDone){
+    if (Get.find<HiveDBHelper>().onboardingDone) {
       // if (user != null) {
       //   Get.offAllNamed(HomeScreen.routeName);
       // } else {
@@ -128,15 +125,15 @@ class AuthController extends GetxController {
     try {
       UserCredential userCredential = await FirebaseHelper.authInstance!
           .signInWithEmailAndPassword(email: email, password: password);
-      if(userCredential.user!=null){
+      if (userCredential.user != null) {
         await setUserInfo();
         return true;
-      }
-      else{
+      } else {
         return false;
       }
     } catch (firebaseAuthException) {
-      print("Firebase auth exception coming is ${firebaseAuthException.toString()}");
+      print(
+          "Firebase auth exception coming is ${firebaseAuthException.toString()}");
       return false;
     }
   }
@@ -146,40 +143,42 @@ class AuthController extends GetxController {
     await FirebaseHelper.authInstance!.signOut();
   }
 
-  Future<void> updateUserLogin({required bool isDisposing})async{
-    final userCollectionRef = FirebaseHelper.fireStoreInstance!.collection("user");
+  Future<void> updateUserLogin({required bool isDisposing}) async {
+    final userCollectionRef =
+        FirebaseHelper.fireStoreInstance!.collection("user");
 
-    final documentReference=userCollectionRef.doc(firebaseUser.value?.uid);
+    final documentReference = userCollectionRef.doc(firebaseUser.value?.uid);
 
-    final userDocument=await documentReference.get();
+    final userDocument = await documentReference.get();
 
-    if(userDocument.exists){
-      if(isDisposing){
-        await documentReference.update({"isOnline":false,"lastOnline":DateTime.now().millisecondsSinceEpoch.toString()});
-      }
-      else{
-        await documentReference.update({"isOnline":true});
+    if (userDocument.exists) {
+      if (isDisposing) {
+        await documentReference.update({
+          "isOnline": false,
+          "lastOnline": DateTime.now().millisecondsSinceEpoch.toString()
+        });
+      } else {
+        await documentReference.update({"isOnline": true});
       }
     }
-
   }
 
-  Future<void> setUserInfo()async{
-    try{
+  Future<void> setUserInfo() async {
+    try {
       final userCollectionRef =
-      FirebaseHelper.fireStoreInstance!.collection("user");
+          FirebaseHelper.fireStoreInstance!.collection("user");
 
-      final docReference=await userCollectionRef.doc(firebaseUser.value?.uid).get();
+      final docReference =
+          await userCollectionRef.doc(firebaseUser.value?.uid).get();
 
-      if(docReference.exists){
-        userInfo=UserModel.fromJson(docReference.data() as Map<String,dynamic>);
+      if (docReference.exists) {
+        userInfo?.value =
+            UserModel.fromJson(docReference.data() as Map<String, dynamic>);
       }
-    }
-    catch(e,s){
-      print("Exception coming in set user info ${e.toString()} ${s.toString()}");
+    } catch (e, s) {
+      print(
+          "Exception coming in set user info ${e.toString()} ${s.toString()}");
     }
   }
-
-
 
 }

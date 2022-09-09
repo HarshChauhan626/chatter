@@ -1,7 +1,13 @@
+import 'dart:io';
+
 import 'package:chat_app/controllers/auth_controller.dart';
 import 'package:chat_app/models/user_model.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../helper/firebase_helper.dart';
 import '../utils/app_strings.dart';
@@ -14,6 +20,7 @@ class UpdateProfileController extends GetxController {
   RxString errorMessage = "".obs;
   RxBool isLoading = false.obs;
   RxBool isUpdating = false.obs;
+  RxString imageUrl = "".obs;
 
   // TextEditingController? userNameController=TextEditingController();
   // TextEditingController? emailController=TextEditingController();
@@ -29,7 +36,6 @@ class UpdateProfileController extends GetxController {
 
   @override
   void onReady() {
-    // TODO: implement onReady
     super.onReady();
     initData();
   }
@@ -41,15 +47,10 @@ class UpdateProfileController extends GetxController {
   //
   // }
 
-  @override
-  void onClose() {
-    // TODO: implement onClose
-    super.onClose();
-  }
 
   void initData() async {
     try {
-      currentUserInfo.value = Get.find<AuthController>().userInfo;
+      currentUserInfo.value = Get.find<AuthController>().userInfo?.value;
       if (currentUserInfo.value != null) {
         username.value = currentUserInfo.value!.userName ?? "";
         firstName.value = currentUserInfo.value!.firstName ?? "";
@@ -104,6 +105,88 @@ class UpdateProfileController extends GetxController {
               bodyText: AppStrings.somethingWentWrong,
               actionButtonText: AppStrings.gotIt));
       print("Exception coming in updating user profile ${e.toString()}");
+    }
+  }
+
+  uploadImage() async {
+    final _firebaseStorage = FirebaseHelper.firebaseStorage;
+    final _imagePicker = ImagePicker();
+    XFile? image;
+    //Check Permissions
+    await Permission.photos.request();
+
+    var permissionStatus = await Permission.photos.status;
+
+    if (permissionStatus.isGranted) {
+      //Select Image
+      final storageRef = FirebaseHelper.firebaseStorage?.ref();
+
+// Create a reference to "mountains.jpg"
+
+      final imageName = "profile_pic_${currentUserInfo.value?.uid}.jpg";
+
+      final profileRef = storageRef?.child(imageName);
+
+      final profileImageRef = storageRef?.child(imageName);
+
+      image = await _imagePicker.pickImage(source: ImageSource.gallery);
+      File? imageFile;
+
+      if (image != null && profileRef != null) {
+        imageFile = File(image.path);
+        profileRef.putFile(imageFile).snapshotEvents.listen((taskSnapshot) async {
+          switch (taskSnapshot.state) {
+            case TaskState.running:
+              final progress = 100.0 *
+                  (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes);
+              print("Upload is $progress% complete.");
+              break;
+            case TaskState.paused:
+              print("Upload is paused.");
+              break;
+            case TaskState.canceled:
+              print("Upload was canceled");
+              break;
+            case TaskState.error:
+              // Handle unsuccessful uploads
+              break;
+            case TaskState.success:
+              // Handle successful uploads on complete
+              // ...
+              imageUrl.value=await profileRef.getDownloadURL();
+              await updateProfilePicture();
+              break;
+          }
+        });
+      }
+    } else {
+      debugPrint('Permission not granted. Try Again with permission access');
+    }
+  }
+
+
+  Future<void> updateProfilePicture() async {
+    try {
+
+      Map<String,dynamic> updatedInfo={
+        "profilePicture":imageUrl.value.toString()
+      };
+
+      final userCollectionRef =
+      FirebaseHelper.fireStoreInstance!.collection("user");
+
+      final documentReference = userCollectionRef.doc(currentUserInfo.value?.uid);
+
+      final userDocument = await documentReference.get();
+
+      if (userDocument.exists) {
+        await documentReference.update(updatedInfo);
+      }
+
+      Get.find<AuthController>().userInfo.value?.profilePicture=imageUrl.value.toString();
+
+    } catch (e) {
+      rethrow;
     }
   }
 }
