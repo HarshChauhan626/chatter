@@ -14,29 +14,28 @@ import '../widgets/alert_dialog.dart';
 import '../widgets/custom_alert_body.dart';
 import '../widgets/custom_safe_area.dart';
 
-
 class ProfilePictureScreen extends StatelessWidget {
-
-  static String routeName="/profile_picture_screen";
-
+  static String routeName = "/profile_picture_screen";
 
   const ProfilePictureScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
     final updateProfileController = Get.find<UpdateProfileController>();
-    final authController =Get.find<AuthController>();
 
     print("Update profile controller $updateProfileController");
-    print("Update profile controller ${updateProfileController.currentUserInfo.toJson()}");
+    print(
+        "Update profile controller ${updateProfileController.currentUserInfo.toJson()}");
 
     return CustomSafeArea(
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            icon: const Icon(CupertinoIcons.back,color: Colors.black,),
-            onPressed: (){
+            icon: const Icon(
+              CupertinoIcons.back,
+              color: Colors.black,
+            ),
+            onPressed: () {
               Get.back();
             },
           ),
@@ -44,20 +43,25 @@ class ProfilePictureScreen extends StatelessWidget {
           title: const Text("Profile photo"),
           actions: [
             IconButton(
-              icon: const Icon(Icons.edit,color: Colors.black,),
-              onPressed: (){
-                showCustomDialog(context,CustomAlertBody.photoSelectionAlert(context,onTapSelectNew: (){
-                  updateProfileController.uploadImage();
-                },onTapTakeNew: (){},onTapRemove: (){
-
-                }));
+              icon: const Icon(
+                Icons.edit,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                showCustomDialog(
+                    context,
+                    CustomAlertBody.photoSelectionAlert(context,
+                        onTapSelectNew: () {
+                      updateProfileController.uploadImage();
+                    }, onTapTakeNew: () {}, onTapRemove: () {}));
               },
             ),
             IconButton(
-              icon: const Icon(Icons.share,color: Colors.black,),
-              onPressed: (){
-
-              },
+              icon: const Icon(
+                Icons.share,
+                color: Colors.black,
+              ),
+              onPressed: () {},
             ),
           ],
         ),
@@ -72,35 +76,40 @@ class ProfilePictureScreen extends StatelessWidget {
               height: 70.h,
               child: Hero(
                 tag: "ProfilePictureTag",
-                child:  Obx(() => Image.network(
-                  authController.userInfo.value?.profilePicture??"",
-                  errorBuilder: (context,error,stacktrace){
-                    debugPrint(error.toString());
-                    return Center(
-                      // child: CircularProgressIndicator(
-                      //   value: loadingProgress.expectedTotalBytes != null
-                      //       ? loadingProgress.cumulativeBytesLoaded /
-                      //       loadingProgress.expectedTotalBytes!
-                      //       : null,
-                      // ),
-                      child: Lottie.asset("assets/image_loading.json",repeat: false),
-                    );
-                  },
-                  fit: BoxFit.fill,
-                  loadingBuilder: (BuildContext context, Widget child,
-                      ImageChunkEvent? loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Center(
-                      // child: CircularProgressIndicator(
-                      //   value: loadingProgress.expectedTotalBytes != null
-                      //       ? loadingProgress.cumulativeBytesLoaded /
-                      //       loadingProgress.expectedTotalBytes!
-                      //       : null,
-                      // ),
-                      child: Lottie.asset("assets/image_loading.json",repeat: true),
-                    );
-                  },
-                )),
+                child: Obx(() {
+                  final authController = Get.find<AuthController>();
+                  return Image.network(
+                    authController.userInfo.value?.profilePicture ?? "",
+                    errorBuilder: (context, error, stacktrace) {
+                      debugPrint(error.toString());
+                      return Center(
+                        // child: CircularProgressIndicator(
+                        //   value: loadingProgress.expectedTotalBytes != null
+                        //       ? loadingProgress.cumulativeBytesLoaded /
+                        //       loadingProgress.expectedTotalBytes!
+                        //       : null,
+                        // ),
+                        child: Lottie.asset("assets/image_loading.json",
+                            repeat: false),
+                      );
+                    },
+                    fit: BoxFit.fill,
+                    loadingBuilder: (BuildContext context, Widget child,
+                        ImageChunkEvent? loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Center(
+                        // child: CircularProgressIndicator(
+                        //   value: loadingProgress.expectedTotalBytes != null
+                        //       ? loadingProgress.cumulativeBytesLoaded /
+                        //       loadingProgress.expectedTotalBytes!
+                        //       : null,
+                        // ),
+                        child: Lottie.asset("assets/image_loading.json",
+                            repeat: true),
+                      );
+                    },
+                  );
+                }),
               ),
             )
           ],
@@ -109,11 +118,3 @@ class ProfilePictureScreen extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-
-
-

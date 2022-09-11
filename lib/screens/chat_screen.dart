@@ -1,5 +1,6 @@
 import 'package:chat_app/controllers/auth_controller.dart';
 import 'package:chat_app/controllers/chat_controller.dart';
+import 'package:chat_app/screens/receiver_profile_screen.dart';
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/widgets/custom_route_builder.dart';
 import 'package:chat_app/widgets/custom_safe_area.dart';
@@ -82,7 +83,7 @@ class ChatScreen extends StatelessWidget {
         backgroundColor: AppColors.whiteColor,
         appBar: getAppBar(context),
         body: getBody(),
-        bottomSheet: getInputField(context),
+        bottomNavigationBar: getInputField(context),
       ),
     );
   }
@@ -120,7 +121,12 @@ class ChatScreen extends StatelessWidget {
                 Navigator.pop(context);
               },
             ),
-            ProfilePictureAvatar(profilePictureLink: receiverProfilePicture),
+            InkWell(
+                child: Hero(tag: "ReceiverProfilePicture", child: ProfilePictureAvatar(profilePictureLink: receiverProfilePicture)),
+              onTap: (){
+                  Get.toNamed(ReceiverProfileScreen.routeName);
+              },
+            ),
             const SizedBox(
               width: 8.0,
             ),
@@ -171,7 +177,7 @@ class ChatScreen extends StatelessWidget {
 
   Widget getMessageList() {
     return SizedBox(
-      height: 79.h,
+      height: 89.h,
       child: Align(
         alignment: Alignment.bottomCenter,
         child: StreamBuilder(
@@ -253,90 +259,93 @@ class ChatScreen extends StatelessWidget {
   Widget getInputField(BuildContext context) {
     final chatController = Get.find<ChatController>();
 
-    return Container(
-      decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(4.w),
-            topRight: Radius.circular(4.w),
-          )),
-      alignment: Alignment.center,
-      height: 10.h,
-      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Container(
-                  height: 7.h,
-                  decoration: BoxDecoration(
-                    color: AppColors.textFieldBackgroundColor,
-                    borderRadius: BorderRadius.circular(15.0),
-                    boxShadow: [
-                      BoxShadow(
-                          offset: const Offset(0, 2),
-                          blurRadius: 7,
-                          color: Colors.grey.shade400)
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      getMoodIconButton(),
-                      Expanded(
-                        child: SizedBox(
-                          // width: 42.w,
-                          child: TextField(
-                            onChanged: (value) {
-                              chatController.message.value = value;
-                            },
-                            controller: chatController.messageFieldController,
-                            decoration: InputDecoration(
-                                filled: true,
-                                fillColor: AppColors.textFieldBackgroundColor,
-                                hintText: AppStrings.message,
-                                hintStyle: Theme.of(context)
-                                    .textTheme
-                                    .subtitle1
-                                    ?.copyWith(
-                                        color: AppColors.greyColor?.darken(30)),
-                                border: InputBorder.none),
+    return Padding(
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      child: Container(
+        decoration: BoxDecoration(
+            color: AppColors.whiteColor,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(4.w),
+              topRight: Radius.circular(4.w),
+            )),
+        alignment: Alignment.center,
+        height: 10.h,
+        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 7.h,
+                    decoration: BoxDecoration(
+                      color: AppColors.textFieldBackgroundColor,
+                      borderRadius: BorderRadius.circular(15.0),
+                      boxShadow: [
+                        BoxShadow(
+                            offset: const Offset(0, 2),
+                            blurRadius: 7,
+                            color: Colors.grey.shade400)
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        getMoodIconButton(),
+                        Expanded(
+                          child: SizedBox(
+                            // width: 42.w,
+                            child: TextField(
+                              onChanged: (value) {
+                                chatController.message.value = value;
+                              },
+                              controller: chatController.messageFieldController,
+                              decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: AppColors.textFieldBackgroundColor,
+                                  hintText: AppStrings.message,
+                                  hintStyle: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1
+                                      ?.copyWith(
+                                          color: AppColors.greyColor?.darken(30)),
+                                  border: InputBorder.none),
+                            ),
                           ),
                         ),
-                      ),
-                      getAttachFileButton(),
-                      Obx(() => chatController.message.value.isNotEmpty
-                          ? const SizedBox()
-                          : getCameraButton()),
-                    ],
+                        getAttachFileButton(),
+                        Obx(() => chatController.message.value.isNotEmpty
+                            ? const SizedBox()
+                            : getCameraButton()),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 10),
-              InkWell(
-                onTap: (){
-                  if(chatController.message.value.isNotEmpty){
-                    callSendMessage();
-                  }
-                  else{
-                    print("Voice recording tapped");
-                  }
-                },
-                child: Container(
-                    padding: const EdgeInsets.all(15.0),
-                    decoration: const BoxDecoration(
-                        color: AppColors.primaryColor,
-                        borderRadius: BorderRadius.all(Radius.circular(12.0))),
-                    child: Obx(() => chatController.message.value.isNotEmpty
-                        ? getSendMessageButton()
-                        : getVoiceRecordingButton())),
-              )
-            ],
-          )
-        ],
+                const SizedBox(width: 10),
+                InkWell(
+                  onTap: (){
+                    if(chatController.message.value.isNotEmpty){
+                      callSendMessage();
+                    }
+                    else{
+                      print("Voice recording tapped");
+                    }
+                  },
+                  child: Container(
+                      padding: const EdgeInsets.all(15.0),
+                      decoration: const BoxDecoration(
+                          color: AppColors.primaryColor,
+                          borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                      child: Obx(() => chatController.message.value.isNotEmpty
+                          ? getSendMessageButton()
+                          : getVoiceRecordingButton())),
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

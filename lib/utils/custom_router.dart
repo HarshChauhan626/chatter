@@ -6,6 +6,7 @@ import 'package:chat_app/screens/home_screen.dart';
 import 'package:chat_app/screens/onboarding_screen.dart';
 import 'package:chat_app/screens/profile_picture_screen.dart';
 import 'package:chat_app/screens/profile_screen.dart';
+import 'package:chat_app/screens/receiver_profile_screen.dart';
 import 'package:chat_app/screens/reset_password.dart';
 import 'package:chat_app/screens/search_conversation_screen.dart';
 import 'package:chat_app/screens/search_people_screen.dart';
@@ -171,6 +172,14 @@ class GetXRouter {
         page: () => const ProfilePictureScreen(),
         middlewares: [MyMiddleware()],
         transition: Transition.native,
+        // customTransition: SizeTransition(),
+        transitionDuration: const Duration(milliseconds: 400),
+      ),
+      GetPage(
+        name: ReceiverProfileScreen.routeName,
+        page: () => const ReceiverProfileScreen(),
+        middlewares: [MyMiddleware()],
+        transition: Transition.rightToLeft,
         // customTransition: SizeTransition(),
         transitionDuration: const Duration(milliseconds: 400),
       ),

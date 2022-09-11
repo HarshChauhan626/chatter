@@ -108,7 +108,7 @@ class UpdateProfileController extends GetxController {
     }
   }
 
-  uploadImage() async {
+  void uploadImage() async {
     final _firebaseStorage = FirebaseHelper.firebaseStorage;
     final _imagePicker = ImagePicker();
     XFile? image;
@@ -183,7 +183,10 @@ class UpdateProfileController extends GetxController {
         await documentReference.update(updatedInfo);
       }
 
-      Get.find<AuthController>().userInfo.value?.profilePicture=imageUrl.value.toString();
+      final currentUserModel=Get.find<AuthController>().userInfo.value;
+
+      Get.find<AuthController>().userInfo.value=currentUserModel?.copyWith(profilePicture: imageUrl.value.toString());
+
 
     } catch (e) {
       rethrow;

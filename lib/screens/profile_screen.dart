@@ -51,9 +51,7 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-    final authController=Get.find<AuthController>();
-    
+
     return CustomSafeArea(
       child: Scaffold(
         // backgroundColor: AppColors.textFieldBackgroundColor,
@@ -84,7 +82,13 @@ class ProfileScreen extends StatelessWidget {
                   width: 120,
                   child: Obx((){
 
-                    final profilePicture = authController.userInfo.value?.profilePicture??"";
+                    final authController=Get.find<AuthController>();
+
+                    final userModel = authController.userInfo.value;
+
+                    final profilePicture=userModel?.profilePicture??"";
+
+                    print("Profile picture coming on profile screen is $profilePicture");
 
                     return ProfilePictureAvatar(profilePictureLink: profilePicture,height: 120.0,width: 120.0,);
 
@@ -97,17 +101,26 @@ class ProfileScreen extends StatelessWidget {
               Padding(
                   padding: const EdgeInsets.only(top: 15.0, bottom: 8.0),
                   child: Obx(() {
+
+                    final authController=Get.find<AuthController>();
+
                     return Text(
                       authController.userInfo.value?.userName??"",
                       style: Theme.of(context).textTheme.headline6,
                     );
                   })
               ),
-              Obx(() => Text(
-                authController.userInfo.value?.email??"",
-                style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                    fontWeight: FontWeight.bold, color: AppColors.greyColor),
-              )),
+              Obx((){
+
+                final authController=Get.find<AuthController>();
+
+                return Text(
+                  authController.userInfo.value?.email??"",
+                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                      fontWeight: FontWeight.bold, color: AppColors.greyColor),
+                );
+              }
+              ),
               // Padding(
               //   padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 3.h),
               //   child: ElevatedButton(

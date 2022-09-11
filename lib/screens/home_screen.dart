@@ -14,6 +14,7 @@ import 'package:chat_app/widgets/custom_bottom_navigation_bar_2.dart';
 import 'package:chat_app/widgets/custom_route_builder.dart';
 import 'package:chat_app/widgets/custom_safe_area.dart';
 import 'package:chat_app/widgets/input_text_field.dart';
+import 'package:chat_app/widgets/profile_picture_avatar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -233,9 +234,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget getAppBar() {
-
-    final currentUserInfo=Get.find<AuthController>().userInfo.value;
-    final currentUserProfilePicture=currentUserInfo?.profilePicture??"";
+    final currentUserInfo = Get.find<AuthController>().userInfo.value;
+    final currentUserProfilePicture = currentUserInfo?.profilePicture ?? "";
 
     return SliverAppBar(
       floating: true,
@@ -268,14 +268,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             fontWeight: FontWeight.w900),
                       ),
                       InkWell(
-                        child: currentUserProfilePicture.isNotEmpty?CircleAvatar(
-                          backgroundImage: NetworkImage(currentUserProfilePicture,
-                          ),
-                        ):randomAvatar(
-                          "Harsh",
-                          height: 30,
-                          width: 30,
-                        ),
+                        child: currentUserProfilePicture.isNotEmpty
+                            ? CircleAvatar(
+                                backgroundImage: NetworkImage(
+                                  currentUserProfilePicture,
+                                ),
+                              )
+                            : randomAvatar(
+                                "Harsh",
+                                height: 30,
+                                width: 30,
+                              ),
                         onTap: () {
                           Get.toNamed('/profile');
                         },
@@ -399,13 +402,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     return SliverList(
         delegate: SliverChildBuilderDelegate((context, index) {
       // return AnimationConfiguration.staggeredList(duration: const Duration(milliseconds: 400),position: index, child: getChatListItem(index));
-      return getChatListItem(roomModelList[index],index);
+      return getChatListItem(roomModelList[index], index);
     }, childCount: roomModelList.length));
   }
 
-  Widget getChatListItem(RoomModel roomModel,int index) {
-
-    final userId=Get.find<AuthController>().firebaseUser.value?.uid;
+  Widget getChatListItem(RoomModel roomModel, int index) {
+    final userId = Get.find<AuthController>().firebaseUser.value?.uid;
 
     // final receiverModel=roomModel.userInfoList?.map((e) {
     //   if(e.uid.toString()!=userId?.toString()){
@@ -415,41 +417,48 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
     UserModel? receiverModel;
 
-    String messageContent=roomModel.latestMessage?.content??"";
+    String messageContent = roomModel.latestMessage?.content ?? "";
 
-    bool isSeen=roomModel.latestMessage?.isSeenBy?.where((element) => element.uid==userId).isNotEmpty??true;
+    bool isSeen = roomModel.latestMessage?.isSeenBy
+            ?.where((element) => element.uid == userId)
+            .isNotEmpty ??
+        true;
 
-    for(var element in roomModel.userInfoList!){
+    for (var element in roomModel.userInfoList!) {
       print("Element id coming is ${element.uid}");
-      if(element.uid.toString()!=userId?.toString()){
-        receiverModel=element;
+      if (element.uid.toString() != userId?.toString()) {
+        receiverModel = element;
       }
     }
 
+    final profilePicture = receiverModel?.profilePicture ?? "";
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4.0),
       child: ListTile(
         onTap: () {
-          Get.toNamed(ChatScreen.routeName,arguments: {"roomId":roomModel.roomId,"receiverModel":receiverModel});
+          Get.toNamed(ChatScreen.routeName, arguments: {
+            "roomId": roomModel.roomId,
+            "receiverModel": receiverModel
+          });
         },
         tileColor: AppColors.whiteColor,
-        leading: randomAvatar(
-          receiverModel?.userName??"$index",
-          height: 50,
-          width: 52,
+        leading: ProfilePictureAvatar(
+          profilePictureLink: profilePicture,
+          height: 50.0,
+          width: 52.0,
         ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              receiverModel?.userName??"",
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyText1
-                  ?.copyWith(fontWeight: FontWeight.bold,color: AppColors.blackTextColor),
+              receiverModel?.userName ?? "",
+              style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                  fontWeight: FontWeight.bold, color: AppColors.blackTextColor),
             ),
-            Text(UtilFunctions().parseTimeStamp(roomModel.latestMessage?.timestamp),
+            Text(
+                UtilFunctions()
+                    .parseTimeStamp(roomModel.latestMessage?.timestamp),
                 style: Theme.of(context)
                     .textTheme
                     .subtitle2
@@ -460,12 +469,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           children: [
             Container(
               width: 65.w,
-              child:
-              Text(messageContent,
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle2
-                      ?.copyWith(color: isSeen?Colors.black54:AppColors.blackTextColor,overflow: TextOverflow.ellipsis)),
+              child: Text(messageContent,
+                  style: Theme.of(context).textTheme.subtitle2?.copyWith(
+                      color: isSeen ? Colors.black54 : AppColors.blackTextColor,
+                      overflow: TextOverflow.ellipsis)),
             )
           ],
         ),
