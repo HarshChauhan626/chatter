@@ -54,6 +54,7 @@ dependencies:
   get:
   image_picker:
   permission_handler:
+  scroll_to_index: ^3.0.1
 
 dev_dependencies:
   flutter_test:

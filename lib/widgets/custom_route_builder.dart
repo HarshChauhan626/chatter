@@ -25,7 +25,6 @@ class CustomRouteBuilder extends PageRouteBuilder {
             });
 }
 
-
 class SizeTransitions extends CustomTransition {
   @override
   Widget buildTransition(

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -6,25 +7,21 @@ import '../models/user_model.dart';
 import 'auth_controller.dart';
 
 class HomeController extends GetxController {
-  // Future<dynamic> getChatList(){
-  //
-  // }
-
   Stream? chatList;
 
   String? senderId;
 
+  RxList<String> selectedChatIdList = <String>[].obs;
+
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
     initData();
   }
 
-  void initData()async{
+  void initData() async {
     await initChatList();
   }
-
 
   Future<void> initChatList() async {
     try {
@@ -33,16 +30,14 @@ class HomeController extends GetxController {
 
       senderId = Get.find<AuthController>().firebaseUser.value?.uid;
 
-      chatList = chatCollectionRef.where("userList",arrayContains: senderId).snapshots();
-
+      chatList = chatCollectionRef
+          .where("userList", arrayContains: senderId)
+          .snapshots();
     } catch (e, s) {
-      print(
+      if (kDebugMode) {
+        print(
           "Exception coming in initializing chat list is ${e.toString()} ${s.toString()}");
+      }
     }
   }
-
-
-
-
-
 }

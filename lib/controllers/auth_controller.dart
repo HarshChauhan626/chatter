@@ -3,6 +3,7 @@ import 'package:chat_app/screens/sign_in_screen.dart';
 import 'package:chat_app/screens/sign_up_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:get/get.dart';
 
@@ -14,7 +15,7 @@ class AuthController extends GetxController {
   // static AuthController instance = Get.find();
   late Rx<User?> firebaseUser;
 
-  final userInfo=Rxn<UserModel>();
+  final userInfo = Rxn<UserModel>();
 
   late Rx<GoogleSignInAccount?> googleSignInAccount;
 
@@ -37,9 +38,23 @@ class AuthController extends GetxController {
     firebaseUser.bindStream(FirebaseHelper.authInstance!.userChanges());
     ever(firebaseUser, _setInitialScreen);
 
+    _generateRandomNumber();
+
     // googleSignInAccount
     //     .bindStream(FirebaseHelper.googleSignInstance!.onCurrentUserChanged);
     // ever(googleSignInAccount, _setInitialScreenGoogle);
+  }
+
+  Future<void> _generateRandomNumber() async {
+    int random;
+    const platform = MethodChannel('example.com/channel');
+    try {
+      random = await platform.invokeMethod('getRandomNumber');
+      debugPrint(
+          "Random number from method chanelling is ${random.toString()}");
+    } on PlatformException catch (e) {
+      random = 0;
+    }
   }
 
   @override
@@ -180,5 +195,4 @@ class AuthController extends GetxController {
           "Exception coming in set user info ${e.toString()} ${s.toString()}");
     }
   }
-
 }

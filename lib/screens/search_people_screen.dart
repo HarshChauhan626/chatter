@@ -35,8 +35,6 @@ class SearchPeopleScreen extends StatelessWidget {
         child: Scaffold(
             appBar: getAppBar(context),
             body: Obx((){
-              print("Obx called");
-              print(controller.isLoading.value);
               if (controller.searchText.isNotEmpty) {
                 if (controller.isLoading.value) {
                   return const Center(

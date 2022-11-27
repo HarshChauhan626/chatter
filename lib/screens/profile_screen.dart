@@ -174,7 +174,7 @@ class ProfileScreen extends StatelessWidget {
           padding: const EdgeInsets.only(top: 10.0),
           child: Card(
             color: AppColors.textFieldBackgroundColor,
-            elevation: 2.0,
+            elevation: 0.0,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10.0),
               child: ListView.separated(

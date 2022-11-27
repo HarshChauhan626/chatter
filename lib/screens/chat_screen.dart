@@ -1,7 +1,9 @@
 import 'package:chat_app/controllers/auth_controller.dart';
 import 'package:chat_app/controllers/chat_controller.dart';
 import 'package:chat_app/screens/receiver_profile_screen.dart';
+import 'package:chat_app/screens/search_conversation_screen.dart';
 import 'package:chat_app/utils/app_colors.dart';
+import 'package:chat_app/widgets/attachment_menu_bottom_sheet.dart';
 import 'package:chat_app/widgets/custom_route_builder.dart';
 import 'package:chat_app/widgets/custom_safe_area.dart';
 import 'package:chat_app/widgets/profile_picture_avatar.dart';
@@ -10,6 +12,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:random_avatar/random_avatar.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:sizer/sizer.dart';
 import 'package:chat_app/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
@@ -17,33 +20,12 @@ import '../helper/firebase_helper.dart';
 import '../models/message_model.dart';
 import '../utils/app_strings.dart';
 
-// class ChatScreen extends StatefulWidget {
-//   const ChatScreen({Key? key}) : super(key: key);
-//
-//   static const String routeName = '/chat';
-//
-//   static Route route() {
-//     // return MaterialPageRoute(
-//     //     settings: const RouteSettings(name: routeName),
-//     //     builder: (_) =>const ChatScreen()
-//     // );
-//     return CustomRouteBuilder(page: const ChatScreen(), routeName: routeName);
-//   }
-//
-//   @override
-//   State<ChatScreen> createState() => _ChatScreenState();
-// }
-
 class ChatScreen extends StatelessWidget {
   ChatScreen({Key? key}) : super(key: key);
 
   static const String routeName = '/chat';
 
   static Route route() {
-    // return MaterialPageRoute(
-    //     settings: const RouteSettings(name: routeName),
-    //     builder: (_) =>const ChatScreen()
-    // );
     return CustomRouteBuilder(page: ChatScreen(), routeName: routeName);
   }
 
@@ -51,16 +33,21 @@ class ChatScreen extends StatelessWidget {
 
   ChatController controller = Get.find<ChatController>();
 
-  List<String> messageList = [
-    for (int i = 0; i < 100; i++) "My message $i",
-  ];
+  AutoScrollController? autoScrollController;
+
 
   void callEmoji() {
     debugPrint('Emoji Icon Pressed...');
   }
 
-  void callAttachFile() {
+  void callAttachFile(BuildContext context) {
     debugPrint('Attach File Icon Pressed...');
+    showModalBottomSheet(
+        context: context,
+        useRootNavigator: true,
+        builder: (context) => const AttachmentMenuBottomSheet(),
+    );
+
   }
 
   void callCamera() {
@@ -77,6 +64,10 @@ class ChatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    autoScrollController=AutoScrollController(
+        viewportBoundaryGetter: () =>
+            Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
+        axis: Axis.horizontal);
     return CustomSafeArea(
       child: Scaffold(
         extendBody: true,
@@ -91,11 +82,11 @@ class ChatScreen extends StatelessWidget {
   PreferredSizeWidget getAppBar(BuildContext context) {
     final chatController = Get.find<ChatController>();
 
-    final receiverModel=chatController.receiverModel;
+    final receiverModel = chatController.receiverModel;
 
     debugPrint("Username coming is ${chatController.receiverModel}");
 
-    final receiverProfilePicture=receiverModel?.profilePicture??"";
+    final receiverProfilePicture = receiverModel?.profilePicture ?? "";
 
     return PreferredSize(
       preferredSize: Size(double.infinity, 8.h),
@@ -118,13 +109,16 @@ class ChatScreen extends StatelessWidget {
             IconButton(
               icon: const Icon(CupertinoIcons.back),
               onPressed: () {
-                Navigator.pop(context);
+                Get.back();
               },
             ),
             InkWell(
-                child: Hero(tag: "ReceiverProfilePicture", child: ProfilePictureAvatar(profilePictureLink: receiverProfilePicture)),
-              onTap: (){
-                  Get.toNamed(ReceiverProfileScreen.routeName);
+              child: Hero(
+                  tag: "ReceiverProfilePicture",
+                  child: ProfilePictureAvatar(
+                      profilePictureLink: receiverProfilePicture)),
+              onTap: () {
+                Get.toNamed(ReceiverProfileScreen.routeName);
               },
             ),
             const SizedBox(
@@ -141,13 +135,15 @@ class ChatScreen extends StatelessWidget {
                       .bodyText1
                       ?.copyWith(fontWeight: FontWeight.bold),
                 ),
-                Obx(() => controller.isUserOnlineVal.value?Text(
+                Obx(() => controller.isUserOnlineVal.value
+                    ? Text(
                   AppStrings.activeNow,
                   style: Theme.of(context)
                       .textTheme
                       .bodyText2
                       ?.copyWith(color: Colors.green),
-                ):const SizedBox())
+                )
+                    : const SizedBox())
               ],
             ),
             const Spacer(),
@@ -156,14 +152,20 @@ class ChatScreen extends StatelessWidget {
                 Icons.search,
                 color: Colors.black,
               ),
-              onPressed: () {},
+              onPressed: () {
+                Get.toNamed(SearchConversationScreen.routeName);
+              },
             ),
             IconButton(
               icon: const Icon(
                 Icons.more_vert,
                 color: Colors.black,
               ),
-              onPressed: () {},
+              onPressed: () async{
+                assert(autoScrollController!=null);
+                await autoScrollController?.scrollToIndex(16,
+                    preferPosition: AutoScrollPosition.end);
+              },
             ),
           ],
         ),
@@ -171,8 +173,10 @@ class ChatScreen extends StatelessWidget {
     );
   }
 
+
   Widget getBody() {
-    return Obx(() => controller.showChat.value?getMessageList():const SizedBox());
+    return Obx(
+        () => controller.showChat.value ? getMessageList() : const SizedBox());
   }
 
   Widget getMessageList() {
@@ -183,61 +187,67 @@ class ChatScreen extends StatelessWidget {
         child: StreamBuilder(
           stream: controller.dataList,
           builder: (context, snapshot) {
-
             print("Connection state coming is ${snapshot.connectionState}");
 
             print(snapshot.hasData);
 
             print(snapshot.hasData);
 
-            if(snapshot.hasData && snapshot.connectionState==ConnectionState.active){
+            if (snapshot.hasData &&
+                snapshot.connectionState == ConnectionState.active) {
+              final chatList = snapshot.data as QuerySnapshot;
 
-              final chatList=snapshot.data as QuerySnapshot;
-
-
-              final list=chatList.docs.map((e){
-                print("Message data coming is ${e.data()}");
-                return MessageModel.fromJson(e.data() as Map<String,dynamic>);
-              }).toList().reversed.toList();
+              final list = chatList.docs
+                  .map((e) {
+                    print("Message data coming is ${e.data()}");
+                    return MessageModel.fromJson(
+                        e.data() as Map<String, dynamic>);
+                  })
+                  .toList()
+                  .reversed
+                  .toList();
 
               return ListView.builder(
-                reverse: true,
+                  reverse: true,
                   itemCount: list.length,
                   shrinkWrap: true,
                   scrollDirection: Axis.vertical,
-                  controller: controller.scrollController,
+                  controller: autoScrollController,
                   itemBuilder: (context, index) {
-                    final userId=Get.find<AuthController>().firebaseUser.value?.uid;
+                    final userId =
+                        Get.find<AuthController>().firebaseUser.value?.uid;
 
-                    bool isSender=list[index].senderId==userId;
+                    bool isSender = list[index].senderId == userId;
 
                     // debugPrint("Is Sender coming is $isSender");
 
-                    return Container(
+                    return AutoScrollTag(key: ValueKey(index.toString()), controller: autoScrollController!, index: index,child: Container(
                       padding: EdgeInsets.only(
-                          left: isSender?50:14, right: isSender?14:50, top: 10, bottom: 10),
+                          left: isSender ? 50 : 14,
+                          right: isSender ? 14 : 50,
+                          top: 10,
+                          bottom: 10),
                       child: Align(
-                        alignment: (isSender
-                            ? Alignment.topRight:Alignment.topLeft
-                            ),
+                        alignment:
+                        (isSender ? Alignment.topRight : Alignment.topLeft),
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.only(
                                 topRight: const Radius.circular(12.0),
                                 topLeft: const Radius.circular(12.0),
                                 bottomLeft: isSender
-                                    ? const Radius.circular(12.0):const Radius.circular(0.0)
-                                    ,
+                                    ? const Radius.circular(12.0)
+                                    : const Radius.circular(0.0),
                                 bottomRight: isSender
-                                    ? const Radius.circular(0.0): const Radius.circular(12.0)
-                                    ),
+                                    ? const Radius.circular(0.0)
+                                    : const Radius.circular(12.0)),
                             color: (isSender
-                                ? AppColors.primaryColor:AppColors.textFieldBackgroundColor
-                                ),
+                                ? AppColors.primaryColor
+                                : AppColors.textFieldBackgroundColor),
                           ),
                           padding: const EdgeInsets.all(16),
                           child: Text(
-                            list[index].content??"",
+                            list[index].content ?? "",
                             style: TextStyle(
                                 fontSize: 15,
                                 color: isSender
@@ -246,10 +256,12 @@ class ChatScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                    );
+                    ),);
                   });
             }
-            return const Center(child: CircularProgressIndicator(),);
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           },
         ),
       ),
@@ -260,7 +272,8 @@ class ChatScreen extends StatelessWidget {
     final chatController = Get.find<ChatController>();
 
     return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
         decoration: BoxDecoration(
             color: AppColors.whiteColor,
@@ -310,12 +323,13 @@ class ChatScreen extends StatelessWidget {
                                       .textTheme
                                       .subtitle1
                                       ?.copyWith(
-                                          color: AppColors.greyColor?.darken(30)),
+                                          color:
+                                              AppColors.greyColor?.darken(30)),
                                   border: InputBorder.none),
                             ),
                           ),
                         ),
-                        getAttachFileButton(),
+                        getAttachFileButton(context),
                         Obx(() => chatController.message.value.isNotEmpty
                             ? const SizedBox()
                             : getCameraButton()),
@@ -325,11 +339,10 @@ class ChatScreen extends StatelessWidget {
                 ),
                 const SizedBox(width: 10),
                 InkWell(
-                  onTap: (){
-                    if(chatController.message.value.isNotEmpty){
+                  onTap: () {
+                    if (chatController.message.value.isNotEmpty) {
                       callSendMessage();
-                    }
-                    else{
+                    } else {
                       print("Voice recording tapped");
                     }
                   },
@@ -337,7 +350,8 @@ class ChatScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(15.0),
                       decoration: const BoxDecoration(
                           color: AppColors.primaryColor,
-                          borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(12.0))),
                       child: Obx(() => chatController.message.value.isNotEmpty
                           ? getSendMessageButton()
                           : getVoiceRecordingButton())),
@@ -360,11 +374,13 @@ class ChatScreen extends StatelessWidget {
         onPressed: () => callEmoji());
   }
 
-  Widget getAttachFileButton() {
-    return IconButton(
-      icon: Icon(Icons.attach_file, color: AppColors.greyColor?.darken(30)),
-      onPressed: () => callAttachFile(),
-    );
+  Widget getAttachFileButton(BuildContext context) {
+    return Builder(builder: (context){
+      return IconButton(
+        icon: Icon(Icons.attach_file, color: AppColors.greyColor?.darken(30)),
+        onPressed: () => callAttachFile(context),
+      );
+    },);
   }
 
   Widget getCameraButton() {
@@ -397,3 +413,5 @@ class ChatScreen extends StatelessWidget {
 }
 
 // https://stackoverflow.com/questions/54702778/how-to-show-typing-indicator-in-android-firebase-chat
+// https://stackoverflow.com/questions/55929366/implementing-transitions-in-a-bottomsheet
+// https://medium.com/flutter-community/revamped-flutter-bottom-sheet-61662dc2983

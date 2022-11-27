@@ -10,6 +10,7 @@ import 'package:chat_app/screens/search_people_screen.dart';
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/utils/util_functions.dart';
 import 'package:chat_app/widgets/animated_column_widget.dart';
+import 'package:chat_app/widgets/chat_list_item.dart';
 import 'package:chat_app/widgets/custom_bottom_navigation_bar_2.dart';
 import 'package:chat_app/widgets/custom_route_builder.dart';
 import 'package:chat_app/widgets/custom_safe_area.dart';
@@ -206,6 +207,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             return RoomModel.fromJson(e.data() as Map<String, dynamic>);
           }).toList();
 
+          roomModelList.sort((a,b){
+            int firstTimeStamp=a.latestMessage!.timestamp!;
+            int secondTimeStamp=b.latestMessage!.timestamp!;
+            print("First ${firstTimeStamp.toString()} Second ${secondTimeStamp.toString()}");
+            print("Compare to $firstTimeStamp $secondTimeStamp ${firstTimeStamp-secondTimeStamp}");
+            return secondTimeStamp.compareTo(firstTimeStamp);
+          });
+
           debugPrint(roomModelList.toString());
 
           sliverList.add(getChatList(roomModelList));
@@ -234,6 +243,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget getAppBar() {
+    return Obx(() {
+      final selectedList = homeController?.selectedChatIdList;
+      if (selectedList!.isEmpty) {
+        return getNormalAppBar();
+      }
+      return getSelectableListAppBar();
+    });
+  }
+
+  Widget getNormalAppBar() {
     final currentUserInfo = Get.find<AuthController>().userInfo.value;
     final currentUserProfilePicture = currentUserInfo?.profilePicture ?? "";
 
@@ -252,232 +271,142 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         background: Container(
             alignment: Alignment.centerLeft,
             padding:
-                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 15.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Chatter",
-                        style: Theme.of(context).textTheme.headline5?.copyWith(
-                            color: AppColors.blackTextColor,
-                            fontWeight: FontWeight.w900),
-                      ),
-                      InkWell(
-                        child: currentUserProfilePicture.isNotEmpty
-                            ? CircleAvatar(
-                                backgroundImage: NetworkImage(
-                                  currentUserProfilePicture,
-                                ),
-                              )
-                            : randomAvatar(
-                                "Harsh",
-                                height: 30,
-                                width: 30,
-                              ),
-                        onTap: () {
-                          Get.toNamed('/profile');
-                        },
-                      )
-                    ],
-                  ),
-                ),
-                OpenContainer(
-                  transitionDuration: const Duration(milliseconds: 600),
-                  transitionType: ContainerTransitionType.fade,
-                  openBuilder: (context, closedContainer) {
-                    return SearchConversationScreen();
-                  },
-                  closedShape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                  ),
-                  closedElevation: 0,
-                  closedColor: AppColors.textFieldBackgroundColor,
-                  closedBuilder: (context, openContainer) {
-                    return InputTextField(
-                      inputTextType: InputTextType.search,
-                      onChangedValue: () {},
-                      hintText: AppStrings.searchConversation,
-                      onTap: () {
-                        // Get.toNamed(SearchConversationScreen.routeName);
-                        openContainer();
-                      },
-                    );
-                  },
-                )
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: [
-                //     Column(
-                //       crossAxisAlignment: CrossAxisAlignment.start,
-                //       children: [
-                //         SlideTransition(
-                //           position: _animation!,
-                //           child: Text(
-                //             "Hello Harsh",
-                //             style: Theme.of(context)
-                //                 .textTheme
-                //                 .subtitle1
-                //                 ?.copyWith(color: Colors.grey),
-                //           ),
-                //         ),
-                //         SlideTransition(
-                //           position: _animation!,
-                //           child: Text(
-                //             "Xchat message",
-                //             style: Theme.of(context)
-                //                 .textTheme
-                //                 .headline6
-                //                 ?.copyWith(fontWeight: FontWeight.w900),
-                //           ),
-                //         ),
-                //       ],
-                //     ),
-                //     IconButton(
-                //       icon: const Icon(Icons.edit),
-                //       onPressed: () {
-                //         showModalBottomSheet(context: context, builder: (context){
-                //           return ReviewPopup();
-                //         });
-                //       },
-                //     )
-                //   ],
-                // ),
-                // const SizedBox(
-                //   height: 30.0,
-                // ),
-                // SizedBox(
-                //   height: 60.0,
-                //   child: ListView.builder(
-                //       scrollDirection: Axis.horizontal,
-                //       shrinkWrap: true,
-                //       itemCount: 30,
-                //       itemBuilder: (context, index) {
-                //         if (index == 0) {
-                //           return Padding(
-                //             padding:
-                //                 const EdgeInsets.symmetric(horizontal: 8.0),
-                //             child: Container(
-                //               height: 60.0,
-                //               width: 60.0,
-                //               decoration: BoxDecoration(
-                //                   color: AppColors.lightGreyColor,
-                //                   borderRadius: BorderRadius.circular(80.0)),
-                //               child: const Icon(
-                //                 Icons.search,
-                //                 color: Colors.black,
-                //               ),
-                //             ),
-                //           );
-                //         }
-                //         return Padding(
-                //           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                //           child: Container(
-                //             height: 80.0,
-                //             width: 80.0,
-                //             decoration: BoxDecoration(
-                //                 color: AppColors.lightGreyColor,
-                //                 borderRadius: BorderRadius.circular(80.0)),
-                //             child: randomAvatar(
-                //               DateTime.now().toIso8601String(),
-                //               trBackground: true,
-                //               height: 50,
-                //               width: 52,
-                //             ),
-                //           ),
-                //         );
-                //       }),
-                // )
+                getHeader(currentUserProfilePicture),
+                getSearchContainer()
               ],
             )),
       ),
     );
   }
 
+  Widget getSelectableListAppBar() {
+    return SliverAppBar(
+      forceElevated: true, //* here
+      elevation: 1.5, //* question having 0 here
+      pinned: true,
+      floating: false,
+      leading: IconButton(
+        icon: getHeaderIcon(Icons.close),
+        onPressed: () {
+          homeController?.selectedChatIdList.clear();
+        },
+      ),
+      title: Text(
+        '${homeController?.selectedChatIdList.length}',
+        style: Theme.of(context)
+            .textTheme
+            .titleLarge
+            ?.copyWith(color: AppColors.primaryColor, fontSize: 24),
+      ),
+      actions: [
+        getHeaderIcon(Icons.push_pin_outlined),
+        getHeaderIcon(Icons.archive_outlined),
+        getHeaderIcon(Icons.delete_outline),
+        getHeaderIcon(Icons.block_flipped)
+      ],
+    );
+  }
+
+  Widget getHeader(String currentUserProfilePicture) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            "Chatter",
+            style: Theme.of(context).textTheme.headline5?.copyWith(
+                color: AppColors.blackTextColor, fontWeight: FontWeight.w900),
+          ),
+          InkWell(
+            child: currentUserProfilePicture.isNotEmpty
+                ? CircleAvatar(
+                    backgroundImage: NetworkImage(
+                      currentUserProfilePicture,
+                    ),
+                  )
+                : randomAvatar(
+                    "Harsh",
+                    height: 30,
+                    width: 30,
+                  ),
+            onTap: () {
+              Get.toNamed('/profile');
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget getSearchContainer() {
+    return OpenContainer(
+      transitionDuration: const Duration(milliseconds: 600),
+      transitionType: ContainerTransitionType.fade,
+      openBuilder: (context, closedContainer) {
+        return SearchConversationScreen();
+      },
+      closedShape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(15.0)),
+      ),
+      closedElevation: 0,
+      closedColor: AppColors.textFieldBackgroundColor,
+      closedBuilder: (context, openContainer) {
+        return InputTextField(
+          inputTextType: InputTextType.search,
+          onChangedValue: () {},
+          hintText: AppStrings.searchConversation,
+          onTap: () {
+            // Get.toNamed(SearchConversationScreen.routeName);
+            openContainer();
+          },
+        );
+      },
+    );
+  }
+
   Widget getChatList(List<RoomModel> roomModelList) {
+    final selectedList = Get.find<HomeController>().selectedChatIdList;
+
     return SliverList(
         delegate: SliverChildBuilderDelegate((context, index) {
       // return AnimationConfiguration.staggeredList(duration: const Duration(milliseconds: 400),position: index, child: getChatListItem(index));
-      return getChatListItem(roomModelList[index], index);
-    }, childCount: roomModelList.length));
-  }
-
-  Widget getChatListItem(RoomModel roomModel, int index) {
-    final userId = Get.find<AuthController>().firebaseUser.value?.uid;
-
-    // final receiverModel=roomModel.userInfoList?.map((e) {
-    //   if(e.uid.toString()!=userId?.toString()){
-    //     return e;
-    //   }
-    // }).toList()[0];
-
-    UserModel? receiverModel;
-
-    String messageContent = roomModel.latestMessage?.content ?? "";
-
-    bool isSeen = roomModel.latestMessage?.isSeenBy
-            ?.where((element) => element.uid == userId)
-            .isNotEmpty ??
-        true;
-
-    for (var element in roomModel.userInfoList!) {
-      print("Element id coming is ${element.uid}");
-      if (element.uid.toString() != userId?.toString()) {
-        receiverModel = element;
-      }
-    }
-
-    final profilePicture = receiverModel?.profilePicture ?? "";
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-      child: ListTile(
-        onTap: () {
-          Get.toNamed(ChatScreen.routeName, arguments: {
-            "roomId": roomModel.roomId,
-            "receiverModel": receiverModel
+      return Dismissible(
+        key: ObjectKey(index),
+        child: ChatListItem(
+          roomModel: roomModelList[index],
+          index: index,
+        ),
+        direction: selectedList.isEmpty
+            ? DismissDirection.horizontal
+            : DismissDirection.none,
+        onDismissed: (DismissDirection direction) {
+          setState(() {
+            // this._theList.removeAt(index);
+            print("List item dismissed");
+            //this.reIndex();
           });
+          direction == DismissDirection.endToStart
+              ? print("favourite")
+              : print("remove");
         },
-        tileColor: AppColors.whiteColor,
-        leading: ProfilePictureAvatar(
-          profilePictureLink: profilePicture,
-          height: 50.0,
-          width: 52.0,
-        ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              receiverModel?.userName ?? "",
-              style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                  fontWeight: FontWeight.bold, color: AppColors.blackTextColor),
-            ),
-            Text(
-                UtilFunctions()
-                    .parseTimeStamp(roomModel.latestMessage?.timestamp),
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle2
-                    ?.copyWith(color: Colors.black54))
-          ],
-        ),
-        subtitle: Row(
-          children: [
-            Container(
-              width: 65.w,
-              child: Text(messageContent,
-                  style: Theme.of(context).textTheme.subtitle2?.copyWith(
-                      color: isSeen ? Colors.black54 : AppColors.blackTextColor,
-                      overflow: TextOverflow.ellipsis)),
-            )
-          ],
-        ),
-      ),
-    );
+        background: Container(
+            alignment: Alignment.center,
+            color: const Color.fromRGBO(0, 96, 100, 0.8),
+            child: const ListTile(
+                leading: Icon(Icons.push_pin_outlined,
+                    color: Colors.white, size: 36.0))),
+        secondaryBackground: Container(
+            color: const Color.fromRGBO(183, 28, 28, 0.8),
+            alignment: Alignment.center,
+            child: const ListTile(
+                trailing: Icon(Icons.delete, color: Colors.white, size: 36.0))),
+      );
+    }, childCount: roomModelList.length));
   }
 
   Widget getBottomNavigation() {
@@ -493,6 +422,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           debugPrint(index.toString());
         },
       )),
+    );
+  }
+
+  Widget getHeaderIcon(IconData iconData) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: Icon(
+        iconData,
+        color: AppColors.primaryColor,
+        size: 26,
+      ),
     );
   }
 }

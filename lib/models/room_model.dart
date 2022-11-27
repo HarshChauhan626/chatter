@@ -10,12 +10,14 @@ class RoomModel {
   MessageModel? latestMessage;
   List<UserModel>? userInfoList;
 
+
   RoomModel(
       {this.roomId,this.userList,
       this.isTyping,
       this.adminList,
       this.latestMessage,
-      this.userInfoList});
+      this.userInfoList
+      });
 
   RoomModel.fromJson(Map<String, dynamic> json) {
     roomId=json["roomId"]??"";

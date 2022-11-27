@@ -1,15 +1,16 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../helper/firebase_helper.dart';
 import '../models/user_model.dart';
 
 class UtilFunctions {
-  String getRoomId(String senderId, String recieverId) {
+  static String getRoomId(String senderId, String recieverId) {
     return senderId + '-' + recieverId;
   }
 
-  String parseTimeStamp(int? value) {
+  static String parseTimeStamp(int? value) {
     try {
       if (value != null) {
         var date = DateTime.fromMillisecondsSinceEpoch(value);
@@ -24,7 +25,7 @@ class UtilFunctions {
     }
   }
 
-  Future<UserModel?> getUserInfo(String userId) async {
+  static Future<UserModel?> getUserInfo(String userId) async {
     try {
       final userCollectionRef =
           FirebaseHelper.fireStoreInstance!.collection("user");
@@ -39,5 +40,39 @@ class UtilFunctions {
       debugPrint(
           "Exception coming in fetching userModel is ${e.toString()}\n${s.toString()}");
     }
+  }
+
+  List<TextSpan> highlightOccurrences(String source, String query) {
+    if (query.isEmpty || !source.toLowerCase().contains(query.toLowerCase())) {
+      return [ TextSpan(text: source) ];
+    }
+    final matches = query.toLowerCase().allMatches(source.toLowerCase());
+
+    int lastMatchEnd = 0;
+
+    final List<TextSpan> children = [];
+    for (var i = 0; i < matches.length; i++) {
+      final match = matches.elementAt(i);
+
+      if (match.start != lastMatchEnd) {
+        children.add(TextSpan(
+          text: source.substring(lastMatchEnd, match.start),
+        ));
+      }
+
+      children.add(TextSpan(
+        text: source.substring(match.start, match.end),
+        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+      ));
+
+      if (i == matches.length - 1 && match.end != source.length) {
+        children.add(TextSpan(
+          text: source.substring(match.end, source.length),
+        ));
+      }
+
+      lastMatchEnd = match.end;
+    }
+    return children;
   }
 }

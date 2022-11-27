@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:sizer/sizer.dart';
 import 'package:uuid/uuid.dart';
 
 import '../helper/firebase_helper.dart';
@@ -37,6 +39,8 @@ class ChatController extends GetxController {
   Rx<RoomModel>? roomModel;
 
   Stream? dataList;
+
+  RxBool searchButtonTapped=false.obs;
 
   @override
   void onInit() {
@@ -139,7 +143,7 @@ class ChatController extends GetxController {
         UserModel? senderUserInfo;
 
         if (user1Id != null) {
-          senderUserInfo = await UtilFunctions().getUserInfo(user1Id!);
+          senderUserInfo = await UtilFunctions.getUserInfo(user1Id!);
         }
 
         await groupDocReference.set({
