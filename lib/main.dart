@@ -1,6 +1,6 @@
 import 'package:chat_app/bindings/auth_binding.dart';
 import 'package:chat_app/helper/hive_db_helper.dart';
-import 'package:chat_app/screens/splash_screen.dart';
+import 'package:chat_app/features/splash/splash_screen.dart';
 import 'package:chat_app/utils/app_theme.dart';
 import 'package:chat_app/utils/custom_router.dart';
 import 'package:firebase_core/firebase_core.dart';

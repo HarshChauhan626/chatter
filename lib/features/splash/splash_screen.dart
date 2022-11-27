@@ -1,8 +1,8 @@
 import 'package:chat_app/controllers/auth_controller.dart';
 import 'package:chat_app/helper/hive_db_helper.dart';
-import 'package:chat_app/screens/home_screen.dart';
-import 'package:chat_app/screens/onboarding_screen.dart';
-import 'package:chat_app/screens/sign_in_screen.dart';
+import 'package:chat_app/features/home/home_screen.dart';
+import 'package:chat_app/features/onboarding/onboarding_screen.dart';
+import 'package:chat_app/features/sign_in/sign_in_screen.dart';
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/widgets/custom_safe_area.dart';
 import 'package:flutter/material.dart';

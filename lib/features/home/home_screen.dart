@@ -3,10 +3,10 @@ import 'dart:ui';
 import 'package:animations/animations.dart';
 import 'package:chat_app/controllers/home_controller.dart';
 import 'package:chat_app/models/user_model.dart';
-import 'package:chat_app/screens/chat_screen.dart';
-import 'package:chat_app/screens/review_popup.dart';
-import 'package:chat_app/screens/search_conversation_screen.dart';
-import 'package:chat_app/screens/search_people_screen.dart';
+import 'package:chat_app/features/chat/chat_screen.dart';
+import 'package:chat_app/widgets/review_popup.dart';
+import 'package:chat_app/features/search_conversations/search_conversation_screen.dart';
+import 'package:chat_app/features/search_people/search_people_screen.dart';
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/utils/util_functions.dart';
 import 'package:chat_app/widgets/animated_column_widget.dart';
@@ -25,11 +25,11 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:random_avatar/random_avatar.dart';
 import 'package:sizer/sizer.dart';
 
-import '../controllers/auth_controller.dart';
-import '../helper/firebase_helper.dart';
-import '../models/room_model.dart';
-import '../utils/app_strings.dart';
-import '../utils/enums.dart';
+import '../../controllers/auth_controller.dart';
+import '../../helper/firebase_helper.dart';
+import '../../models/room_model.dart';
+import '../../utils/app_strings.dart';
+import '../../utils/enums.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);

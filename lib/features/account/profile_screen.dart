@@ -1,6 +1,5 @@
-import 'package:chat_app/screens/profile_picture_screen.dart';
-import 'package:chat_app/screens/reset_password.dart';
-import 'package:chat_app/screens/update_profile_screen.dart';
+import 'package:chat_app/features/account/update_profile_screen.dart';
+import 'package:chat_app/features/reset_password/reset_password.dart';
 import 'package:chat_app/utils/extensions.dart';
 import 'package:chat_app/widgets/profile_picture_avatar.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,11 +9,11 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:random_avatar/random_avatar.dart';
 import 'package:sizer/sizer.dart';
 
-import '../controllers/auth_controller.dart';
-import '../utils/app_colors.dart';
-import '../utils/app_strings.dart';
-import '../widgets/custom_route_builder.dart';
-import '../widgets/custom_safe_area.dart';
+import '../../controllers/auth_controller.dart';
+import '../../utils/app_colors.dart';
+import '../../utils/app_strings.dart';
+import '../../widgets/custom_route_builder.dart';
+import '../../widgets/custom_safe_area.dart';
 
 class ListTileItem {
   String title;

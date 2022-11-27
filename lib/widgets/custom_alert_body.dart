@@ -1,4 +1,4 @@
-import 'package:chat_app/screens/sign_in_screen.dart';
+import 'package:chat_app/features/sign_in/sign_in_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';

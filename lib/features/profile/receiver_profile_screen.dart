@@ -9,8 +9,8 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:sizer/sizer.dart';
 
-import '../utils/app_colors.dart';
-import '../widgets/profile_picture_avatar.dart';
+import '../../utils/app_colors.dart';
+import '../../widgets/profile_picture_avatar.dart';
 
 class ReceiverProfileScreen extends StatelessWidget {
   const ReceiverProfileScreen({Key? key}) : super(key: key);

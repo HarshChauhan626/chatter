@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 
-import '../utils/app_colors.dart';
-import '../widgets/custom_route_builder.dart';
+import '../../utils/app_colors.dart';
+import '../../widgets/custom_route_builder.dart';
 
 class SearchConversationScreen extends StatelessWidget {
   SearchConversationScreen({Key? key}) : super(key: key);

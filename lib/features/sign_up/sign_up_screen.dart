@@ -1,6 +1,6 @@
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/controllers/sign_up_controller.dart';
-import 'package:chat_app/screens/sign_in_screen.dart';
+import 'package:chat_app/features/sign_in/sign_in_screen.dart';
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/utils/enums.dart';
 import 'package:chat_app/widgets/animated_column_widget.dart';
@@ -13,7 +13,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
-import '../utils/app_strings.dart';
+import '../../utils/app_strings.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);

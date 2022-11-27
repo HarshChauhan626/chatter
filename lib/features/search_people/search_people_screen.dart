@@ -7,10 +7,10 @@ import 'package:get/get.dart';
 import 'package:random_avatar/random_avatar.dart';
 import 'package:sizer/sizer.dart';
 
-import '../models/user_model.dart';
-import '../utils/app_colors.dart';
-import '../widgets/custom_route_builder.dart';
-import 'chat_screen.dart';
+import '../../models/user_model.dart';
+import '../../utils/app_colors.dart';
+import '../../widgets/custom_route_builder.dart';
+import '../chat/chat_screen.dart';
 
 class SearchPeopleScreen extends StatelessWidget {
   SearchPeopleScreen({Key? key}) : super(key: key);

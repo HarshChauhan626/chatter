@@ -7,12 +7,12 @@ import 'package:lottie/lottie.dart';
 import 'package:random_avatar/random_avatar.dart';
 import 'package:sizer/sizer.dart';
 
-import '../controllers/auth_controller.dart';
-import '../utils/app_strings.dart';
-import '../utils/asset_strings.dart';
-import '../widgets/alert_dialog.dart';
-import '../widgets/custom_alert_body.dart';
-import '../widgets/custom_safe_area.dart';
+import '../../controllers/auth_controller.dart';
+import '../../utils/app_strings.dart';
+import '../../utils/asset_strings.dart';
+import '../../widgets/alert_dialog.dart';
+import '../../widgets/custom_alert_body.dart';
+import '../../widgets/custom_safe_area.dart';
 
 class ProfilePictureScreen extends StatelessWidget {
   static String routeName = "/profile_picture_screen";

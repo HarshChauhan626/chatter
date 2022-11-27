@@ -1,6 +1,6 @@
 import 'package:chat_app/controllers/auth_controller.dart';
 import 'package:chat_app/controllers/update_profile_controller.dart';
-import 'package:chat_app/screens/profile_picture_screen.dart';
+import 'package:chat_app/features/account/profile_picture_screen.dart';
 import 'package:chat_app/utils/extensions.dart';
 import 'package:chat_app/widgets/label_text_field.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,15 +9,15 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:random_avatar/random_avatar.dart';
 import 'package:sizer/sizer.dart';
-import '../utils/app_colors.dart';
-import '../utils/app_strings.dart';
-import '../utils/asset_strings.dart';
-import '../utils/enums.dart';
-import '../widgets/alert_dialog.dart';
-import '../widgets/animated_column_widget.dart';
-import '../widgets/custom_alert_body.dart';
-import '../widgets/custom_safe_area.dart';
-import '../widgets/input_text_field.dart';
+import '../../utils/app_colors.dart';
+import '../../utils/app_strings.dart';
+import '../../utils/asset_strings.dart';
+import '../../utils/enums.dart';
+import '../../widgets/alert_dialog.dart';
+import '../../widgets/animated_column_widget.dart';
+import '../../widgets/custom_alert_body.dart';
+import '../../widgets/custom_safe_area.dart';
+import '../../widgets/input_text_field.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class UpdateProfileScreen extends StatelessWidget {

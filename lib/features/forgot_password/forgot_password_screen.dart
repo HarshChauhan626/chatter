@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../utils/app_strings.dart';
-import '../utils/asset_strings.dart';
+import '../../utils/app_strings.dart';
+import '../../utils/asset_strings.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({Key? key}) : super(key: key);

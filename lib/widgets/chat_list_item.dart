@@ -9,7 +9,7 @@ import 'package:sizer/sizer.dart';
 import '../controllers/auth_controller.dart';
 import '../models/room_model.dart';
 import '../models/user_model.dart';
-import '../screens/chat_screen.dart';
+import '../features/chat/chat_screen.dart';
 import '../utils/app_colors.dart';
 import '../utils/util_functions.dart';
 

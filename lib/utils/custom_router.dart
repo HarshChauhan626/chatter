@@ -1,24 +1,24 @@
 import 'package:chat_app/controllers/search_people_controller.dart';
 import 'package:chat_app/controllers/update_profile_controller.dart';
-import 'package:chat_app/screens/chat_screen.dart';
-import 'package:chat_app/screens/forgot_password_screen.dart';
-import 'package:chat_app/screens/home_screen.dart';
-import 'package:chat_app/screens/onboarding_screen.dart';
-import 'package:chat_app/screens/profile_picture_screen.dart';
-import 'package:chat_app/screens/profile_screen.dart';
-import 'package:chat_app/screens/receiver_profile_screen.dart';
-import 'package:chat_app/screens/reset_password.dart';
-import 'package:chat_app/screens/search_conversation_screen.dart';
-import 'package:chat_app/screens/search_people_screen.dart';
-import 'package:chat_app/screens/sign_in_screen.dart';
-import 'package:chat_app/screens/sign_up_screen.dart';
-import 'package:chat_app/screens/splash_screen.dart';
-import 'package:chat_app/screens/update_profile_screen.dart';
+import 'package:chat_app/features/chat/chat_screen.dart';
+import 'package:chat_app/features/forgot_password/forgot_password_screen.dart';
+import 'package:chat_app/features/home/home_screen.dart';
+import 'package:chat_app/features/onboarding/onboarding_screen.dart';
+import 'package:chat_app/features/profile/receiver_profile_screen.dart';
+import 'package:chat_app/features/reset_password/reset_password.dart';
+import 'package:chat_app/features/search_conversations/search_conversation_screen.dart';
+import 'package:chat_app/features/search_people/search_people_screen.dart';
+import 'package:chat_app/features/sign_in/sign_in_screen.dart';
+import 'package:chat_app/features/sign_up/sign_up_screen.dart';
+import 'package:chat_app/features/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controllers/chat_controller.dart';
 import '../controllers/home_controller.dart';
+import '../features/account/profile_picture_screen.dart';
+import '../features/account/profile_screen.dart';
+import '../features/account/update_profile_screen.dart';
 
 class CustomRouter {
   static Route onGenerateRoute(RouteSettings settings) {

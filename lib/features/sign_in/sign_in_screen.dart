@@ -1,6 +1,6 @@
 import 'package:chat_app/controllers/sign_in_controlller.dart';
-import 'package:chat_app/screens/home_screen.dart';
-import 'package:chat_app/screens/sign_up_screen.dart';
+import 'package:chat_app/features/home/home_screen.dart';
+import 'package:chat_app/features/sign_up/sign_up_screen.dart';
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/utils/app_strings.dart';
 import 'package:chat_app/utils/enums.dart';
@@ -16,10 +16,10 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
-import '../utils/asset_strings.dart';
-import '../widgets/alert_dialog.dart';
-import '../widgets/custom_alert_body.dart';
-import 'forgot_password_screen.dart';
+import '../../utils/asset_strings.dart';
+import '../../widgets/alert_dialog.dart';
+import '../../widgets/custom_alert_body.dart';
+import '../forgot_password/forgot_password_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({Key? key}) : super(key: key);

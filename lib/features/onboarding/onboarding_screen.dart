@@ -1,5 +1,5 @@
 import 'package:chat_app/helper/hive_db_helper.dart';
-import 'package:chat_app/screens/sign_in_screen.dart';
+import 'package:chat_app/features/sign_in/sign_in_screen.dart';
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/utils/app_strings.dart';
 import 'package:chat_app/widgets/custom_route_builder.dart';

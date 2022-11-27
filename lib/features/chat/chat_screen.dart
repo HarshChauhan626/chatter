@@ -1,7 +1,7 @@
 import 'package:chat_app/controllers/auth_controller.dart';
 import 'package:chat_app/controllers/chat_controller.dart';
-import 'package:chat_app/screens/receiver_profile_screen.dart';
-import 'package:chat_app/screens/search_conversation_screen.dart';
+import 'package:chat_app/features/profile/receiver_profile_screen.dart';
+import 'package:chat_app/features/search_conversations/search_conversation_screen.dart';
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/widgets/attachment_menu_bottom_sheet.dart';
 import 'package:chat_app/widgets/custom_route_builder.dart';
@@ -16,9 +16,9 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:sizer/sizer.dart';
 import 'package:chat_app/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
-import '../helper/firebase_helper.dart';
-import '../models/message_model.dart';
-import '../utils/app_strings.dart';
+import '../../helper/firebase_helper.dart';
+import '../../models/message_model.dart';
+import '../../utils/app_strings.dart';
 
 class ChatScreen extends StatelessWidget {
   ChatScreen({Key? key}) : super(key: key);
@@ -89,14 +89,10 @@ class ChatScreen extends StatelessWidget {
     final receiverProfilePicture = receiverModel?.profilePicture ?? "";
 
     return PreferredSize(
-      preferredSize: Size(double.infinity, 8.h),
+      preferredSize: Size(double.infinity, 14.h),
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
-          // borderRadius: BorderRadius.only(
-          //     bottomRight: Radius.circular(4.w),
-          //     bottomLeft: Radius.circular(4.w)
-          // ),
           boxShadow: [
             BoxShadow(
                 offset: const Offset(0, 2),
@@ -104,69 +100,103 @@ class ChatScreen extends StatelessWidget {
                 color: Colors.grey.shade300),
           ],
         ),
-        child: Row(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            IconButton(
-              icon: const Icon(CupertinoIcons.back),
-              onPressed: () {
-                Get.back();
-              },
-            ),
-            InkWell(
-              child: Hero(
-                  tag: "ReceiverProfilePicture",
-                  child: ProfilePictureAvatar(
-                      profilePictureLink: receiverProfilePicture)),
-              onTap: () {
-                Get.toNamed(ReceiverProfileScreen.routeName);
-              },
-            ),
-            const SizedBox(
-              width: 8.0,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  chatController.receiverModel?.userName ?? "",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyText1
-                      ?.copyWith(fontWeight: FontWeight.bold),
-                ),
-                Obx(() => controller.isUserOnlineVal.value
-                    ? Text(
-                  AppStrings.activeNow,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyText2
-                      ?.copyWith(color: Colors.green),
-                )
-                    : const SizedBox())
-              ],
-            ),
-            const Spacer(),
-            IconButton(
-              icon: const Icon(
-                Icons.search,
-                color: Colors.black,
+            SizedBox(
+              height: 7.h,
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(CupertinoIcons.back),
+                    onPressed: () {
+                      Get.back();
+                    },
+                  ),
+                  InkWell(
+                    child: Hero(
+                        tag: "ReceiverProfilePicture",
+                        child: ProfilePictureAvatar(
+                            profilePictureLink: receiverProfilePicture)),
+                    onTap: () {
+                      Get.toNamed(ReceiverProfileScreen.routeName);
+                    },
+                  ),
+                  const SizedBox(
+                    width: 8.0,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        chatController.receiverModel?.userName ?? "",
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            ?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      Obx(() => controller.isUserOnlineVal.value
+                          ? Text(
+                        AppStrings.activeNow,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText2
+                            ?.copyWith(color: Colors.green),
+                      )
+                          : const SizedBox())
+                    ],
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.search,
+                      color: Colors.black,
+                    ),
+                    onPressed: () {
+                      Get.toNamed(SearchConversationScreen.routeName);
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.more_vert,
+                      color: Colors.black,
+                    ),
+                    onPressed: () async{
+                      assert(autoScrollController!=null);
+                      await autoScrollController?.scrollToIndex(16,
+                          preferPosition: AutoScrollPosition.end);
+                    },
+                  ),
+                ],
               ),
-              onPressed: () {
-                Get.toNamed(SearchConversationScreen.routeName);
-              },
             ),
-            IconButton(
-              icon: const Icon(
-                Icons.more_vert,
-                color: Colors.black,
+            Container(
+              padding: const EdgeInsets.only(left: 17.0),
+              alignment: Alignment.center,
+              height: 7.h,
+              color: AppColors.textFieldBackgroundColor,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("18/18 results found",style: Theme.of(context).textTheme.bodyLarge,),
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back_ios,color: Colors.black,),
+                        onPressed: (){
+
+                        },
+                      ),
+                      IconButton(
+                          icon: const Icon(Icons.arrow_forward_ios,color: Colors.black,),
+                          onPressed: (){}
+                      )
+                    ],
+                  )
+                ],
               ),
-              onPressed: () async{
-                assert(autoScrollController!=null);
-                await autoScrollController?.scrollToIndex(16,
-                    preferPosition: AutoScrollPosition.end);
-              },
-            ),
+            )
           ],
         ),
       ),
