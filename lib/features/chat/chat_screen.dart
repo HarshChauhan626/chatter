@@ -35,7 +35,6 @@ class ChatScreen extends StatelessWidget {
 
   AutoScrollController? autoScrollController;
 
-
   void callEmoji() {
     debugPrint('Emoji Icon Pressed...');
   }
@@ -43,11 +42,10 @@ class ChatScreen extends StatelessWidget {
   void callAttachFile(BuildContext context) {
     debugPrint('Attach File Icon Pressed...');
     showModalBottomSheet(
-        context: context,
-        useRootNavigator: true,
-        builder: (context) => const AttachmentMenuBottomSheet(),
+      context: context,
+      useRootNavigator: true,
+      builder: (context) => const AttachmentMenuBottomSheet(),
     );
-
   }
 
   void callCamera() {
@@ -64,30 +62,31 @@ class ChatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    autoScrollController=AutoScrollController(
+    autoScrollController = AutoScrollController(
         viewportBoundaryGetter: () =>
             Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
         axis: Axis.horizontal);
-    return CustomSafeArea(
-      child: Scaffold(
-        extendBody: true,
-        backgroundColor: AppColors.whiteColor,
-        appBar: getAppBar(context),
-        body: getBody(),
-        bottomNavigationBar: getInputField(context),
+    return WillPopScope(
+      onWillPop: () async {
+        if (controller.searchButtonTapped.value) {
+          controller.searchButtonTapped.value = false;
+          return false;
+        }
+        return true;
+      },
+      child: CustomSafeArea(
+        child: Scaffold(
+          extendBody: true,
+          backgroundColor: AppColors.whiteColor,
+          appBar: getAppBar(),
+          body: getBody(),
+          bottomNavigationBar: getInputField(context),
+        ),
       ),
     );
   }
 
-  PreferredSizeWidget getAppBar(BuildContext context) {
-    final chatController = Get.find<ChatController>();
-
-    final receiverModel = chatController.receiverModel;
-
-    debugPrint("Username coming is ${chatController.receiverModel}");
-
-    final receiverProfilePicture = receiverModel?.profilePicture ?? "";
-
+  PreferredSizeWidget getAppBar() {
     return PreferredSize(
       preferredSize: Size(double.infinity, 14.h),
       child: Container(
@@ -102,107 +101,176 @@ class ChatScreen extends StatelessWidget {
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          children: [getAppBarUpperBody(), getSearchResultNavigator()],
+        ),
+      ),
+    );
+  }
+
+  Widget getAppBarUpperBody() {
+    return Obx(() {
+      if (controller.searchButtonTapped.value) {
+        return getSearchBar();
+      }
+      return getNormalBar();
+    });
+  }
+
+  Widget getSearchResultNavigator() {
+    return Builder(builder: (context) {
+      return Container(
+        padding: const EdgeInsets.only(left: 17.0),
+        alignment: Alignment.center,
+        height: 7.h,
+        color: AppColors.textFieldBackgroundColor,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(
-              height: 7.h,
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(CupertinoIcons.back),
-                    onPressed: () {
-                      Get.back();
-                    },
+            Text(
+              "18/18 results found",
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            Row(
+              children: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.black,
                   ),
-                  InkWell(
-                    child: Hero(
-                        tag: "ReceiverProfilePicture",
-                        child: ProfilePictureAvatar(
-                            profilePictureLink: receiverProfilePicture)),
-                    onTap: () {
-                      Get.toNamed(ReceiverProfileScreen.routeName);
-                    },
-                  ),
-                  const SizedBox(
-                    width: 8.0,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        chatController.receiverModel?.userName ?? "",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText1
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      Obx(() => controller.isUserOnlineVal.value
-                          ? Text(
+                  onPressed: () {},
+                ),
+                IconButton(
+                    icon: const Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.black,
+                    ),
+                    onPressed: () {})
+              ],
+            )
+          ],
+        ),
+      );
+    });
+  }
+
+  Widget getSearchBar() {
+    return SizedBox(
+      height: 7.h,
+      child: Row(
+        children: [
+          getBackButton(),
+          Expanded(
+            child: TextField(
+              decoration: InputDecoration(
+                  focusedBorder: InputBorder.none,
+                  hintText: AppStrings.search,
+                  border: InputBorder.none),
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.clear),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () {},
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget getNormalBar() {
+    final chatController = Get.find<ChatController>();
+
+    final receiverModel = chatController.receiverModel;
+
+    debugPrint("Username coming is ${chatController.receiverModel}");
+
+    final receiverProfilePicture = receiverModel?.profilePicture ?? "";
+
+    return Builder(builder: (context) {
+      return SizedBox(
+        height: 7.h,
+        child: Row(
+          children: [
+            getBackButton(),
+            InkWell(
+              child: Hero(
+                  tag: "ReceiverProfilePicture",
+                  child: ProfilePictureAvatar(
+                      profilePictureLink: receiverProfilePicture)),
+              onTap: () {
+                Get.toNamed(ReceiverProfileScreen.routeName);
+              },
+            ),
+            const SizedBox(
+              width: 8.0,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  chatController.receiverModel?.userName ?? "",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      ?.copyWith(fontWeight: FontWeight.bold),
+                ),
+                Obx(() => controller.isUserOnlineVal.value
+                    ? Text(
                         AppStrings.activeNow,
                         style: Theme.of(context)
                             .textTheme
                             .bodyText2
                             ?.copyWith(color: Colors.green),
                       )
-                          : const SizedBox())
-                    ],
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.search,
-                      color: Colors.black,
-                    ),
-                    onPressed: () {
-                      Get.toNamed(SearchConversationScreen.routeName);
-                    },
-                  ),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.more_vert,
-                      color: Colors.black,
-                    ),
-                    onPressed: () async{
-                      assert(autoScrollController!=null);
-                      await autoScrollController?.scrollToIndex(16,
-                          preferPosition: AutoScrollPosition.end);
-                    },
-                  ),
-                ],
-              ),
+                    : const SizedBox())
+              ],
             ),
-            Container(
-              padding: const EdgeInsets.only(left: 17.0),
-              alignment: Alignment.center,
-              height: 7.h,
-              color: AppColors.textFieldBackgroundColor,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("18/18 results found",style: Theme.of(context).textTheme.bodyLarge,),
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back_ios,color: Colors.black,),
-                        onPressed: (){
-
-                        },
-                      ),
-                      IconButton(
-                          icon: const Icon(Icons.arrow_forward_ios,color: Colors.black,),
-                          onPressed: (){}
-                      )
-                    ],
-                  )
-                ],
+            const Spacer(),
+            IconButton(
+              icon: const Icon(
+                Icons.search,
+                color: Colors.black,
               ),
-            )
+              onPressed: () {
+                chatController.searchButtonTapped.value = true;
+              },
+            ),
+            IconButton(
+              icon: const Icon(
+                Icons.more_vert,
+                color: Colors.black,
+              ),
+              onPressed: () async {
+                assert(autoScrollController != null);
+                await autoScrollController?.scrollToIndex(16,
+                    preferPosition: AutoScrollPosition.end);
+              },
+            ),
           ],
         ),
-      ),
-    );
+      );
+    });
   }
 
+  Widget getBackButton() {
+    return IconButton(
+      icon: const Icon(
+        CupertinoIcons.back,
+        size: 28.0,
+      ),
+      onPressed: () {
+        if (controller.searchButtonTapped.value) {
+          controller.searchButtonTapped.value = false;
+        } else {
+          Get.back();
+        }
+      },
+    );
+  }
 
   Widget getBody() {
     return Obx(
@@ -217,12 +285,6 @@ class ChatScreen extends StatelessWidget {
         child: StreamBuilder(
           stream: controller.dataList,
           builder: (context, snapshot) {
-            print("Connection state coming is ${snapshot.connectionState}");
-
-            print(snapshot.hasData);
-
-            print(snapshot.hasData);
-
             if (snapshot.hasData &&
                 snapshot.connectionState == ConnectionState.active) {
               final chatList = snapshot.data as QuerySnapshot;
@@ -251,42 +313,48 @@ class ChatScreen extends StatelessWidget {
 
                     // debugPrint("Is Sender coming is $isSender");
 
-                    return AutoScrollTag(key: ValueKey(index.toString()), controller: autoScrollController!, index: index,child: Container(
-                      padding: EdgeInsets.only(
-                          left: isSender ? 50 : 14,
-                          right: isSender ? 14 : 50,
-                          top: 10,
-                          bottom: 10),
-                      child: Align(
-                        alignment:
-                        (isSender ? Alignment.topRight : Alignment.topLeft),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                                topRight: const Radius.circular(12.0),
-                                topLeft: const Radius.circular(12.0),
-                                bottomLeft: isSender
-                                    ? const Radius.circular(12.0)
-                                    : const Radius.circular(0.0),
-                                bottomRight: isSender
-                                    ? const Radius.circular(0.0)
-                                    : const Radius.circular(12.0)),
-                            color: (isSender
-                                ? AppColors.primaryColor
-                                : AppColors.textFieldBackgroundColor),
-                          ),
-                          padding: const EdgeInsets.all(16),
-                          child: Text(
-                            list[index].content ?? "",
-                            style: TextStyle(
-                                fontSize: 15,
-                                color: isSender
-                                    ? AppColors.whiteColor
-                                    : AppColors.blackTextColor),
+                    return AutoScrollTag(
+                      key: ValueKey(index.toString()),
+                      controller: autoScrollController!,
+                      index: index,
+                      child: Container(
+                        padding: EdgeInsets.only(
+                            left: isSender ? 50 : 14,
+                            right: isSender ? 14 : 50,
+                            top: 10,
+                            bottom: 10),
+                        child: Align(
+                          alignment: (isSender
+                              ? Alignment.topRight
+                              : Alignment.topLeft),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topRight: const Radius.circular(12.0),
+                                  topLeft: const Radius.circular(12.0),
+                                  bottomLeft: isSender
+                                      ? const Radius.circular(12.0)
+                                      : const Radius.circular(0.0),
+                                  bottomRight: isSender
+                                      ? const Radius.circular(0.0)
+                                      : const Radius.circular(12.0)),
+                              color: (isSender
+                                  ? AppColors.primaryColor
+                                  : AppColors.textFieldBackgroundColor),
+                            ),
+                            padding: const EdgeInsets.all(16),
+                            child: Text(
+                              list[index].content ?? "",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  color: isSender
+                                      ? AppColors.whiteColor
+                                      : AppColors.blackTextColor),
+                            ),
                           ),
                         ),
                       ),
-                    ),);
+                    );
                   });
             }
             return const Center(
@@ -405,12 +473,14 @@ class ChatScreen extends StatelessWidget {
   }
 
   Widget getAttachFileButton(BuildContext context) {
-    return Builder(builder: (context){
-      return IconButton(
-        icon: Icon(Icons.attach_file, color: AppColors.greyColor?.darken(30)),
-        onPressed: () => callAttachFile(context),
-      );
-    },);
+    return Builder(
+      builder: (context) {
+        return IconButton(
+          icon: Icon(Icons.attach_file, color: AppColors.greyColor?.darken(30)),
+          onPressed: () => callAttachFile(context),
+        );
+      },
+    );
   }
 
   Widget getCameraButton() {

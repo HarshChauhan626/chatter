@@ -52,6 +52,7 @@ class AppStrings {
   static const String message = "Message";
   static const String startChat = "Start chat";
   static const String searchConversation = "Search conversations";
+  static const String search="Search";
 
   static const String reachOutToUs="Reach out to us";
 

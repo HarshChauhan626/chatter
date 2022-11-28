@@ -37,7 +37,6 @@ class SearchConversationScreen extends StatelessWidget {
 
   Widget getSearchResultItem() {
     return Container(
-
     );
   }
 
