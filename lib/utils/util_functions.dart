@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 
 import '../helper/firebase_helper.dart';
 import '../models/user_model.dart';
+import 'app_colors.dart';
 
 class UtilFunctions {
   static String getRoomId(String senderId, String recieverId) {
@@ -42,9 +43,12 @@ class UtilFunctions {
     }
   }
 
-  List<TextSpan> highlightOccurrences(String source, String query) {
+  static List<TextSpan> highlightOccurrences(String source, String query,bool isSender) {
+
+    Color textColor=isSender?AppColors.whiteColor:AppColors.blackTextColor;
+
     if (query.isEmpty || !source.toLowerCase().contains(query.toLowerCase())) {
-      return [ TextSpan(text: source) ];
+      return [ TextSpan(text: source,style: TextStyle(color: textColor)) ];
     }
     final matches = query.toLowerCase().allMatches(source.toLowerCase());
 
@@ -55,19 +59,27 @@ class UtilFunctions {
       final match = matches.elementAt(i);
 
       if (match.start != lastMatchEnd) {
+        print(
+            source.substring(lastMatchEnd, match.start));
         children.add(TextSpan(
           text: source.substring(lastMatchEnd, match.start),
+          style: TextStyle(
+            color: textColor,
+            fontSize: 15
+          )
         ));
       }
 
       children.add(TextSpan(
         text: source.substring(match.start, match.end),
-        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+        style: TextStyle(color: AppColors.blackTextColor,background: Paint()..color=Colors.yellow,fontSize: 15),
       ));
 
       if (i == matches.length - 1 && match.end != source.length) {
         children.add(TextSpan(
           text: source.substring(match.end, source.length),
+            style: TextStyle(fontWeight: FontWeight.bold, color: textColor,fontSize: 15
+            )
         ));
       }
 

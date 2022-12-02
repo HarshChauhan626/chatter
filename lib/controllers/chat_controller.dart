@@ -34,13 +34,23 @@ class ChatController extends GetxController {
 
   RxBool isTyping = false.obs;
 
-  RxBool isUserOnlineVal=false.obs;
+  RxBool isUserOnlineVal = false.obs;
 
   Rx<RoomModel>? roomModel;
 
   Stream? dataList;
 
-  RxBool searchButtonTapped=false.obs;
+  RxBool searchButtonTapped = false.obs;
+
+  RxString searchText = "".obs;
+
+  RxList<int> searchResultList = <int>[].obs;
+
+  TextEditingController searchTextController = TextEditingController();
+
+  RxList<MessageModel> messageList=<MessageModel>[].obs;
+
+  RxInt currentIndex=0.obs;
 
   @override
   void onInit() {
@@ -48,19 +58,13 @@ class ChatController extends GetxController {
 
     initData();
   }
+
   @override
   void onReady() {
-    // TODO: implement onReady
-    // scrollController.animateTo(
-    //   scrollController.position.maxScrollExtent,
-    //   duration: const Duration(milliseconds: 100),
-    //   curve: Curves.easeIn,
-    // );
     super.onReady();
   }
 
-
-  void initData()async{
+  void initData() async {
     debugPrint("debugPrinting userModel");
     debugPrint(Get.arguments['receiverModel'].toString());
     debugPrint(Get.arguments['receiverModel'].runtimeType.toString());
@@ -75,25 +79,25 @@ class ChatController extends GetxController {
       getChatStream();
     }
 
-    if(receiverModel!=null){
+    if (receiverModel != null) {
       isUserOnline();
     }
   }
 
-  Future<void> isUserOnline()async{
-    try{
+  Future<void> isUserOnline() async {
+    try {
       final userCollectionRef =
-      FirebaseHelper.fireStoreInstance!.collection("user");
+          FirebaseHelper.fireStoreInstance!.collection("user");
 
-      final userDocStream=userCollectionRef.doc(receiverModel?.uid).snapshots();
+      final userDocStream =
+          userCollectionRef.doc(receiverModel?.uid).snapshots();
 
       userDocStream.listen((event) {
         debugPrint(event.toString());
       });
-
-    }
-    catch(e,s){
-      debugPrint("Exception coming in getting user active status ${e.toString()} ${s.toString()}");
+    } catch (e, s) {
+      debugPrint(
+          "Exception coming in getting user active status ${e.toString()} ${s.toString()}");
     }
   }
 
@@ -131,7 +135,7 @@ class ChatController extends GetxController {
         "replyTo": "", // Message Id
         "isLikedBy": [],
         "isSeenBy": [
-            {"uid": "$user1Id", "messageSeenAt": dateTimeNow}
+          {"uid": "$user1Id", "messageSeenAt": dateTimeNow}
         ],
       };
 
@@ -183,22 +187,26 @@ class ChatController extends GetxController {
 
       final groupDocReference = chatCollectionRef.doc(roomId.value);
 
-      final groupData=await groupDocReference.get();
+      final groupData = await groupDocReference.get();
 
-      if(groupData.exists){
-        bool isAlreadySeen=false;
-        final groupDataMap=groupData.data();
-        final isSeenByList=groupDataMap!["latestMessage"]["isSeenBy"];
-        for(int i=0;i<isSeenByList.length;i++){
-          if(isSeenByList[i]["uid"]==user1Id){
-            isAlreadySeen=true;
+      if (groupData.exists) {
+        bool isAlreadySeen = false;
+        final groupDataMap = groupData.data();
+        final isSeenByList = groupDataMap!["latestMessage"]["isSeenBy"];
+        for (int i = 0; i < isSeenByList.length; i++) {
+          if (isSeenByList[i]["uid"] == user1Id) {
+            isAlreadySeen = true;
             break;
           }
         }
-        if(!isAlreadySeen){
-          groupDataMap["latestMessage"]["isSeenBy"].add({"uid":user1Id,"messageSeenAt":DateTime.now().millisecondsSinceEpoch.toString()});
+        if (!isAlreadySeen) {
+          groupDataMap["latestMessage"]["isSeenBy"].add({
+            "uid": user1Id,
+            "messageSeenAt": DateTime.now().millisecondsSinceEpoch.toString()
+          });
         }
-        groupDocReference.update({"latestMessage":groupDataMap["latestMessage"]});
+        groupDocReference
+            .update({"latestMessage": groupDataMap["latestMessage"]});
       }
 
       dataList = groupDocReference
@@ -214,5 +222,44 @@ class ChatController extends GetxController {
     }
   }
 
+  Future<void> searchMessages()async{
+    // final chatCollectionRef =
+    // FirebaseHelper.fireStoreInstance!.collection("chats");
 
+    // searchResultList.value=[];
+    //
+    // final groupDocReference = chatCollectionRef.doc(roomId.value);
+    //
+    // final dataList=await groupDocReference.collection(roomId.value).where("content",
+    //     isGreaterThanOrEqualTo: searchText.value,
+    // ).where("content",isLessThan: searchText.value + "z")
+    //     .get();
+
+    // final searchList=[];
+
+    // dataList.snapshots().listen((event) {
+    //   print(event.docs.first.data());
+    //   for(final value in event.docs){
+    //     searchResultList.add(MessageModel.fromJson(value.data()));
+    //   }
+    // });
+
+    // dataList.docs.forEach((element) {
+    //   searchResultList.add(MessageModel.fromJson(element.data()));
+    // });
+    //
+    // searchResultList.value.forEach((element) {
+    //   print(element.content);
+    // });
+    final set=<int>{};
+    for(int index=0;index<messageList.value.length;index++){
+      final message=messageList[index];
+      if(message.content?.toLowerCase().contains(searchText.value.toLowerCase())??false){
+        set.add(index);
+      }
+    }
+
+    searchResultList.value=set.toList();
+
+  }
 }

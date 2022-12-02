@@ -3,6 +3,7 @@ import 'package:chat_app/controllers/chat_controller.dart';
 import 'package:chat_app/features/profile/receiver_profile_screen.dart';
 import 'package:chat_app/features/search_conversations/search_conversation_screen.dart';
 import 'package:chat_app/utils/app_colors.dart';
+import 'package:chat_app/utils/util_functions.dart';
 import 'package:chat_app/widgets/attachment_menu_bottom_sheet.dart';
 import 'package:chat_app/widgets/custom_route_builder.dart';
 import 'package:chat_app/widgets/custom_safe_area.dart';
@@ -34,6 +35,7 @@ class ChatScreen extends StatelessWidget {
   ChatController controller = Get.find<ChatController>();
 
   AutoScrollController? autoScrollController;
+  FocusNode? focusNode;
 
   void callEmoji() {
     debugPrint('Emoji Icon Pressed...');
@@ -62,6 +64,7 @@ class ChatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    focusNode = FocusNode();
     autoScrollController = AutoScrollController(
         viewportBoundaryGetter: () =>
             Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
@@ -101,7 +104,10 @@ class ChatScreen extends StatelessWidget {
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [getAppBarUpperBody(), getSearchResultNavigator()],
+          children: [
+            getAppBarUpperBody(),
+            getSearchResultNavigator()
+          ],
         ),
       ),
     );
@@ -109,46 +115,63 @@ class ChatScreen extends StatelessWidget {
 
   Widget getAppBarUpperBody() {
     return Obx(() {
-      if (controller.searchButtonTapped.value) {
-        return getSearchBar();
-      }
-      return getNormalBar();
+      return AnimatedCrossFade(
+          firstChild: getNormalBar(),
+          secondChild: getSearchBar(),
+          crossFadeState: controller.searchButtonTapped.value
+              ? CrossFadeState.showSecond
+              : CrossFadeState.showFirst,
+          duration: const Duration(milliseconds: 200));
+      // if (controller.searchButtonTapped.value) {
+      //   return getSearchBar();
+      // }
+      // return getNormalBar();
     });
   }
 
   Widget getSearchResultNavigator() {
-    return Builder(builder: (context) {
-      return Container(
-        padding: const EdgeInsets.only(left: 17.0),
-        alignment: Alignment.center,
-        height: 7.h,
-        color: AppColors.textFieldBackgroundColor,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "18/18 results found",
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-            Row(
+
+    return Obx((){
+      int currentIndex=controller.currentIndex.value;
+      final searchList=controller.searchResultList.value;
+      if(searchList.isNotEmpty){
+        return Builder(builder: (context) {
+          return Container(
+            padding: const EdgeInsets.only(left: 17.0),
+            alignment: Alignment.center,
+            height: 7.h,
+            color: AppColors.textFieldBackgroundColor,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back_ios,
-                    color: Colors.black,
-                  ),
-                  onPressed: () {},
+                Text(
+                  "${controller.currentIndex}/${controller.searchResultList.length} results found",
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
-                IconButton(
-                    icon: const Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.black,
+                Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.black,
+                      ),
+                      onPressed: () {},
                     ),
-                    onPressed: () {})
+                    IconButton(
+                        icon: const Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.black,
+                        ),
+                        onPressed: () {})
+                  ],
+                )
               ],
-            )
-          ],
-        ),
+            ),
+          );
+        });
+      }
+      return SizedBox(
+        height: 0.h,
       );
     });
   }
@@ -161,15 +184,30 @@ class ChatScreen extends StatelessWidget {
           getBackButton(),
           Expanded(
             child: TextField(
-              decoration: InputDecoration(
+              focusNode: focusNode,
+              controller: controller.searchTextController,
+              autofocus: true,
+              textInputAction: TextInputAction.search,
+              decoration: const InputDecoration(
                   focusedBorder: InputBorder.none,
                   hintText: AppStrings.search,
                   border: InputBorder.none),
+              onChanged: (String val){
+                controller.searchText.value=val;
+              },
+              onSubmitted: (String val) {
+                if (val.length >= 2) {
+                  controller.searchMessages();
+                }
+              },
             ),
           ),
           IconButton(
             icon: const Icon(Icons.clear),
-            onPressed: () {},
+            onPressed: () {
+              controller.searchTextController.clear();
+              controller.searchText.value = "";
+            },
           ),
           IconButton(
             icon: const Icon(Icons.more_vert),
@@ -237,6 +275,7 @@ class ChatScreen extends StatelessWidget {
               ),
               onPressed: () {
                 chatController.searchButtonTapped.value = true;
+                focusNode?.requestFocus();
               },
             ),
             IconButton(
@@ -289,9 +328,9 @@ class ChatScreen extends StatelessWidget {
                 snapshot.connectionState == ConnectionState.active) {
               final chatList = snapshot.data as QuerySnapshot;
 
-              final list = chatList.docs
+              controller.messageList.value = chatList.docs
                   .map((e) {
-                    print("Message data coming is ${e.data()}");
+                    // print("Message data coming is ${e.data()}");
                     return MessageModel.fromJson(
                         e.data() as Map<String, dynamic>);
                   })
@@ -299,9 +338,12 @@ class ChatScreen extends StatelessWidget {
                   .reversed
                   .toList();
 
+              print(controller.messageList.length);
+
+
               return ListView.builder(
                   reverse: true,
-                  itemCount: list.length,
+                  itemCount: controller.messageList.length,
                   shrinkWrap: true,
                   scrollDirection: Axis.vertical,
                   controller: autoScrollController,
@@ -309,53 +351,65 @@ class ChatScreen extends StatelessWidget {
                     final userId =
                         Get.find<AuthController>().firebaseUser.value?.uid;
 
-                    bool isSender = list[index].senderId == userId;
+                    bool isSender = controller.messageList[index].senderId == userId;
 
                     // debugPrint("Is Sender coming is $isSender");
 
-                    return AutoScrollTag(
-                      key: ValueKey(index.toString()),
-                      controller: autoScrollController!,
-                      index: index,
-                      child: Container(
-                        padding: EdgeInsets.only(
-                            left: isSender ? 50 : 14,
-                            right: isSender ? 14 : 50,
-                            top: 10,
-                            bottom: 10),
-                        child: Align(
-                          alignment: (isSender
-                              ? Alignment.topRight
-                              : Alignment.topLeft),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                  topRight: const Radius.circular(12.0),
-                                  topLeft: const Radius.circular(12.0),
-                                  bottomLeft: isSender
-                                      ? const Radius.circular(12.0)
-                                      : const Radius.circular(0.0),
-                                  bottomRight: isSender
-                                      ? const Radius.circular(0.0)
-                                      : const Radius.circular(12.0)),
-                              color: (isSender
-                                  ? AppColors.primaryColor
-                                  : AppColors.textFieldBackgroundColor),
-                            ),
-                            padding: const EdgeInsets.all(16),
-                            child: Text(
-                              list[index].content ?? "",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: isSender
-                                      ? AppColors.whiteColor
-                                      : AppColors.blackTextColor),
+                    return Obx((){
+                      if(controller.searchResultList.contains(index)){
+                        print("Is result item ${controller.messageList[index].content}");
+                      }
+
+                      return AutoScrollTag(
+                        key: ValueKey(index.toString()),
+                        controller: autoScrollController!,
+                        index: index,
+                        child: Container(
+                          padding: EdgeInsets.only(
+                              left: isSender ? 50 : 14,
+                              right: isSender ? 14 : 50,
+                              top: 10,
+                              bottom: 10),
+                          child: Align(
+                            alignment: (isSender
+                                ? Alignment.topRight
+                                : Alignment.topLeft),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                    topRight: const Radius.circular(12.0),
+                                    topLeft: const Radius.circular(12.0),
+                                    bottomLeft: isSender
+                                        ? const Radius.circular(12.0)
+                                        : const Radius.circular(0.0),
+                                    bottomRight: isSender
+                                        ? const Radius.circular(0.0)
+                                        : const Radius.circular(12.0)),
+                                color: (isSender
+                                    ? AppColors.primaryColor
+                                    : AppColors.textFieldBackgroundColor),
+                              ),
+                              padding: const EdgeInsets.all(16),
+                              child: RichText(
+                                text: TextSpan(
+                                  children: UtilFunctions.highlightOccurrences(controller.messageList[index].content??"", controller.searchText.value,isSender)
+                                ),
+                              ),
+                              //  child: Text(
+                              //     controller.messageList[index].content ?? "",
+                              //     style: TextStyle(
+                              //         fontSize: 15,
+                              //         color: isSender
+                              //             ? AppColors.whiteColor
+                              //             : AppColors.blackTextColor),
+                              //   )
                             ),
                           ),
                         ),
-                      ),
-                    );
+                      );
+                    });
                   });
+
             }
             return const Center(
               child: CircularProgressIndicator(),
@@ -450,9 +504,12 @@ class ChatScreen extends StatelessWidget {
                           color: AppColors.primaryColor,
                           borderRadius:
                               BorderRadius.all(Radius.circular(12.0))),
-                      child: Obx(() => chatController.message.value.isNotEmpty
-                          ? getSendMessageButton()
-                          : getVoiceRecordingButton())),
+                      child: Obx(() => AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 200),
+                            child: chatController.message.value.isNotEmpty
+                                ? getSendMessageButton()
+                                : getVoiceRecordingButton(),
+                          ))),
                 )
               ],
             )
