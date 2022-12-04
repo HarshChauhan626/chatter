@@ -59,6 +59,7 @@ class AuthController extends GetxController {
 
   @override
   void onClose() {
+    print("On close auth controller running");
     if (firebaseUser.value != null) {
       updateUserLogin(isDisposing: true);
     }
@@ -187,7 +188,7 @@ class AuthController extends GetxController {
           await userCollectionRef.doc(firebaseUser.value?.uid).get();
 
       if (docReference.exists) {
-        userInfo?.value =
+        userInfo.value =
             UserModel.fromJson(docReference.data() as Map<String, dynamic>);
       }
     } catch (e, s) {
@@ -195,4 +196,27 @@ class AuthController extends GetxController {
           "Exception coming in set user info ${e.toString()} ${s.toString()}");
     }
   }
+
+
+  Future<void> saveUserDeviceToken(String deviceToken)async{
+    try {
+      final userCollectionRef =
+      FirebaseHelper.fireStoreInstance!.collection("user");
+
+      final docReference = userCollectionRef.doc(firebaseUser.value?.uid);
+
+      final userDocument=await docReference.get();
+
+      if (userDocument.exists) {
+        docReference.update({
+          "deviceToken":deviceToken
+        });
+      }
+    } catch (e, s) {
+      print(
+          "Exception coming in set user info ${e.toString()} ${s.toString()}");
+    }
+  }
+
+
 }

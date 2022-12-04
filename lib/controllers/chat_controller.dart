@@ -51,6 +51,7 @@ class ChatController extends GetxController {
   RxList<MessageModel> messageList=<MessageModel>[].obs;
 
   RxInt currentIndex=0.obs;
+  RxInt scrollPosition=0.obs;
 
   @override
   void onInit() {
@@ -223,34 +224,6 @@ class ChatController extends GetxController {
   }
 
   Future<void> searchMessages()async{
-    // final chatCollectionRef =
-    // FirebaseHelper.fireStoreInstance!.collection("chats");
-
-    // searchResultList.value=[];
-    //
-    // final groupDocReference = chatCollectionRef.doc(roomId.value);
-    //
-    // final dataList=await groupDocReference.collection(roomId.value).where("content",
-    //     isGreaterThanOrEqualTo: searchText.value,
-    // ).where("content",isLessThan: searchText.value + "z")
-    //     .get();
-
-    // final searchList=[];
-
-    // dataList.snapshots().listen((event) {
-    //   print(event.docs.first.data());
-    //   for(final value in event.docs){
-    //     searchResultList.add(MessageModel.fromJson(value.data()));
-    //   }
-    // });
-
-    // dataList.docs.forEach((element) {
-    //   searchResultList.add(MessageModel.fromJson(element.data()));
-    // });
-    //
-    // searchResultList.value.forEach((element) {
-    //   print(element.content);
-    // });
     final set=<int>{};
     for(int index=0;index<messageList.value.length;index++){
       final message=messageList[index];
@@ -260,6 +233,10 @@ class ChatController extends GetxController {
     }
 
     searchResultList.value=set.toList();
+
+    if(searchResultList.isNotEmpty){
+      currentIndex.value=0;
+    }
 
   }
 }

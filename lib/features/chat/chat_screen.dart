@@ -68,7 +68,7 @@ class ChatScreen extends StatelessWidget {
     autoScrollController = AutoScrollController(
         viewportBoundaryGetter: () =>
             Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
-        axis: Axis.horizontal);
+        axis: Axis.vertical);
     return WillPopScope(
       onWillPop: () async {
         if (controller.searchButtonTapped.value) {
@@ -91,29 +91,23 @@ class ChatScreen extends StatelessWidget {
 
   PreferredSizeWidget getAppBar() {
     return PreferredSize(
-      preferredSize: Size(double.infinity, 14.h),
+      preferredSize: Size(double.infinity, 8.h),
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           boxShadow: [
             BoxShadow(
                 offset: const Offset(0, 2),
-                blurRadius: 3,
+                blurRadius: 2,
                 color: Colors.grey.shade300),
           ],
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            getAppBarUpperBody(),
-            getSearchResultNavigator()
-          ],
-        ),
+        child: getAppBarBody(),
       ),
     );
   }
 
-  Widget getAppBarUpperBody() {
+  Widget getAppBarBody() {
     return Obx(() {
       return AnimatedCrossFade(
           firstChild: getNormalBar(),
@@ -130,45 +124,73 @@ class ChatScreen extends StatelessWidget {
   }
 
   Widget getSearchResultNavigator() {
-
-    return Obx((){
-      int currentIndex=controller.currentIndex.value;
-      final searchList=controller.searchResultList.value;
-      if(searchList.isNotEmpty){
-        return Builder(builder: (context) {
-          return Container(
-            padding: const EdgeInsets.only(left: 17.0),
-            alignment: Alignment.center,
-            height: 7.h,
-            color: AppColors.textFieldBackgroundColor,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "${controller.currentIndex}/${controller.searchResultList.length} results found",
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                Row(
-                  children: [
-                    IconButton(
+    return Obx(() {
+      int currentIndex = controller.currentIndex.value;
+      final searchList = controller.searchResultList.value;
+      final searchText = controller.searchText.value;
+      if (searchList.isNotEmpty && searchText.isNotEmpty) {
+        // return Builder(builder: (context) {
+        //
+        // });
+        return Container(
+          padding: const EdgeInsets.only(left: 17.0),
+          alignment: Alignment.center,
+          height: 7.h,
+          color: AppColors.textFieldBackgroundColor,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "${controller.currentIndex.value + 1}/${controller.searchResultList.length} results found",
+                // style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.black,
+                    ),
+                    onPressed: () async {
+                      if (controller.currentIndex.value >= 1) {
+                        controller.currentIndex.value -= 1;
+                        assert(autoScrollController != null);
+                        final scrollToIndexVal = controller.searchResultList
+                            .value[controller.currentIndex.value];
+                        print(
+                            "Scroll to index val coming is $scrollToIndexVal");
+                        await autoScrollController?.scrollToIndex(16,
+                            preferPosition: AutoScrollPosition.begin);
+                        print(
+                            "Scrolling done with ${autoScrollController != null}");
+                      }
+                    },
+                  ),
+                  IconButton(
                       icon: const Icon(
-                        Icons.arrow_back_ios,
+                        Icons.arrow_forward_ios,
                         color: Colors.black,
                       ),
-                      onPressed: () {},
-                    ),
-                    IconButton(
-                        icon: const Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.black,
-                        ),
-                        onPressed: () {})
-                  ],
-                )
-              ],
-            ),
-          );
-        });
+                      onPressed: () async {
+                        if (controller.currentIndex.value <
+                            controller.searchResultList.length - 1) {
+                          controller.currentIndex.value += 1;
+                          assert(autoScrollController != null);
+                          final scrollToIndexVal = controller.searchResultList
+                              .value[controller.currentIndex.value];
+                          print(
+                              "Scroll to index val coming is $scrollToIndexVal");
+                          await autoScrollController?.scrollToIndex(16,
+                              preferPosition: AutoScrollPosition.begin);
+                          print(
+                              "Scrolling done with ${autoScrollController != null}");
+                        }
+                      })
+                ],
+              )
+            ],
+          ),
+        );
       }
       return SizedBox(
         height: 0.h,
@@ -192,8 +214,14 @@ class ChatScreen extends StatelessWidget {
                   focusedBorder: InputBorder.none,
                   hintText: AppStrings.search,
                   border: InputBorder.none),
-              onChanged: (String val){
-                controller.searchText.value=val;
+              onChanged: (String val) {
+                controller.searchText.value = val;
+                if (controller.searchResultList.isNotEmpty) {
+                  controller.searchMessages();
+                }
+                if (val.isEmpty) {
+                  controller.searchResultList.clear();
+                }
               },
               onSubmitted: (String val) {
                 if (val.length >= 2) {
@@ -207,6 +235,7 @@ class ChatScreen extends StatelessWidget {
             onPressed: () {
               controller.searchTextController.clear();
               controller.searchText.value = "";
+              controller.searchResultList.clear();
             },
           ),
           IconButton(
@@ -285,7 +314,7 @@ class ChatScreen extends StatelessWidget {
               ),
               onPressed: () async {
                 assert(autoScrollController != null);
-                await autoScrollController?.scrollToIndex(16,
+                await autoScrollController?.scrollToIndex(1,
                     preferPosition: AutoScrollPosition.end);
               },
             ),
@@ -321,100 +350,118 @@ class ChatScreen extends StatelessWidget {
       height: 89.h,
       child: Align(
         alignment: Alignment.bottomCenter,
-        child: StreamBuilder(
-          stream: controller.dataList,
-          builder: (context, snapshot) {
-            if (snapshot.hasData &&
-                snapshot.connectionState == ConnectionState.active) {
-              final chatList = snapshot.data as QuerySnapshot;
+        child: Stack(
+          children: [
+            StreamBuilder(
+              stream: controller.dataList,
+              builder: (context, snapshot) {
+                if (snapshot.hasData &&
+                    snapshot.connectionState == ConnectionState.active) {
+                  final chatList = snapshot.data as QuerySnapshot;
 
-              controller.messageList.value = chatList.docs
-                  .map((e) {
-                    // print("Message data coming is ${e.data()}");
-                    return MessageModel.fromJson(
-                        e.data() as Map<String, dynamic>);
-                  })
-                  .toList()
-                  .reversed
-                  .toList();
+                  controller.messageList.value = chatList.docs
+                      .map((e) {
+                        // print("Message data coming is ${e.data()}");
+                        return MessageModel.fromJson(
+                            e.data() as Map<String, dynamic>);
+                      })
+                      .toList()
+                      .reversed
+                      .toList();
 
-              print(controller.messageList.length);
+                  print(controller.messageList.length);
 
+                  return ListView.builder(
+                      reverse: true,
+                      itemCount: controller.messageList.length,
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      controller: autoScrollController,
+                      itemBuilder: (context, index) {
+                        final userId =
+                            Get.find<AuthController>().firebaseUser.value?.uid;
 
-              return ListView.builder(
-                  reverse: true,
-                  itemCount: controller.messageList.length,
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  controller: autoScrollController,
-                  itemBuilder: (context, index) {
-                    final userId =
-                        Get.find<AuthController>().firebaseUser.value?.uid;
+                        bool isSender =
+                            controller.messageList[index].senderId == userId;
 
-                    bool isSender = controller.messageList[index].senderId == userId;
+                        // debugPrint("Is Sender coming is $isSender");
 
-                    // debugPrint("Is Sender coming is $isSender");
+                        return Obx(() {
+                          if (controller.searchResultList.contains(index)) {
+                            print(
+                                "Is result item ${controller.messageList[index].content}");
+                          }
 
-                    return Obx((){
-                      if(controller.searchResultList.contains(index)){
-                        print("Is result item ${controller.messageList[index].content}");
-                      }
-
-                      return AutoScrollTag(
-                        key: ValueKey(index.toString()),
-                        controller: autoScrollController!,
-                        index: index,
-                        child: Container(
-                          padding: EdgeInsets.only(
-                              left: isSender ? 50 : 14,
-                              right: isSender ? 14 : 50,
-                              top: 10,
-                              bottom: 10),
-                          child: Align(
-                            alignment: (isSender
-                                ? Alignment.topRight
-                                : Alignment.topLeft),
+                          return AutoScrollTag(
+                            key: ValueKey(index.toString()),
+                            controller: autoScrollController!,
+                            index: index,
                             child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                    topRight: const Radius.circular(12.0),
-                                    topLeft: const Radius.circular(12.0),
-                                    bottomLeft: isSender
-                                        ? const Radius.circular(12.0)
-                                        : const Radius.circular(0.0),
-                                    bottomRight: isSender
-                                        ? const Radius.circular(0.0)
-                                        : const Radius.circular(12.0)),
-                                color: (isSender
-                                    ? AppColors.primaryColor
-                                    : AppColors.textFieldBackgroundColor),
+                              padding: EdgeInsets.only(
+                                  left: isSender ? 50 : 14,
+                                  right: isSender ? 14 : 50,
+                                  top: 10,
+                                  bottom: 10),
+                              child: Align(
+                                alignment: (isSender
+                                    ? Alignment.topRight
+                                    : Alignment.topLeft),
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                          topRight: const Radius.circular(12.0),
+                                          topLeft: const Radius.circular(12.0),
+                                          bottomLeft: isSender
+                                              ? const Radius.circular(12.0)
+                                              : const Radius.circular(0.0),
+                                          bottomRight: isSender
+                                              ? const Radius.circular(0.0)
+                                              : const Radius.circular(12.0)),
+                                      color: (isSender
+                                          ? AppColors.primaryColor
+                                          : AppColors.textFieldBackgroundColor),
+                                    ),
+                                    padding: const EdgeInsets.all(16),
+                                    child: (controller
+                                                .searchText.value.isNotEmpty &&
+                                            controller
+                                                .searchResultList.isNotEmpty)
+                                        ? RichText(
+                                            text: TextSpan(
+                                                children: UtilFunctions
+                                                    .highlightOccurrences(
+                                                        controller
+                                                                .messageList[
+                                                                    index]
+                                                                .content ??
+                                                            "",
+                                                        controller
+                                                            .searchText.value,
+                                                        isSender)),
+                                          )
+                                        : Text(
+                                            controller.messageList[index]
+                                                    .content ??
+                                                "",
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                color: isSender
+                                                    ? AppColors.whiteColor
+                                                    : AppColors.blackTextColor),
+                                          )),
                               ),
-                              padding: const EdgeInsets.all(16),
-                              child: RichText(
-                                text: TextSpan(
-                                  children: UtilFunctions.highlightOccurrences(controller.messageList[index].content??"", controller.searchText.value,isSender)
-                                ),
-                              ),
-                              //  child: Text(
-                              //     controller.messageList[index].content ?? "",
-                              //     style: TextStyle(
-                              //         fontSize: 15,
-                              //         color: isSender
-                              //             ? AppColors.whiteColor
-                              //             : AppColors.blackTextColor),
-                              //   )
                             ),
-                          ),
-                        ),
-                      );
-                    });
-                  });
-
-            }
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          },
+                          );
+                        });
+                      });
+                }
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
+            ),
+            getSearchResultNavigator()
+          ],
         ),
       ),
     );

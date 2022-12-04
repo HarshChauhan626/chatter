@@ -5,6 +5,7 @@ import 'package:chat_app/features/onboarding/onboarding_screen.dart';
 import 'package:chat_app/features/sign_in/sign_in_screen.dart';
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/widgets/custom_safe_area.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -48,6 +49,16 @@ class _SplashScreenState extends State<SplashScreen> {
     // TODO: implement initState
     super.initState();
     startTimer();
+    registerDeviceToken();
+  }
+
+
+  void registerDeviceToken()async{
+    await FirebaseMessaging.instance.getToken().then((token) {
+      if(token!=null){
+        authController.saveUserDeviceToken(token);
+      }
+    });
   }
 
   @override

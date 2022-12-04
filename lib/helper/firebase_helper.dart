@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -8,6 +9,7 @@ class FirebaseHelper{
   static FirebaseFirestore? fireStoreInstance;
   static GoogleSignIn? googleSignInstance;
   static FirebaseStorage? firebaseStorage;
+  static FirebaseMessaging? firebaseMessaging;
 
   static User? user;
 
@@ -16,6 +18,7 @@ class FirebaseHelper{
     fireStoreInstance=FirebaseFirestore.instance;
     googleSignInstance=GoogleSignIn();
     firebaseStorage=FirebaseStorage.instance;
+    firebaseMessaging=FirebaseMessaging.instance;
   }
 
 

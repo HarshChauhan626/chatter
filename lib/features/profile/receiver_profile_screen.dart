@@ -28,40 +28,50 @@ class ReceiverProfileScreen extends StatelessWidget {
 
     return CustomSafeArea(
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size(double.infinity, 20.h),
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppColors.whiteColor,
-              // borderRadius: BorderRadius.only(
-              //     bottomRight: Radius.circular(4.w),
-              //     bottomLeft: Radius.circular(4.w)
-              // ),
-              boxShadow: [
-                BoxShadow(
-                    offset: const Offset(0, 2),
-                    blurRadius: 3,
-                    color: Colors.grey.shade300),
-              ],
-            ),
-            child: Row(
-              children: [
-                IconButton(
-                  icon: const Icon(CupertinoIcons.back),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                // const Spacer(),
-                // IconButton(
-                //   icon: const Icon(
-                //     Icons.more_vert,
-                //     color: Colors.black,
-                //   ),
-                //   onPressed: () {},
-                // ),
-              ],
-            ),
+        // appBar: PreferredSize(
+        //   preferredSize: Size(double.infinity, 30.h),
+        //   child: Container(
+        //     decoration: BoxDecoration(
+        //       color: AppColors.whiteColor,
+        //       // borderRadius: BorderRadius.only(
+        //       //     bottomRight: Radius.circular(4.w),
+        //       //     bottomLeft: Radius.circular(4.w)
+        //       // ),
+        //       boxShadow: [
+        //         BoxShadow(
+        //             offset: const Offset(0, 2),
+        //             blurRadius: 3,
+        //             color: Colors.grey.shade300),
+        //       ],
+        //     ),
+        //     child: Row(
+        //       children: [
+        //         IconButton(
+        //           icon: const Icon(CupertinoIcons.back),
+        //           onPressed: () {
+        //             Navigator.pop(context);
+        //           },
+        //         ),
+        //         // const Spacer(),
+        //         // IconButton(
+        //         //   icon: const Icon(
+        //         //     Icons.more_vert,
+        //         //     color: Colors.black,
+        //         //   ),
+        //         //   onPressed: () {},
+        //         // ),
+        //       ],
+        //     ),
+        //   ),
+        // ),
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          elevation: 2.0,
+          leading: IconButton(
+            icon: const Icon(CupertinoIcons.back,color: Colors.black,size: 28.0,),
+            onPressed: () {
+              Get.back();
+            },
           ),
         ),
         body: SingleChildScrollView(

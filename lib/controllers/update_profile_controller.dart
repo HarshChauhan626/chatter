@@ -50,7 +50,7 @@ class UpdateProfileController extends GetxController {
 
   void initData() async {
     try {
-      currentUserInfo.value = Get.find<AuthController>().userInfo?.value;
+      currentUserInfo.value = Get.find<AuthController>().userInfo.value;
       if (currentUserInfo.value != null) {
         username.value = currentUserInfo.value!.userName ?? "";
         firstName.value = currentUserInfo.value!.firstName ?? "";
