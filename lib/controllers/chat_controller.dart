@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:chat_app/helper/notification_helper.dart';
 import 'package:chat_app/models/message_model.dart';
 import 'package:chat_app/utils/util_functions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,10 +11,12 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:sizer/sizer.dart';
 import 'package:uuid/uuid.dart';
 
+import '../constants.dart';
 import '../helper/firebase_helper.dart';
 import '../models/room_model.dart';
 import '../models/user_model.dart';
 import 'auth_controller.dart';
+import 'package:http/http.dart' as http;
 
 class ChatController extends GetxController {
   String? user1Id;
@@ -48,10 +53,10 @@ class ChatController extends GetxController {
 
   TextEditingController searchTextController = TextEditingController();
 
-  RxList<MessageModel> messageList=<MessageModel>[].obs;
+  RxList<MessageModel> messageList = <MessageModel>[].obs;
 
-  RxInt currentIndex=0.obs;
-  RxInt scrollPosition=0.obs;
+  RxInt currentIndex = 0.obs;
+  RxInt scrollPosition = 0.obs;
 
   @override
   void onInit() {
@@ -172,6 +177,10 @@ class ChatController extends GetxController {
             .doc(dateTimeNow)
             .set(messageData);
       }
+      if (receiverModel != null && roomId.value.isNotEmpty) {
+        await NotificationHelper.sendNotification(
+            receiverModel!, roomId.value, message.value);
+      }
     } catch (e, s) {
       debugPrint(
           "Exception coming in sending message is ${e.toString()} ${s.toString()}");
@@ -223,20 +232,22 @@ class ChatController extends GetxController {
     }
   }
 
-  Future<void> searchMessages()async{
-    final set=<int>{};
-    for(int index=0;index<messageList.value.length;index++){
-      final message=messageList[index];
-      if(message.content?.toLowerCase().contains(searchText.value.toLowerCase())??false){
+  Future<void> searchMessages() async {
+    final set = <int>{};
+    for (int index = 0; index < messageList.value.length; index++) {
+      final message = messageList[index];
+      if (message.content
+              ?.toLowerCase()
+              .contains(searchText.value.toLowerCase()) ??
+          false) {
         set.add(index);
       }
     }
 
-    searchResultList.value=set.toList();
+    searchResultList.value = set.toList();
 
-    if(searchResultList.isNotEmpty){
-      currentIndex.value=0;
+    if (searchResultList.isNotEmpty) {
+      currentIndex.value = 0;
     }
-
   }
 }

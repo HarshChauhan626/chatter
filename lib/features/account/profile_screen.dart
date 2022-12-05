@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:random_avatar/random_avatar.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../controllers/auth_controller.dart';

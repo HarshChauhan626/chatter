@@ -7,37 +7,35 @@ import 'package:hive/hive.dart';
 import '../utils/app_strings.dart';
 import 'package:path_provider/path_provider.dart' as pathProvider;
 
-class HiveDBHelper extends GetxController{
+class HiveDBHelper extends GetxController {
   Box? userPreferenceBox;
 
-  bool _onboardingDone=false;
+  bool _onboardingDone = false;
 
-  bool get onboardingDone=>_onboardingDone;
+  bool get onboardingDone => _onboardingDone;
 
-  set onboardingDone(bool onboardingDone){
-    _onboardingDone=onboardingDone;
-    userPreferenceBox?.put(AppStrings.isOnBoardingDone,onboardingDone);
+  set onboardingDone(bool onboardingDone) {
+    _onboardingDone = onboardingDone;
+    userPreferenceBox?.put(AppStrings.isOnBoardingDone, onboardingDone);
   }
 
   @override
-  void onInit(){
+  void onInit() {
     super.onInit();
     initData();
   }
-
-
-
 
   void initData() async {
     await initBoxes();
     await setUpData();
   }
 
-  Future<void> setUpData()async{
-    _onboardingDone=userPreferenceBox?.get(AppStrings.isOnBoardingDone)??false;
+  Future<void> setUpData() async {
+    _onboardingDone =
+        userPreferenceBox?.get(AppStrings.isOnBoardingDone) ?? false;
   }
 
-  Future<void> initBoxes()async{
+  Future<void> initBoxes() async {
     List<int> generatedKey = [
       213,
       61,

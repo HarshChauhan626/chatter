@@ -9,6 +9,7 @@ class UserModel {
   String? firstName;
   String? lastName;
   String? profilePicture;
+  String? deviceToken;
   UserModel(
       {this.email,
       this.userName,
@@ -19,7 +20,9 @@ class UserModel {
       this.firstName,
       this.lastName,
       this.bio,
-      this.profilePicture});
+      this.profilePicture,
+        this.deviceToken
+      });
 
   UserModel.fromJson(Map<String, dynamic> userModelJson) {
     email = userModelJson["email"] ?? "";
@@ -32,6 +35,7 @@ class UserModel {
     firstName = userModelJson["firstName"] ?? "";
     lastName = userModelJson["lastName"] ?? "";
     profilePicture = userModelJson["profilePicture"];
+    deviceToken=userModelJson["deviceToken"];
   }
 
   Map<String, dynamic> toJson() {
@@ -45,7 +49,8 @@ class UserModel {
       "lastName": lastName,
       "isOnline": isOnline,
       "lastSeenAt": lastSeenAt,
-      "profilePicture": profilePicture
+      "profilePicture": profilePicture,
+      "deviceToken":deviceToken
     };
   }
 

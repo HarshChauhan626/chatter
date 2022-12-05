@@ -19,7 +19,7 @@ class RoomModel {
       this.userInfoList
       });
 
-  RoomModel.fromJson(Map<String, dynamic> json) {
+  RoomModel.fromJson(Map<String, dynamic> json){
     roomId=json["roomId"]??"";
     userList = json["userList"] ?? [];
     isTyping = json["isTyping"] ?? [];

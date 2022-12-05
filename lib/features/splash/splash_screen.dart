@@ -3,6 +3,7 @@ import 'package:chat_app/helper/hive_db_helper.dart';
 import 'package:chat_app/features/home/home_screen.dart';
 import 'package:chat_app/features/onboarding/onboarding_screen.dart';
 import 'package:chat_app/features/sign_in/sign_in_screen.dart';
+import 'package:chat_app/helper/notification_helper.dart';
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/widgets/custom_safe_area.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -31,15 +32,16 @@ class _SplashScreenState extends State<SplashScreen> {
   AuthController authController = Get.put(AuthController(), permanent: true);
 
   void startTimer() async {
-    await Future.delayed(const Duration(seconds: 6), () async {});
-    if(Get.find<HiveDBHelper>().onboardingDone){
+    await Future.delayed(const Duration(seconds: 2), () async {});
+    if (Get.find<HiveDBHelper>().onboardingDone) {
       if (authController.firebaseUser.value != null) {
-        Get.offAllNamed(HomeScreen.routeName);
+        if(NotificationHelper.notificationDataModel==null){
+          Get.offAllNamed(HomeScreen.routeName);
+        }
       } else {
         Get.offAllNamed(SignInScreen.routeName);
       }
-    }
-    else{
+    } else {
       Get.offAllNamed(OnboardingScreen.routeName);
     }
   }
@@ -48,14 +50,14 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    NotificationHelper.setUpNotifications();
     startTimer();
     registerDeviceToken();
   }
 
-
-  void registerDeviceToken()async{
+  void registerDeviceToken() async {
     await FirebaseMessaging.instance.getToken().then((token) {
-      if(token!=null){
+      if (token != null) {
         authController.saveUserDeviceToken(token);
       }
     });
