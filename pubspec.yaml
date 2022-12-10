@@ -66,6 +66,7 @@ dependencies:
   date_time_format: ^2.0.1
   touch_ripple_effect: ^2.2.3
   flutter_ringtone_player: ^3.2.0
+  shimmer: ^2.0.0
 
 dev_dependencies:
   flutter_test:
