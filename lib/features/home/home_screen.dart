@@ -30,7 +30,6 @@ import '../../helper/firebase_helper.dart';
 import '../../models/room_model.dart';
 import '../../utils/app_strings.dart';
 import '../../utils/enums.dart';
-import 'home_loading_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -222,9 +221,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
           debugPrint(roomModelList.toString());
 
-          // sliverList.add(getChatList(roomModelList));
-          sliverList.add(SliverToBoxAdapter(child: HomeLoadingScreen(),));
+          sliverList.add(getChatList(roomModelList));
         }
+
         return CustomScrollView(
           controller: _scrollController,
           // slivers: [getAppBar(), getChatList()],
