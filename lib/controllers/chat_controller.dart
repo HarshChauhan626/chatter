@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:chat_app/helper/hive_db_helper.dart';
 import 'package:chat_app/helper/notification_helper.dart';
 import 'package:chat_app/models/message_model.dart';
 import 'package:chat_app/utils/util_functions.dart';
@@ -61,13 +62,39 @@ class ChatController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-
     initData();
   }
 
   @override
   void onReady() {
     super.onReady();
+  }
+
+  @override
+  void onClose() {
+    // TODO: implement onClose
+    Get.find<HiveDBHelper>().currentChatId=null;
+    super.onClose();
+  }
+
+  void toggleUserActiveStatus() async{
+    try {
+      final chatCollectionRef =
+      FirebaseHelper.fireStoreInstance!.collection("chats");
+
+      final groupDocReference = chatCollectionRef.doc(roomId.value);
+
+      final groupData = await groupDocReference.get();
+
+      groupData.data()?.update("activeUsers", (value) => [
+        {user1Id:true},
+        {user2Id:true}
+      ]);
+
+    } catch (e,s) {
+      debugPrint(e.toString());
+      debugPrint(s.toString());
+    }
   }
 
   void initData() async {
@@ -88,6 +115,9 @@ class ChatController extends GetxController {
     if (receiverModel != null) {
       isUserOnline();
     }
+
+    Get.find<HiveDBHelper>().currentChatId=roomId.value;
+
   }
 
   Future<void> isUserOnline() async {
@@ -133,6 +163,12 @@ class ChatController extends GetxController {
 
       final dateTimeNow = DateTime.now().millisecondsSinceEpoch.toString();
 
+      UserModel? senderUserInfo;
+
+      if (user1Id != null) {
+        senderUserInfo = await UtilFunctions.getUserInfo(user1Id!);
+      }
+
       final messageData = {
         "content": message.value,
         "sender": user1Id,
@@ -149,20 +185,11 @@ class ChatController extends GetxController {
         final uniqueRoomId = const Uuid().v1();
         roomId.value = uniqueRoomId;
         final groupDocReference = chatCollectionRef.doc(uniqueRoomId);
-
-        UserModel? senderUserInfo;
-
-        if (user1Id != null) {
-          senderUserInfo = await UtilFunctions.getUserInfo(user1Id!);
-        }
-
         await groupDocReference.set({
           "roomId": roomId.value,
           "userList": [user1Id, receiverModel?.uid],
           "isTyping": [],
-          "adminList": [],
           "latestMessage": messageData,
-          "userInfoList": [senderUserInfo?.toJson(), receiverModel?.toJson()]
         });
         await groupDocReference
             .collection(uniqueRoomId)
@@ -177,9 +204,13 @@ class ChatController extends GetxController {
             .doc(dateTimeNow)
             .set(messageData);
       }
-      if (receiverModel != null && roomId.value.isNotEmpty) {
+      if (receiverModel != null &&
+          roomId.value.isNotEmpty &&
+          receiverModel?.deviceToken != null &&
+          (receiverModel?.deviceToken!.isNotEmpty ?? false) &&
+          senderUserInfo != null) {
         await NotificationHelper.sendNotification(
-            receiverModel!, roomId.value, message.value);
+            receiverModel!, roomId.value, message.value, senderUserInfo);
       }
     } catch (e, s) {
       debugPrint(

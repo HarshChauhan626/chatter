@@ -162,7 +162,6 @@ class ChatListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     setUpData();
 
     return Obx(() {
@@ -236,8 +235,8 @@ class ChatListItem extends StatelessWidget {
                       color: AppColors.blackTextColor),
                 ),
                 Text(
-                    UtilFunctions
-                        .parseTimeStamp(roomModel.latestMessage?.timestamp),
+                    UtilFunctions.parseTimeStamp(
+                        roomModel.latestMessage?.timestamp),
                     style: Theme.of(context)
                         .textTheme
                         .subtitle2
@@ -246,7 +245,7 @@ class ChatListItem extends StatelessWidget {
             ),
             subtitle: Row(
               children: [
-                Container(
+                SizedBox(
                   width: 65.w,
                   child: Text(messageContent,
                       style: Theme.of(context).textTheme.subtitle2?.copyWith(
@@ -261,14 +260,13 @@ class ChatListItem extends StatelessWidget {
     });
   }
 
-
-  void setUpData(){
+  void setUpData() {
     userId = Get.find<AuthController>().firebaseUser.value?.uid;
 
     messageContent = roomModel.latestMessage?.content ?? "";
     isSeen = roomModel.latestMessage?.isSeenBy
-        ?.where((element) => element.uid == userId)
-        .isNotEmpty ??
+            ?.where((element) => element.uid == userId)
+            .isNotEmpty ??
         true;
     for (var element in roomModel.userInfoList!) {
       debugPrint("Element id coming is ${element.uid}");
@@ -278,5 +276,4 @@ class ChatListItem extends StatelessWidget {
     }
     profilePicture = receiverModel?.profilePicture ?? "";
   }
-
 }

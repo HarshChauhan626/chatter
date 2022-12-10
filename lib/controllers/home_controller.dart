@@ -1,3 +1,4 @@
+import 'package:chat_app/models/room_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,7 +33,17 @@ class HomeController extends GetxController {
 
       chatList = chatCollectionRef
           .where("userList", arrayContains: senderId)
-          .snapshots();
+          .snapshots().asyncMap<List<RoomModel>>((roomList)async{
+            return Future.wait(roomList.docs.map((e)async {
+              final roomModel=RoomModel.fromJson(e.data());
+              for(String uid in roomModel.userList!){
+                final userModel=await getUserInfo(uid);
+                roomModel.userInfoList?.add(userModel);
+              }
+              return roomModel;
+            }
+            ).toList());
+      });
     } catch (e, s) {
       if (kDebugMode) {
         print(
@@ -40,4 +51,20 @@ class HomeController extends GetxController {
       }
     }
   }
+
+
+  Future<UserModel?> getUserInfo(String uid)async{
+    final userCollectionRef =
+    FirebaseHelper.fireStoreInstance!.collection("user");
+
+    final docReference =
+        await userCollectionRef.doc(uid).get();
+
+    if(docReference.data()!=null){
+      return UserModel.fromJson(docReference.data()!);
+    }
+
+  }
+
+
 }

@@ -120,4 +120,6 @@ class AppStrings {
   static const String userPreferences = "userPreferences";
 
   static const String activeNow = "Active now";
+
+  static const String currentChatId="CurrentChatID";
 }

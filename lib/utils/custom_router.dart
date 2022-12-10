@@ -74,7 +74,7 @@ class GetXRouter {
         page: () => const SplashScreen(),
         middlewares: [MyMiddleware()],
         transition: Transition.rightToLeft,
-        transitionDuration: const Duration(milliseconds: 300),
+        transitionDuration: const Duration(milliseconds: 200),
       ),
       GetPage(
         name: HomeScreen.routeName,
@@ -84,14 +84,14 @@ class GetXRouter {
           Get.put<HomeController>(HomeController());
         }),
         transition: Transition.rightToLeft,
-        transitionDuration: const Duration(milliseconds: 300),
+        transitionDuration: const Duration(milliseconds: 200),
       ),
       GetPage(
         name: OnboardingScreen.routeName,
         page: () => const OnboardingScreen(),
         middlewares: [MyMiddleware()],
         transition: Transition.rightToLeft,
-        transitionDuration: const Duration(milliseconds: 300),
+        transitionDuration: const Duration(milliseconds: 200),
       ),
       GetPage(
         name: ChatScreen.routeName,
@@ -101,49 +101,49 @@ class GetXRouter {
           Get.put<ChatController>(ChatController());
         }),
         transition: Transition.rightToLeft,
-        transitionDuration: const Duration(milliseconds: 300),
+        transitionDuration: const Duration(milliseconds: 200),
       ),
       GetPage(
         name: SignInScreen.routeName,
         page: () => const SignInScreen(),
         middlewares: [MyMiddleware()],
         transition: Transition.rightToLeft,
-        transitionDuration: const Duration(milliseconds: 300),
+        transitionDuration: const Duration(milliseconds: 200),
       ),
       GetPage(
         name: SignUpScreen.routeName,
         page: () => const SignUpScreen(),
         middlewares: [MyMiddleware()],
         transition: Transition.rightToLeft,
-        transitionDuration: const Duration(milliseconds: 300),
+        transitionDuration: const Duration(milliseconds: 200),
       ),
       GetPage(
         name: ForgotPasswordScreen.routeName,
         page: () => const ForgotPasswordScreen(),
         middlewares: [MyMiddleware()],
         transition: Transition.rightToLeft,
-        transitionDuration: const Duration(milliseconds: 300),
+        transitionDuration: const Duration(milliseconds: 200),
       ),
       GetPage(
         name: ResetPasswordScreen.routeName,
         page: () => const ResetPasswordScreen(),
         middlewares: [MyMiddleware()],
         transition: Transition.rightToLeft,
-        transitionDuration: const Duration(milliseconds: 300),
+        transitionDuration: const Duration(milliseconds: 200),
       ),
       GetPage(
         name: ProfileScreen.routeName,
         page: () => const ProfileScreen(),
         middlewares: [MyMiddleware()],
         transition: Transition.rightToLeft,
-        transitionDuration: const Duration(milliseconds: 300),
+        transitionDuration: const Duration(milliseconds: 200),
       ),
       GetPage(
         name: SearchConversationScreen.routeName,
         page: () => SearchConversationScreen(),
         middlewares: [MyMiddleware()],
         transition: Transition.fade,
-        transitionDuration: const Duration(milliseconds: 300),
+        transitionDuration: const Duration(milliseconds: 200),
       ),
       GetPage(
         name: SearchPeopleScreen.routeName,
@@ -154,7 +154,7 @@ class GetXRouter {
         }),
         transition: Transition.native,
         // customTransition: SizeTransition(),
-        transitionDuration: const Duration(milliseconds: 300),
+        transitionDuration: const Duration(milliseconds: 200),
       ),
       GetPage(
         name: UpdateProfileScreen.routeName,
@@ -165,7 +165,7 @@ class GetXRouter {
         }),
         transition: Transition.rightToLeft,
         // customTransition: SizeTransition(),
-        transitionDuration: const Duration(milliseconds: 300),
+        transitionDuration: const Duration(milliseconds: 200),
       ),
       GetPage(
         name: ProfilePictureScreen.routeName,
@@ -173,7 +173,7 @@ class GetXRouter {
         middlewares: [MyMiddleware()],
         transition: Transition.native,
         // customTransition: SizeTransition(),
-        transitionDuration: const Duration(milliseconds: 300),
+        transitionDuration: const Duration(milliseconds: 200),
       ),
       GetPage(
         name: ReceiverProfileScreen.routeName,
@@ -181,7 +181,7 @@ class GetXRouter {
         middlewares: [MyMiddleware()],
         transition: Transition.rightToLeft,
         // customTransition: SizeTransition(),
-        transitionDuration: const Duration(milliseconds: 300),
+        transitionDuration: const Duration(milliseconds: 200),
       ),
     ];
   }

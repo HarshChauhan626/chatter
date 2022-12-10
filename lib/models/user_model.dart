@@ -34,7 +34,7 @@ class UserModel {
     bio = userModelJson["bio"] ?? "";
     firstName = userModelJson["firstName"] ?? "";
     lastName = userModelJson["lastName"] ?? "";
-    profilePicture = userModelJson["profilePicture"];
+    profilePicture = userModelJson["profilePicture"]??"";
     deviceToken=userModelJson["deviceToken"];
   }
 

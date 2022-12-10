@@ -19,6 +19,15 @@ class HiveDBHelper extends GetxController {
     userPreferenceBox?.put(AppStrings.isOnBoardingDone, onboardingDone);
   }
 
+  String? _currentChatId;
+
+  String? get currentChatId=>_currentChatId;
+
+  set currentChatId(String? currentChatId){
+    _currentChatId=currentChatId;
+    userPreferenceBox?.put(AppStrings.currentChatId, currentChatId);
+  }
+
   @override
   void onInit() {
     super.onInit();

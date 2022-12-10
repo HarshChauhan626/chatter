@@ -179,7 +179,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         }
         if (snapshot.connectionState == ConnectionState.active &&
             snapshot.hasData) {
-          final chatList = snapshot.data as QuerySnapshot;
+          // final chatList = snapshot.data as QuerySnapshot;
+
+          final roomModelList = snapshot.data as List<RoomModel>;
 
           // final roomModelList = chatList.docs.map((e) async{
           //   debugPrint("Message data coming is ${e.data()}");
@@ -202,16 +204,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           //   // return RoomModel.fromJson(e.data() as Map<String, dynamic>);
           // ).toList();
 
-          final roomModelList = chatList.docs.map((e) {
-            debugPrint("Message data coming is ${e.data()}");
-            return RoomModel.fromJson(e.data() as Map<String, dynamic>);
-          }).toList();
+          // final roomModelList = chatList.docs.map((e) {
+          //   debugPrint("Message data coming is ${e.data()}");
+          //   return RoomModel.fromJson(e.data() as Map<String, dynamic>);
+          // }).toList();
 
-          roomModelList.sort((a,b){
-            int firstTimeStamp=a.latestMessage!.timestamp!;
-            int secondTimeStamp=b.latestMessage!.timestamp!;
-            print("First ${firstTimeStamp.toString()} Second ${secondTimeStamp.toString()}");
-            print("Compare to $firstTimeStamp $secondTimeStamp ${firstTimeStamp-secondTimeStamp}");
+          roomModelList.sort((a, b) {
+            int firstTimeStamp = a.latestMessage!.timestamp!;
+            int secondTimeStamp = b.latestMessage!.timestamp!;
+            debugPrint(
+                "First ${firstTimeStamp.toString()} Second ${secondTimeStamp.toString()}");
+            debugPrint(
+                "Compare to $firstTimeStamp $secondTimeStamp ${firstTimeStamp - secondTimeStamp}");
             return secondTimeStamp.compareTo(firstTimeStamp);
           });
 

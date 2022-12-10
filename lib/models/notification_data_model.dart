@@ -1,4 +1,5 @@
 import 'package:chat_app/models/user_model.dart';
+import 'dart:convert';
 
 class NotificationDataModel{
   UserModel? receiverModel;
@@ -7,7 +8,7 @@ class NotificationDataModel{
   NotificationDataModel(this.receiverModel,this.roomId);
   
   NotificationDataModel.fromJson(Map<String,dynamic> jsonMap){
-    receiverModel=UserModel.fromJson(jsonMap["receiverModel"]);
+    receiverModel=UserModel.fromJson(jsonDecode(jsonMap["receiverModel"]));
     roomId=jsonMap["roomId"];
   }
 

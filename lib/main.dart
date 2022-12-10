@@ -19,7 +19,7 @@ void main() async {
   await Firebase.initializeApp();
   FirebaseHelper.initInstances();
   // await FirebaseMessaging.instance.subscribeToTopic("all");
-  NotificationHelper.setUpNotificationInMain();
+  NotificationHelper.loadFCM();
   Get.put(HiveDBHelper());
   runApp(const MyApp());
 }
