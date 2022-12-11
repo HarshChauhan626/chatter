@@ -20,6 +20,7 @@ import 'package:uuid/uuid.dart';
 import '../../helper/firebase_helper.dart';
 import '../../models/message_model.dart';
 import '../../utils/app_strings.dart';
+import 'chat_loading_screen.dart';
 
 class ChatScreen extends StatelessWidget {
   ChatScreen({Key? key}) : super(key: key);
@@ -368,9 +369,7 @@ class ChatScreen extends StatelessWidget {
                       .toList()
                       .reversed
                       .toList();
-
                   print(controller.messageList.length);
-
                   return ListView.builder(
                       reverse: true,
                       itemCount: controller.messageList.length,
@@ -455,9 +454,7 @@ class ChatScreen extends StatelessWidget {
                         });
                       });
                 }
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+                return const ChatLoadingScreen();
               },
             ),
             getSearchResultNavigator()

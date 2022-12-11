@@ -173,9 +173,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
           sliverList.add(const SliverToBoxAdapter(
-            child: Center(
-              child: CircularProgressIndicator(),
-            ),
+            child: HomeLoadingScreen()
           ));
         }
         if (snapshot.connectionState == ConnectionState.active &&
@@ -222,8 +220,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
           debugPrint(roomModelList.toString());
 
-          // sliverList.add(getChatList(roomModelList));
-          sliverList.add(SliverToBoxAdapter(child: HomeLoadingScreen(),));
+          sliverList.add(getChatList(roomModelList));
+          // sliverList.add(const SliverToBoxAdapter(
+          //   child: HomeLoadingScreen(),
+          // ));
         }
         return CustomScrollView(
           controller: _scrollController,
