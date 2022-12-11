@@ -1,5 +1,8 @@
+import 'package:chat_app/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+
+import '../../utils/app_colors.dart';
 
 class HomeLoadingScreen extends StatelessWidget {
   const HomeLoadingScreen({Key? key}) : super(key: key);
@@ -7,32 +10,29 @@ class HomeLoadingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      // child: ListView.builder(physics: const NeverScrollableScrollPhysics(),itemCount: 6,itemBuilder: (context,index){
-      //   return Card(
-      //     elevation: 1.0,
-      //     child: Row(
-      //       children: [
-      //
-      //       ],
-      //     ),
-      //   );
-      // }),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            for (int i = 0; i < 10; i++)
-              Card(
-                elevation: 1.0,
-                child: Container(
-                  height: 100.0,
-                )
+            for (int i = 0; i < 20; i++)
+              ListTile(
+                leading: const CircleAvatar(
+                  radius: 20.0,
+                ),
+                title: Container(
+                  height: 12.0,
+                  color: AppColors.textFieldBackgroundColor,
+                ),
+                subtitle: Container(
+                  height: 10.0,
+                  color: AppColors.textFieldBackgroundColor,
+                ),
               )
           ],
         ),
       ),
-      baseColor: Colors.grey.shade300,
-      highlightColor: Colors.grey.shade100,
+      baseColor: AppColors.textFieldBackgroundColor,
+      highlightColor: AppColors.textFieldBackgroundColor.darken(5),
     );
   }
 }
