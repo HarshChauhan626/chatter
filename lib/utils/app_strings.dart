@@ -122,4 +122,5 @@ class AppStrings {
   static const String activeNow = "Active now";
 
   static const String currentChatId="CurrentChatID";
+  static const String pinnedRoomIds="PinnedRoomIDs";
 }

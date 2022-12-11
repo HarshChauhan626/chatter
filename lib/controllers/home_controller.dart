@@ -33,38 +33,33 @@ class HomeController extends GetxController {
 
       chatList = chatCollectionRef
           .where("userList", arrayContains: senderId)
-          .snapshots().asyncMap<List<RoomModel>>((roomList)async{
-            return Future.wait(roomList.docs.map((e)async {
-              final roomModel=RoomModel.fromJson(e.data());
-              for(String uid in roomModel.userList!){
-                final userModel=await getUserInfo(uid);
-                roomModel.userInfoList?.add(userModel);
-              }
-              return roomModel;
-            }
-            ).toList());
+          .snapshots()
+          .asyncMap<List<RoomModel>>((roomList) async {
+        return Future.wait(roomList.docs.map((e) async {
+          final roomModel = RoomModel.fromJson(e.data());
+          for (String uid in roomModel.userList!) {
+            final userModel = await getUserInfo(uid);
+            roomModel.userInfoList?.add(userModel);
+          }
+          return roomModel;
+        }).toList());
       });
     } catch (e, s) {
       if (kDebugMode) {
         print(
-          "Exception coming in initializing chat list is ${e.toString()} ${s.toString()}");
+            "Exception coming in initializing chat list is ${e.toString()} ${s.toString()}");
       }
     }
   }
 
-
-  Future<UserModel?> getUserInfo(String uid)async{
+  Future<UserModel?> getUserInfo(String uid) async {
     final userCollectionRef =
-    FirebaseHelper.fireStoreInstance!.collection("user");
+        FirebaseHelper.fireStoreInstance!.collection("user");
 
-    final docReference =
-        await userCollectionRef.doc(uid).get();
+    final docReference = await userCollectionRef.doc(uid).get();
 
-    if(docReference.data()!=null){
+    if (docReference.data() != null) {
       return UserModel.fromJson(docReference.data()!);
     }
-
   }
-
-
 }

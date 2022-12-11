@@ -412,6 +412,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.1"
+  flutter_reorderable_list:
+    dependency: "direct main"
+    description:
+      name: flutter_reorderable_list
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.0"
   flutter_ringtone_player:
     dependency: "direct main"
     description:

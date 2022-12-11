@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:animations/animations.dart';
 import 'package:chat_app/controllers/home_controller.dart';
+import 'package:chat_app/features/home/selectable_list_app_bar.dart';
 import 'package:chat_app/models/user_model.dart';
 import 'package:chat_app/features/chat/chat_screen.dart';
 import 'package:chat_app/widgets/review_popup.dart';
@@ -10,7 +11,7 @@ import 'package:chat_app/features/search_people/search_people_screen.dart';
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/utils/util_functions.dart';
 import 'package:chat_app/widgets/animated_column_widget.dart';
-import 'package:chat_app/widgets/chat_list_item.dart';
+import 'package:chat_app/features/home/chat_list_item.dart';
 import 'package:chat_app/widgets/custom_bottom_navigation_bar_2.dart';
 import 'package:chat_app/widgets/custom_route_builder.dart';
 import 'package:chat_app/widgets/custom_safe_area.dart';
@@ -172,9 +173,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ));
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
-          sliverList.add(const SliverToBoxAdapter(
-            child: HomeLoadingScreen()
-          ));
+          sliverList.add(const SliverToBoxAdapter(child: HomeLoadingScreen()));
         }
         if (snapshot.connectionState == ConnectionState.active &&
             snapshot.hasData) {
@@ -253,7 +252,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       if (selectedList!.isEmpty) {
         return getNormalAppBar();
       }
-      return getSelectableListAppBar();
+      return SelectableListAppBar();
     });
   }
 
@@ -288,33 +287,44 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget getSelectableListAppBar() {
-    return SliverAppBar(
-      forceElevated: true, //* here
-      elevation: 1.5, //* question having 0 here
-      pinned: true,
-      floating: false,
-      leading: IconButton(
-        icon: getHeaderIcon(Icons.close),
-        onPressed: () {
-          homeController?.selectedChatIdList.clear();
-        },
-      ),
-      title: Text(
-        '${homeController?.selectedChatIdList.length}',
-        style: Theme.of(context)
-            .textTheme
-            .titleLarge
-            ?.copyWith(color: AppColors.primaryColor, fontSize: 24),
-      ),
-      actions: [
-        getHeaderIcon(Icons.push_pin_outlined),
-        getHeaderIcon(Icons.archive_outlined),
-        getHeaderIcon(Icons.delete_outline),
-        getHeaderIcon(Icons.block_flipped)
-      ],
-    );
-  }
+  // Widget getSelectableListAppBar() {
+  //   return Obx(() {
+  //
+  //     bool isSelectedLengthGT1=false;
+  //
+  //     if((homeController?.selectedChatIdList.value.length??0)>1){
+  //       isSelectedLengthGT1=true;
+  //     }
+  //
+  //     return SliverAppBar(
+  //       forceElevated: true, //* here
+  //       elevation: 1.5, //* question having 0 here
+  //       pinned: true,
+  //       floating: false,
+  //       leading: IconButton(
+  //         icon: getHeaderIcon(Icons.close),
+  //         onPressed: () {
+  //           homeController?.selectedChatIdList.clear();
+  //         },
+  //       ),
+  //       title: Text(
+  //         '${homeController?.selectedChatIdList.length}',
+  //         style: Theme.of(context)
+  //             .textTheme
+  //             .titleLarge
+  //             ?.copyWith(color: AppColors.primaryColor, fontSize: 24),
+  //       ),
+  //       actions: [
+  //         if(!isSelectedLengthGT1)
+  //           getHeaderIcon(Icons.push_pin_outlined),
+  //         getHeaderIcon(Icons.archive_outlined),
+  //         getHeaderIcon(Icons.delete_outline),
+  //         if(!isSelectedLengthGT1)
+  //           getHeaderIcon(Icons.block_flipped)
+  //       ],
+  //     );
+  //   });
+  // }
 
   Widget getHeader(String currentUserProfilePicture) {
     return Padding(
@@ -376,7 +386,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   Widget getChatList(List<RoomModel> roomModelList) {
     final selectedList = Get.find<HomeController>().selectedChatIdList;
-
     return SliverList(
         delegate: SliverChildBuilderDelegate((context, index) {
       // return AnimationConfiguration.staggeredList(duration: const Duration(milliseconds: 400),position: index, child: getChatListItem(index));
@@ -414,30 +423,30 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     }, childCount: roomModelList.length));
   }
 
-  Widget getBottomNavigation() {
-    return Container(
-      height: 70.0,
-      decoration: const BoxDecoration(color: AppColors.whiteColor, boxShadow: [
-        BoxShadow(color: Colors.black, offset: Offset(10.0, 0.0)),
-        BoxShadow(color: Colors.white12, offset: Offset(10.0, 10.0)),
-      ]),
-      alignment: Alignment.center,
-      child: Center(child: BottomNavbar(
-        callback: (int index) {
-          debugPrint(index.toString());
-        },
-      )),
-    );
-  }
+  // Widget getBottomNavigation() {
+  //   return Container(
+  //     height: 70.0,
+  //     decoration: const BoxDecoration(color: AppColors.whiteColor, boxShadow: [
+  //       BoxShadow(color: Colors.black, offset: Offset(10.0, 0.0)),
+  //       BoxShadow(color: Colors.white12, offset: Offset(10.0, 10.0)),
+  //     ]),
+  //     alignment: Alignment.center,
+  //     child: Center(child: BottomNavbar(
+  //       callback: (int index) {
+  //         debugPrint(index.toString());
+  //       },
+  //     )),
+  //   );
+  // }
 
-  Widget getHeaderIcon(IconData iconData) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: Icon(
-        iconData,
-        color: AppColors.primaryColor,
-        size: 26,
-      ),
-    );
-  }
+  // Widget getHeaderIcon(IconData iconData) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(horizontal: 10.0),
+  //     child: Icon(
+  //       iconData,
+  //       color: AppColors.primaryColor,
+  //       size: 26,
+  //     ),
+  //   );
+  // }
 }

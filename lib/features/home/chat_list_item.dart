@@ -6,12 +6,12 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:sizer/sizer.dart';
 
-import '../controllers/auth_controller.dart';
-import '../models/room_model.dart';
-import '../models/user_model.dart';
-import '../features/chat/chat_screen.dart';
-import '../utils/app_colors.dart';
-import '../utils/util_functions.dart';
+import '../../controllers/auth_controller.dart';
+import '../../models/room_model.dart';
+import '../../models/user_model.dart';
+import '../chat/chat_screen.dart';
+import '../../utils/app_colors.dart';
+import '../../utils/util_functions.dart';
 
 // class ChatListItem extends StatefulWidget {
 //   RoomModel roomModel;
@@ -169,11 +169,6 @@ class ChatListItem extends StatelessWidget {
           .selectedChatIdList
           .contains(roomModel.roomId);
 
-      // final receiverModel=roomModel.userInfoList?.map((e) {
-      //   if(e.uid.toString()!=userId?.toString()){
-      //     return e;
-      //   }
-      // }).toList()[0];
       Color tileColor = isSelected
           ? AppColors.primaryColor.lighten(60)
           : AppColors.whiteColor;

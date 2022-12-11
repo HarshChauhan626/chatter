@@ -28,6 +28,15 @@ class HiveDBHelper extends GetxController {
     userPreferenceBox?.put(AppStrings.currentChatId, currentChatId);
   }
 
+  List<String> _pinnedRoomIdList=<String>[];
+
+  List<String>? get pinnedRoomIdList=>_pinnedRoomIdList;
+
+  void addPinnedRoomId(String roomId){
+    _pinnedRoomIdList.add(roomId);
+    userPreferenceBox?.put(AppStrings.pinnedRoomIds,_pinnedRoomIdList);
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -42,6 +51,7 @@ class HiveDBHelper extends GetxController {
   Future<void> setUpData() async {
     _onboardingDone =
         userPreferenceBox?.get(AppStrings.isOnBoardingDone) ?? false;
+    _pinnedRoomIdList=userPreferenceBox?.get(AppStrings.pinnedRoomIds)??<String>[];
   }
 
   Future<void> initBoxes() async {
