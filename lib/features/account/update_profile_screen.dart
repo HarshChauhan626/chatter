@@ -63,8 +63,6 @@ class UpdateProfileScreen extends StatelessWidget {
 
   Widget getProfileView(BuildContext context){
 
-
-
     return AnimatedColumn(
       animationType: AnimationType.vertical,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -76,13 +74,11 @@ class UpdateProfileScreen extends StatelessWidget {
         InkWell(
           child: Hero(
             tag: "ProfilePictureTag",
-            child:Container(
+            child:SizedBox(
               height: 120,
               width: 120,
               child: Obx((){
-
                 final profilePicture=Get.find<AuthController>().userInfo.value?.profilePicture??"";
-
                 if(profilePicture.isNotEmpty){
                   return CircleAvatar(
                     backgroundImage: NetworkImage(

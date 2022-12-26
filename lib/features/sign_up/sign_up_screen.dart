@@ -3,6 +3,8 @@ import 'package:chat_app/controllers/sign_up_controller.dart';
 import 'package:chat_app/features/sign_in/sign_in_screen.dart';
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/utils/enums.dart';
+import 'package:chat_app/utils/extensions.dart';
+import 'package:chat_app/utils/input_validators.dart';
 import 'package:chat_app/widgets/animated_column_widget.dart';
 import 'package:chat_app/widgets/custom_route_builder.dart';
 import 'package:chat_app/widgets/custom_safe_area.dart';
@@ -95,6 +97,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 height: 30.0,
               ),
               InputTextField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (String? value) {
+                    return InputValidators.usernameValidator(value);
+                  },
                   onChangedValue: (value) {
                     signUpController.userName.value = value;
                   },
@@ -104,6 +110,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 height: 14.0,
               ),
               InputTextField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (String? value) {
+                    return InputValidators.emailValidator(value);
+                  },
                   onChangedValue: (value) {
                     signUpController.email.value = value;
                   },
@@ -113,6 +123,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 height: 14.0,
               ),
               InputTextField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (String? value) {
+                    return InputValidators.passwordValidator(value);
+                  },
                   onChangedValue: (value) {
                     signUpController.password.value = value;
                   },
@@ -123,7 +137,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  signUpController.registerUser(context);
+                  if(isFormValid()){
+                    signUpController.registerUser(context);
+                  }
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -193,4 +209,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
     ));
   }
+
+
+  bool isFormValid(){
+    final isValidPassword=InputValidators.passwordValidator(signUpController.password.value)==null;
+    final isValidUsername=InputValidators.usernameValidator(signUpController.userName.value)==null;
+    final isValidEmail=InputValidators.usernameValidator(signUpController.email.value)==null;
+
+    return isValidPassword && isValidUsername && isValidEmail;
+
+  }
+
+
 }
