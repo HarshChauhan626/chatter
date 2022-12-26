@@ -8,18 +8,18 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import kotlin.random.Random
 
-class MainActivity: FlutterActivity() {
+class MainActivity: FlutterFragmentActivity() {
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "example.com/channel").setMethodCallHandler {
-                call, result ->
-            if(call.method == "getRandomNumber") {
-                val rand = Random.nextInt(100)
-                result.success(rand)
-            }
-            else {
-                result.notImplemented()
-            }
-        }
+//        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "example.com/channel").setMethodCallHandler {
+//                call, result ->
+//            if(call.method == "getRandomNumber") {
+//                val rand = Random.nextInt(100)
+//                result.success(rand)
+//            }
+//            else {
+//                result.notImplemented()
+//            }
+//        }
     }
 }

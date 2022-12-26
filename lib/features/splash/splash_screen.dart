@@ -10,6 +10,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:sizer/sizer.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -36,6 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if (Get.find<HiveDBHelper>().onboardingDone) {
       if (authController.firebaseUser.value != null) {
         if (NotificationHelper.notificationDataModel == null) {
+
           Get.offAllNamed(HomeScreen.routeName);
         }
       } else {
