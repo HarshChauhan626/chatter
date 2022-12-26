@@ -52,6 +52,46 @@ class HomeController extends GetxController {
     }
   }
 
+  Future<void> pinChat(String roomId) async {
+    try {
+      final chatCollectionRef =
+          FirebaseHelper.fireStoreInstance!.collection("chats");
+
+      senderId = Get.find<AuthController>().firebaseUser.value?.uid;
+
+      final roomRef = await chatCollectionRef.doc(roomId).get();
+
+      final pinnedByList = roomRef.get("pinnedByList");
+
+      if (pinnedByList != null && senderId != null) {
+        // pinnedByList as List<String>;
+        if (pinnedByList.contains(senderId)) {
+          pinnedByList.remove(senderId);
+        } else {
+          pinnedByList.add(senderId!);
+        }
+        chatCollectionRef.doc(roomId).update({"pinnedByList": pinnedByList});
+      }
+    } catch (e, s) {
+      debugPrint(e.toString());
+      debugPrint(s.toString());
+    }
+  }
+
+  Future<void> deleteChat(String roomId) async {
+    try {
+      final chatCollectionRef =
+          FirebaseHelper.fireStoreInstance!.collection("chats");
+
+      final roomRef = chatCollectionRef.doc(roomId);
+
+      roomRef.delete();
+    } catch (e, s) {
+      debugPrint(e.toString());
+      debugPrint(s.toString());
+    }
+  }
+
   Future<UserModel?> getUserInfo(String uid) async {
     final userCollectionRef =
         FirebaseHelper.fireStoreInstance!.collection("user");

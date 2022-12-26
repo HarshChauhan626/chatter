@@ -188,6 +188,7 @@ class ChatController extends GetxController {
         await groupDocReference.set({
           "roomId": roomId.value,
           "userList": [user1Id, receiverModel?.uid],
+          "pinnedByList":[],
           "isTyping": [],
           "latestMessage": messageData,
         });

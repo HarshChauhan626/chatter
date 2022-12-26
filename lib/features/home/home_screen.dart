@@ -210,15 +210,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           roomModelList.sort((a, b) {
             int firstTimeStamp = a.latestMessage!.timestamp!;
             int secondTimeStamp = b.latestMessage!.timestamp!;
-            debugPrint(
-                "First ${firstTimeStamp.toString()} Second ${secondTimeStamp.toString()}");
-            debugPrint(
-                "Compare to $firstTimeStamp $secondTimeStamp ${firstTimeStamp - secondTimeStamp}");
-            return secondTimeStamp.compareTo(firstTimeStamp);
+
+            int pinnedByListA = getIsPinnedStatus(a.pinnedByList);
+            int pinnedByListB = getIsPinnedStatus(b.pinnedByList);
+
+            String firstMetaData = "$pinnedByListA $firstTimeStamp";
+            String secondMetaData = "$pinnedByListB $secondTimeStamp";
+
+            // return secondTimeStamp.compareTo(firstTimeStamp);
+            return secondMetaData.compareTo(firstMetaData);
           });
 
           debugPrint(roomModelList.toString());
-
           sliverList.add(getChatList(roomModelList));
           // sliverList.add(const SliverToBoxAdapter(
           //   child: HomeLoadingScreen(),
@@ -244,6 +247,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     //   }
     // });
     //
+  }
+
+  int getIsPinnedStatus(List? pinnedByList) {
+    int isPinned = 0;
+    final senderId = Get.find<AuthController>().firebaseUser.value?.uid;
+    if (pinnedByList != null && pinnedByList.contains(senderId)) {
+      isPinned = 1;
+    }
+    return isPinned;
   }
 
   Widget getAppBar() {

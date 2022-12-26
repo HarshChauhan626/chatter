@@ -248,7 +248,9 @@ class ChatListItem extends StatelessWidget {
                               ? Colors.black54
                               : AppColors.blackTextColor,
                           overflow: TextOverflow.ellipsis)),
-                )
+                ),
+                isPinned()?
+                const Icon(Icons.push_pin,color: Colors.grey,):const SizedBox()
               ],
             ),
           ));
@@ -270,5 +272,11 @@ class ChatListItem extends StatelessWidget {
       }
     }
     profilePicture = receiverModel?.profilePicture ?? "";
+  }
+
+
+  bool isPinned(){
+    final userId=Get.find<HomeController>().senderId;
+    return roomModel.pinnedByList?.contains(userId)??false;
   }
 }

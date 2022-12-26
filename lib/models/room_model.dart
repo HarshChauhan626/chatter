@@ -9,6 +9,7 @@ class RoomModel {
   List<dynamic>? adminList;
   MessageModel? latestMessage;
   List<dynamic>? userInfoList;
+  List<dynamic>? pinnedByList;
 
   RoomModel(
       {this.roomId,
@@ -16,7 +17,8 @@ class RoomModel {
       this.isTyping,
       this.adminList,
       this.latestMessage,
-      this.userInfoList
+      this.userInfoList,
+        this.pinnedByList
       });
 
   RoomModel.fromJson(Map<String, dynamic> json) {
@@ -28,6 +30,7 @@ class RoomModel {
         ? MessageModel.fromJson(json["latestMessage"])
         : null;
     userInfoList = json["userInfoList"] ?? [];
+    pinnedByList=json["pinnedByList"]??[];
   }
 
   Map<String, dynamic> toJson() {
@@ -36,16 +39,9 @@ class RoomModel {
       "isTyping": isTyping,
       "adminList": adminList,
       "latestMessage": latestMessage,
-      "userInfoList": userInfoList
+      "userInfoList": userInfoList,
+      "pinnedByList":pinnedByList
     };
   }
 }
 
-class RoomEntity {
-  String? roomId;
-  List<dynamic>? userList;
-  List<dynamic>? isTyping;
-  List<dynamic>? adminList;
-  MessageModel? latestMessage;
-  List<UserModel>? userInfoList;
-}

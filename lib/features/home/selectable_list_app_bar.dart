@@ -45,7 +45,9 @@ class SelectableListAppBar extends StatelessWidget {
               onTapPin();
             }),
           getHeaderIcon(Icons.archive_outlined, onTap: () {}),
-          getHeaderIcon(Icons.delete_outline, onTap: () {}),
+          getHeaderIcon(Icons.delete_outline, onTap: () {
+            onTapDelete();
+          }),
           if (!isSelectedLengthGT1)
             getHeaderIcon(Icons.block_flipped, onTap: () {})
         ],
@@ -72,15 +74,21 @@ class SelectableListAppBar extends StatelessWidget {
 
   void onTapPin(){
     final roomId=homeController.selectedChatIdList.first;
-    Get.find<HiveDBHelper>().addPinnedRoomId(roomId);
+    // Get.find<HiveDBHelper>().addPinnedRoomId(roomId);
+    Get.find<HomeController>().pinChat(roomId);
+    homeController.selectedChatIdList.clear();
   }
 
   void onTapArchive(){
 
   }
 
-  void onTapDelete(){
-
+  void onTapDelete()async{
+    final selectedChatList=homeController.selectedChatIdList;
+    for(int i=0;i<selectedChatList.length;i++){
+      await homeController.deleteChat(selectedChatList[i]);
+    }
+    homeController.selectedChatIdList.clear();
   }
 
   void onTapBlock(){
