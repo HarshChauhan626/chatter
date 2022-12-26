@@ -44,7 +44,7 @@ class SelectableListAppBar extends StatelessWidget {
             getHeaderIcon(Icons.push_pin_outlined, onTap: () {
               onTapPin();
             }),
-          getHeaderIcon(Icons.archive_outlined, onTap: () {}),
+          // getHeaderIcon(Icons.archive_outlined, onTap: () {}),
           getHeaderIcon(Icons.delete_outline, onTap: () {
             onTapDelete();
           }),
@@ -79,9 +79,9 @@ class SelectableListAppBar extends StatelessWidget {
     homeController.selectedChatIdList.clear();
   }
 
-  void onTapArchive(){
-
-  }
+  // void onTapArchive(){
+  //
+  // }
 
   void onTapDelete()async{
     final selectedChatList=homeController.selectedChatIdList;
