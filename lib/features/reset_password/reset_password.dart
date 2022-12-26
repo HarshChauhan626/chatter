@@ -1,3 +1,4 @@
+import 'package:chat_app/utils/input_validators.dart';
 import 'package:chat_app/widgets/custom_route_builder.dart';
 import 'package:chat_app/widgets/custom_safe_area.dart';
 import 'package:flutter/cupertino.dart';
@@ -34,25 +35,17 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     return CustomSafeArea(
       child: Scaffold(
         appBar: AppBar(
-            leading: Padding(
-          padding: const EdgeInsets.all(6.0),
-          child: InkWell(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                  border: Border.all(
-                    color: AppColors.blackTextColor,
-                  ),
-                  borderRadius: BorderRadius.circular(10.0)),
+            leading: InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
               child: const Icon(
                 CupertinoIcons.back,
                 color: AppColors.blackTextColor,
               ),
             ),
-          ),
-        )),
+          title: const Text("Reset password")
+        ),
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -66,11 +59,11 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   child: SvgPicture.asset("assets/reset_password.svg"),
                 ),
               ),
-              Text(
-                "Reset password",
-                style: Theme.of(context).textTheme.headline5?.copyWith(
-                    color: AppColors.primaryColor, fontWeight: FontWeight.w900),
-              ),
+              // Text(
+              //   "Reset password",
+              //   style: Theme.of(context).textTheme.headline5?.copyWith(
+              //       color: AppColors.primaryColor, fontWeight: FontWeight.w900),
+              // ),
               SizedBox(
                 height: 4.h,
               ),
@@ -87,6 +80,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 4.w),
                 child: InputTextField(
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (String? value) {
+                      return InputValidators.passwordValidator(value);
+                    },
                     onChangedValue: (value) {},
                     hintText: "Confirm new password",
                     inputTextType: InputTextType.password),

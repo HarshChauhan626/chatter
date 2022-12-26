@@ -1,9 +1,5 @@
 import 'dart:ui';
 
-import 'package:firebase_auth/firebase_auth.dart';
-
-import '../models/user_model.dart';
-
 extension ColorTintGenerator on Color{
   Color darken([int percent=10]){
     assert(1 <= percent && percent <= 100);
@@ -29,6 +25,13 @@ extension ColorTintGenerator on Color{
 
 
 }
+
+extension StringValidators on String {
+  bool get containsUppercase => contains(RegExp(r'[A-Z]'));
+  bool get containsLowercase => contains(RegExp(r'[a-z]'));
+  bool get containsNumerics=> contains(RegExp(r'[0-9]'));
+}
+
 
 // extension FirebaseUserToUserModel on User{
 //   UserModel toUserModel(){

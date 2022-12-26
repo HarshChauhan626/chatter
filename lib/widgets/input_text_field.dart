@@ -8,13 +8,17 @@ class InputTextField extends StatefulWidget {
   final String hintText;
   final InputTextType inputTextType;
   final Function? onTap;
+  final String? Function(String?)? validator;
+  final AutovalidateMode? autovalidateMode;
 
   const InputTextField(
       {Key? key,
-        this.onTap,
+      this.onTap,
       required this.onChangedValue,
       required this.hintText,
-      required this.inputTextType})
+      required this.inputTextType,
+      this.validator,
+      this.autovalidateMode})
       : super(key: key);
 
   @override
@@ -28,31 +32,40 @@ class _InputTextFieldState extends State<InputTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
+      autovalidateMode: widget.autovalidateMode,
+      validator: widget.validator,
       controller: inputController,
       onChanged: (value) {
         widget.onChangedValue(value);
       },
-      onTap: (){
-        if(widget.onTap!=null){
+      onTap: () {
+        if (widget.onTap != null) {
           widget.onTap!();
         }
       },
       obscureText: getTextVisibility(),
       textAlignVertical: TextAlignVertical.center,
       textAlign: TextAlign.left,
-      keyboardType: widget.inputTextType==InputTextType.search?TextInputType.none:TextInputType.text,
+      keyboardType: widget.inputTextType == InputTextType.search
+          ? TextInputType.none
+          : TextInputType.text,
       style: Theme.of(context)
           .textTheme
           .bodyText1
           ?.copyWith(fontWeight: FontWeight.bold),
-      maxLines: widget.inputTextType==InputTextType.normal?25:1,
+      maxLines: widget.inputTextType == InputTextType.normal ? 25 : 1,
       decoration: InputDecoration(
+          errorMaxLines: 2,
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
           hintText: widget.hintText,
-          prefixIcon: widget.inputTextType==InputTextType.search?Icon(Icons.search,color: AppColors.blackTextColor.lighten(30)
-            ,):null,
+          prefixIcon: widget.inputTextType == InputTextType.search
+              ? Icon(
+                  Icons.search,
+                  color: AppColors.blackTextColor.lighten(30),
+                )
+              : null,
           filled: true,
           hintStyle: const TextStyle(color: Colors.grey),
           fillColor: AppColors.textFieldBackgroundColor,

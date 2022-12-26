@@ -44,4 +44,8 @@ class SignInController extends GetxController {
               actionButtonText: AppStrings.gotIt));
     }
   }
+
+
+  bool signInFormValidated()=>!(user.value.isEmpty || !user.value.isEmail || password.value.isEmpty);
+
 }
