@@ -6,6 +6,7 @@ import '../../../../constants/colors.dart';
 
 class ParticipantList extends StatefulWidget {
   final Room meeting;
+
   const ParticipantList({Key? key, required this.meeting}) : super(key: key);
 
   @override

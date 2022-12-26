@@ -43,12 +43,13 @@ class UtilFunctions {
     }
   }
 
-  static List<TextSpan> highlightOccurrences(String source, String query,bool isSender) {
-
-    Color textColor=isSender?AppColors.whiteColor:AppColors.blackTextColor;
+  static List<TextSpan> highlightOccurrences(
+      String source, String query, bool isSender) {
+    Color textColor =
+        isSender ? AppColors.whiteColor : AppColors.blackTextColor;
 
     if (query.isEmpty || !source.toLowerCase().contains(query.toLowerCase())) {
-      return [ TextSpan(text: source,style: TextStyle(color: textColor)) ];
+      return [TextSpan(text: source, style: TextStyle(color: textColor))];
     }
     final matches = query.toLowerCase().allMatches(source.toLowerCase());
 
@@ -59,33 +60,29 @@ class UtilFunctions {
       final match = matches.elementAt(i);
 
       if (match.start != lastMatchEnd) {
-        print(
-            source.substring(lastMatchEnd, match.start));
+        print(source.substring(lastMatchEnd, match.start));
         children.add(TextSpan(
-          text: source.substring(lastMatchEnd, match.start),
-          style: TextStyle(
-            color: textColor,
-            fontSize: 15
-          )
-        ));
+            text: source.substring(lastMatchEnd, match.start),
+            style: TextStyle(color: textColor, fontSize: 15)));
       }
 
       children.add(TextSpan(
         text: source.substring(match.start, match.end),
-        style: TextStyle(color: AppColors.blackTextColor,background: Paint()..color=Colors.yellow,fontSize: 15),
+        style: TextStyle(
+            color: AppColors.blackTextColor,
+            background: Paint()..color = Colors.yellow,
+            fontSize: 15),
       ));
 
       if (i == matches.length - 1 && match.end != source.length) {
         children.add(TextSpan(
-          text: source.substring(match.end, source.length),
-            style: TextStyle(fontWeight: FontWeight.bold, color: textColor,fontSize: 15
-            )
-        ));
+            text: source.substring(match.end, source.length),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, color: textColor, fontSize: 15)));
       }
 
       lastMatchEnd = match.end;
     }
     return children;
   }
-
 }

@@ -3,7 +3,7 @@ import 'package:sizer/sizer.dart';
 
 import '../utils/app_colors.dart';
 
-void showCustomDialog(BuildContext context,Widget customChild) {
+void showCustomDialog(BuildContext context, Widget customChild) {
   showGeneralDialog(
     context: context,
     barrierLabel: "Barrier",
@@ -18,7 +18,7 @@ void showCustomDialog(BuildContext context,Widget customChild) {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5.w),
           ),
-            child: customChild,
+          child: customChild,
         ),
       );
     },

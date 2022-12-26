@@ -9,141 +9,9 @@ import 'package:sizer/sizer.dart';
 import '../../controllers/auth_controller.dart';
 import '../../models/room_model.dart';
 import '../../models/user_model.dart';
-import '../chat/chat_screen.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/util_functions.dart';
-
-// class ChatListItem extends StatefulWidget {
-//   RoomModel roomModel;
-//   int index;
-//
-//   ChatListItem({Key? key, required this.roomModel, required this.index})
-//       : super(key: key);
-//
-//   @override
-//   State<ChatListItem> createState() => _ChatListItemState();
-// }
-//
-// class _ChatListItemState extends State<ChatListItem> {
-//   String profilePicture = '';
-//   bool isSeen = false;
-//   String messageContent = "";
-//   UserModel? receiverModel;
-//   String? userId;
-//
-//   bool isSelected = false;
-//
-//   @override
-//   void initState() {
-//     // TODO: implement initState
-//     super.initState();
-//     userId = Get.find<AuthController>().firebaseUser.value?.uid;
-//     isSelected = Get.find<HomeController>()
-//         .selectedChatIdList
-//         .contains(widget.roomModel.roomId);
-//
-//     // final receiverModel=roomModel.userInfoList?.map((e) {
-//     //   if(e.uid.toString()!=userId?.toString()){
-//     //     return e;
-//     //   }
-//     // }).toList()[0];
-//     messageContent = widget.roomModel.latestMessage?.content ?? "";
-//     isSeen = widget.roomModel.latestMessage?.isSeenBy
-//             ?.where((element) => element.uid == userId)
-//             .isNotEmpty ??
-//         true;
-//     for (var element in widget.roomModel.userInfoList!) {
-//       debugPrint("Element id coming is ${element.uid}");
-//       if (element.uid.toString() != userId?.toString()) {
-//         receiverModel = element;
-//       }
-//     }
-//     profilePicture = receiverModel?.profilePicture ?? "";
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     Color tileColor =
-//         isSelected ? AppColors.primaryColor.lighten(60) : AppColors.whiteColor;
-//
-//     return Padding(
-//         padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 5.0),
-//         child: ListTile(
-//           // shape: RoundedRectangleBorder(
-//           //     borderRadius: BorderRadius.circular(20.0)
-//           // ),
-//           onLongPress: () {
-//             final selectedList = Get.find<HomeController>().selectedChatIdList;
-//             if (selectedList.isEmpty) {
-//               selectedList.add(widget.roomModel.roomId!);
-//             } else {
-//               selectedList.remove(widget.roomModel.roomId);
-//             }
-//             setState(() {
-//               isSelected = selectedList.contains(widget.roomModel.roomId);
-//             });
-//           },
-//           onTap: () {
-//             final selectedList = Get.find<HomeController>().selectedChatIdList;
-//             if (selectedList.isEmpty) {
-//               Get.toNamed(ChatScreen.routeName, arguments: {
-//                 "roomId": widget.roomModel.roomId,
-//                 "receiverModel": receiverModel
-//               });
-//             } else {
-//               if (selectedList.contains(widget.roomModel.roomId)) {
-//                 selectedList.remove(widget.roomModel.roomId);
-//               } else {
-//                 if (widget.roomModel.roomId != null &&
-//                     widget.roomModel.roomId!.isNotEmpty) {
-//                   selectedList.add(widget.roomModel.roomId!);
-//                 }
-//               }
-//             }
-//             setState(() {
-//               isSelected = selectedList.contains(widget.roomModel.roomId);
-//             });
-//           },
-//           tileColor: tileColor,
-//           leading: ProfilePictureAvatar(
-//             profilePictureLink: profilePicture,
-//             showCheckIcon: isSelected,
-//             height: 50.0,
-//             width: 52.0,
-//           ),
-//           title: Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//             children: [
-//               Text(
-//                 receiverModel?.userName ?? "",
-//                 style: Theme.of(context).textTheme.bodyText1?.copyWith(
-//                     fontWeight: FontWeight.bold,
-//                     color: AppColors.blackTextColor),
-//               ),
-//               Text(
-//                   UtilFunctions().parseTimeStamp(
-//                       widget.roomModel.latestMessage?.timestamp),
-//                   style: Theme.of(context)
-//                       .textTheme
-//                       .subtitle2
-//                       ?.copyWith(color: Colors.black54))
-//             ],
-//           ),
-//           subtitle: Row(
-//             children: [
-//               Container(
-//                 width: 65.w,
-//                 child: Text(messageContent,
-//                     style: Theme.of(context).textTheme.subtitle2?.copyWith(
-//                         color:
-//                             isSeen ? Colors.black54 : AppColors.blackTextColor,
-//                         overflow: TextOverflow.ellipsis)),
-//               )
-//             ],
-//           ),
-//         ));
-//   }
-// }
+import '../chat/chat_screen.dart';
 
 class ChatListItem extends StatelessWidget {
   RoomModel roomModel;
@@ -249,8 +117,12 @@ class ChatListItem extends StatelessWidget {
                               : AppColors.blackTextColor,
                           overflow: TextOverflow.ellipsis)),
                 ),
-                isPinned()?
-                const Icon(Icons.push_pin,color: Colors.grey,):const SizedBox()
+                isPinned()
+                    ? const Icon(
+                        Icons.push_pin,
+                        color: Colors.grey,
+                      )
+                    : const SizedBox()
               ],
             ),
           ));
@@ -274,9 +146,8 @@ class ChatListItem extends StatelessWidget {
     profilePicture = receiverModel?.profilePicture ?? "";
   }
 
-
-  bool isPinned(){
-    final userId=Get.find<HomeController>().senderId;
-    return roomModel.pinnedByList?.contains(userId)??false;
+  bool isPinned() {
+    final userId = Get.find<HomeController>().senderId;
+    return roomModel.pinnedByList?.contains(userId) ?? false;
   }
 }

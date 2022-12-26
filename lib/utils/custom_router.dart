@@ -188,13 +188,12 @@ class GetXRouter {
 }
 
 class MyMiddleware extends GetMiddleware {
-
   GetPage? getPage;
 
   @override
   GetPage? onPageCalled(GetPage? page) {
     debugPrint("Navigating to page ${page?.name}");
-    getPage=page;
+    getPage = page;
     return super.onPageCalled(page);
   }
 
@@ -204,5 +203,4 @@ class MyMiddleware extends GetMiddleware {
     super.onPageDispose();
     debugPrint("Disposing page ${getPage?.name}");
   }
-
 }

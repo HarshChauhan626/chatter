@@ -11,6 +11,7 @@ import 'package:chat_app/widgets/input_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+
 import '../../utils/asset_strings.dart';
 import '../forgot_password/forgot_password_screen.dart';
 
@@ -42,56 +43,55 @@ class _SignInScreenState extends State<SignInScreen> {
         child: Scaffold(
       body: SingleChildScrollView(
           child: AnimatedColumn(
-            children: [
-              getHeaderImageWidget(),
-              Text(
-                AppStrings.welcomeBack,
-                style: Theme.of(context).textTheme.headline5?.copyWith(
-                    fontWeight: FontWeight.w900, color: AppColors.primaryColor),
-              ),
-              const SizedBox(
-                height: 10.0,
-              ),
-              Text(
-                AppStrings.pleaseSignIn,
+        children: [
+          getHeaderImageWidget(),
+          Text(
+            AppStrings.welcomeBack,
+            style: Theme.of(context).textTheme.headline5?.copyWith(
+                fontWeight: FontWeight.w900, color: AppColors.primaryColor),
+          ),
+          const SizedBox(
+            height: 10.0,
+          ),
+          Text(
+            AppStrings.pleaseSignIn,
+            style: Theme.of(context)
+                .textTheme
+                .bodyText1
+                ?.copyWith(color: AppColors.greyColor),
+          ),
+          const SizedBox(
+            height: 30.0,
+          ),
+          getEmailField(),
+          getPasswordField(),
+          Container(
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, ForgotPasswordScreen.routeName);
+              },
+              child: Text(
+                AppStrings.forgotPassword,
                 style: Theme.of(context)
                     .textTheme
-                    .bodyText1
-                    ?.copyWith(color: AppColors.greyColor),
+                    .subtitle2
+                    ?.copyWith(color: AppColors.primaryColor),
               ),
-              const SizedBox(
-                height: 30.0,
-              ),
-              getEmailField(),
-              getPasswordField(),
-              Container(
-                alignment: Alignment.centerRight,
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(
-                        context, ForgotPasswordScreen.routeName);
-                  },
-                  child: Text(
-                    AppStrings.forgotPassword,
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle2
-                        ?.copyWith(color: AppColors.primaryColor),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 30.0,
-              ),
-              getSignInButton(),
-              getSignInWithGoogleButton(),
-              const SizedBox(
-                height: 20.0,
-              ),
-              getNavigateToSignUpWidget()
-            ],
-          )),
+            ),
+          ),
+          const SizedBox(
+            height: 30.0,
+          ),
+          getSignInButton(),
+          getSignInWithGoogleButton(),
+          const SizedBox(
+            height: 20.0,
+          ),
+          getNavigateToSignUpWidget()
+        ],
+      )),
     ));
   }
 

@@ -1,27 +1,21 @@
-import 'dart:convert';
-
 import 'package:chat_app/helper/hive_db_helper.dart';
 import 'package:chat_app/helper/notification_helper.dart';
 import 'package:chat_app/models/message_model.dart';
 import 'package:chat_app/utils/util_functions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:scroll_to_index/scroll_to_index.dart';
-import 'package:sizer/sizer.dart';
 import 'package:uuid/uuid.dart';
 
-import '../constants.dart';
 import '../helper/firebase_helper.dart';
 import '../models/room_model.dart';
 import '../models/user_model.dart';
 import 'auth_controller.dart';
-import 'package:http/http.dart' as http;
 
 class ChatController extends GetxController {
   String? user1Id;
   String? user2Id;
+
   // final roomId=Rxn<String>();
 
   RxString roomId = "".obs;
@@ -73,25 +67,26 @@ class ChatController extends GetxController {
   @override
   void onClose() {
     // TODO: implement onClose
-    Get.find<HiveDBHelper>().currentChatId=null;
+    Get.find<HiveDBHelper>().currentChatId = null;
     super.onClose();
   }
 
-  void toggleUserActiveStatus() async{
+  void toggleUserActiveStatus() async {
     try {
       final chatCollectionRef =
-      FirebaseHelper.fireStoreInstance!.collection("chats");
+          FirebaseHelper.fireStoreInstance!.collection("chats");
 
       final groupDocReference = chatCollectionRef.doc(roomId.value);
 
       final groupData = await groupDocReference.get();
 
-      groupData.data()?.update("activeUsers", (value) => [
-        {user1Id:true},
-        {user2Id:true}
-      ]);
-
-    } catch (e,s) {
+      groupData.data()?.update(
+          "activeUsers",
+          (value) => [
+                {user1Id: true},
+                {user2Id: true}
+              ]);
+    } catch (e, s) {
       debugPrint(e.toString());
       debugPrint(s.toString());
     }
@@ -116,8 +111,7 @@ class ChatController extends GetxController {
       isUserOnline();
     }
 
-    Get.find<HiveDBHelper>().currentChatId=roomId.value;
-
+    Get.find<HiveDBHelper>().currentChatId = roomId.value;
   }
 
   Future<void> isUserOnline() async {
@@ -188,7 +182,7 @@ class ChatController extends GetxController {
         await groupDocReference.set({
           "roomId": roomId.value,
           "userList": [user1Id, receiverModel?.uid],
-          "pinnedByList":[],
+          "pinnedByList": [],
           "isTyping": [],
           "latestMessage": messageData,
         });

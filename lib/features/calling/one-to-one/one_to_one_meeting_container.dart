@@ -7,6 +7,7 @@ import '../../../constants/colors.dart';
 
 class OneToOneMeetingContainer extends StatefulWidget {
   final Room meeting;
+
   const OneToOneMeetingContainer({Key? key, required this.meeting})
       : super(key: key);
 

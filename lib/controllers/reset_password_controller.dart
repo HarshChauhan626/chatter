@@ -1,9 +1,7 @@
 import 'package:chat_app/helper/firebase_helper.dart';
-import 'package:chat_app/helper/user_data_helper.dart';
 import 'package:chat_app/widgets/alert_dialog.dart';
 import 'package:chat_app/widgets/custom_alert_body.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 

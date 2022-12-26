@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:videosdk/videosdk.dart';
+
 import '../../../constants/colors.dart';
 import '../../../utils/spacer.dart';
 
@@ -13,6 +14,7 @@ class ParticipantView extends StatelessWidget {
   bool isScreenShare;
   double avatarTextSize;
   Function() onStopScreeenSharePressed;
+
   ParticipantView(
       {Key? key,
       required this.stream,

@@ -15,12 +15,15 @@ class MessageModel {
       this.timestamp,
       this.contentType,
       this.replyTo,
-      this.isLikedBy,this.isSeenBy});
+      this.isLikedBy,
+      this.isSeenBy});
 
   MessageModel.fromJson(Map<String, dynamic> data) {
     content = data["content"];
     senderId = data["sender"];
-    timestamp = data["timestamp"]!=null?int.parse(data["timestamp"]):data["timestamp"];
+    timestamp = data["timestamp"] != null
+        ? int.parse(data["timestamp"])
+        : data["timestamp"];
     contentType = data["contentType"];
     replyTo = data["replyTo"];
     isLikedBy = data["isLikedBy"];
@@ -30,7 +33,6 @@ class MessageModel {
         isSeenBy!.add(LastSeenModel.fromJson(v));
       });
     }
-
   }
 
   Map<String, dynamic> toJson() {
@@ -44,5 +46,4 @@ class MessageModel {
       "isSeenBy": isSeenBy
     };
   }
-
 }

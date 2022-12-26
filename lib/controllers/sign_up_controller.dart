@@ -1,6 +1,4 @@
-import 'package:chat_app/constants.dart';
 import 'package:chat_app/helper/firebase_helper.dart';
-import 'package:chat_app/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';

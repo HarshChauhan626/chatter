@@ -1,7 +1,5 @@
-import 'package:chat_app/helper/hive_db_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
@@ -11,12 +9,10 @@ import '../../utils/app_colors.dart';
 class SelectableListAppBar extends StatelessWidget {
   SelectableListAppBar({Key? key}) : super(key: key);
 
-
   final homeController = Get.find<HomeController>();
 
   @override
   Widget build(BuildContext context) {
-
     return Obx(() {
       bool isSelectedLengthGT1 = false;
 
@@ -25,8 +21,10 @@ class SelectableListAppBar extends StatelessWidget {
       }
 
       return SliverAppBar(
-        forceElevated: true, //* here
-        elevation: 1.5, //* question having 0 here
+        forceElevated: true,
+        //* here
+        elevation: 1.5,
+        //* question having 0 here
         pinned: true,
         floating: false,
         leading: getHeaderIcon(Icons.close, onTap: () {
@@ -71,9 +69,8 @@ class SelectableListAppBar extends StatelessWidget {
     );
   }
 
-
-  void onTapPin(){
-    final roomId=homeController.selectedChatIdList.first;
+  void onTapPin() {
+    final roomId = homeController.selectedChatIdList.first;
     // Get.find<HiveDBHelper>().addPinnedRoomId(roomId);
     Get.find<HomeController>().pinChat(roomId);
     homeController.selectedChatIdList.clear();
@@ -83,16 +80,13 @@ class SelectableListAppBar extends StatelessWidget {
   //
   // }
 
-  void onTapDelete()async{
-    final selectedChatList=homeController.selectedChatIdList;
-    for(int i=0;i<selectedChatList.length;i++){
+  void onTapDelete() async {
+    final selectedChatList = homeController.selectedChatIdList;
+    for (int i = 0; i < selectedChatList.length; i++) {
       await homeController.deleteChat(selectedChatList[i]);
     }
     homeController.selectedChatIdList.clear();
   }
 
-  void onTapBlock(){
-
-  }
-
+  void onTapBlock() {}
 }

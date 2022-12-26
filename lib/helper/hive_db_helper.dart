@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart' as pathProvider;
 
 import '../utils/app_strings.dart';
-import 'package:path_provider/path_provider.dart' as pathProvider;
 
 class HiveDBHelper extends GetxController {
   Box? userPreferenceBox;
@@ -21,20 +21,20 @@ class HiveDBHelper extends GetxController {
 
   String? _currentChatId;
 
-  String? get currentChatId=>_currentChatId;
+  String? get currentChatId => _currentChatId;
 
-  set currentChatId(String? currentChatId){
-    _currentChatId=currentChatId;
+  set currentChatId(String? currentChatId) {
+    _currentChatId = currentChatId;
     userPreferenceBox?.put(AppStrings.currentChatId, currentChatId);
   }
 
-  List<String> _pinnedRoomIdList=<String>[];
+  List<String> _pinnedRoomIdList = <String>[];
 
-  List<String>? get pinnedRoomIdList=>_pinnedRoomIdList;
+  List<String>? get pinnedRoomIdList => _pinnedRoomIdList;
 
-  void addPinnedRoomId(String roomId){
+  void addPinnedRoomId(String roomId) {
     _pinnedRoomIdList.add(roomId);
-    userPreferenceBox?.put(AppStrings.pinnedRoomIds,_pinnedRoomIdList);
+    userPreferenceBox?.put(AppStrings.pinnedRoomIds, _pinnedRoomIdList);
   }
 
   @override
@@ -51,7 +51,8 @@ class HiveDBHelper extends GetxController {
   Future<void> setUpData() async {
     _onboardingDone =
         userPreferenceBox?.get(AppStrings.isOnBoardingDone) ?? false;
-    _pinnedRoomIdList=userPreferenceBox?.get(AppStrings.pinnedRoomIds)??<String>[];
+    _pinnedRoomIdList =
+        userPreferenceBox?.get(AppStrings.pinnedRoomIds) ?? <String>[];
   }
 
   Future<void> initBoxes() async {

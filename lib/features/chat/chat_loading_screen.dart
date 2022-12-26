@@ -13,7 +13,7 @@ class ChatLoadingScreen extends StatelessWidget {
         child: ListView.builder(
             itemCount: 30,
             itemBuilder: (context, index) {
-              bool isSender = index%2==0||index%5==0;
+              bool isSender = index % 2 == 0 || index % 5 == 0;
               return Container(
                 height: 70.0,
                 padding: EdgeInsets.only(
@@ -22,7 +22,8 @@ class ChatLoadingScreen extends StatelessWidget {
                     top: 10,
                     bottom: 10),
                 child: Align(
-                  alignment: isSender?Alignment.centerRight:Alignment.centerLeft,
+                  alignment:
+                      isSender ? Alignment.centerRight : Alignment.centerLeft,
                   child: Container(
                     height: 70.0,
                     color: AppColors.textFieldBackgroundColor,

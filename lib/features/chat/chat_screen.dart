@@ -1,8 +1,8 @@
 import 'package:chat_app/controllers/auth_controller.dart';
 import 'package:chat_app/controllers/chat_controller.dart';
 import 'package:chat_app/features/profile/receiver_profile_screen.dart';
-import 'package:chat_app/features/search_conversations/search_conversation_screen.dart';
 import 'package:chat_app/utils/app_colors.dart';
+import 'package:chat_app/utils/extensions.dart';
 import 'package:chat_app/utils/util_functions.dart';
 import 'package:chat_app/widgets/attachment_menu_bottom_sheet.dart';
 import 'package:chat_app/widgets/custom_route_builder.dart';
@@ -12,12 +12,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:random_avatar/random_avatar.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:sizer/sizer.dart';
-import 'package:chat_app/utils/extensions.dart';
-import 'package:uuid/uuid.dart';
-import '../../helper/firebase_helper.dart';
+
 import '../../models/message_model.dart';
 import '../../utils/app_strings.dart';
 import 'chat_loading_screen.dart';

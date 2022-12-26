@@ -62,7 +62,6 @@ class AppTheme {
               borderRadius: BorderRadius.all(Radius.circular(15.0))),
           primary: AppColors.primaryColor,
           minimumSize: const Size(double.infinity, 54.0),
-        ))
-    );
+        )));
   }
 }

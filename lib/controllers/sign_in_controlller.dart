@@ -1,5 +1,5 @@
-import 'package:chat_app/helper/firebase_helper.dart';
 import 'package:chat_app/features/home/home_screen.dart';
+import 'package:chat_app/helper/firebase_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -45,7 +45,6 @@ class SignInController extends GetxController {
     }
   }
 
-
-  bool signInFormValidated()=>!(user.value.isEmpty || !user.value.isEmail || password.value.isEmpty);
-
+  bool signInFormValidated() =>
+      !(user.value.isEmpty || !user.value.isEmail || password.value.isEmpty);
 }

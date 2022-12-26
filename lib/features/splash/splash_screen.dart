@@ -1,8 +1,8 @@
 import 'package:chat_app/controllers/auth_controller.dart';
-import 'package:chat_app/helper/hive_db_helper.dart';
 import 'package:chat_app/features/home/home_screen.dart';
 import 'package:chat_app/features/onboarding/onboarding_screen.dart';
 import 'package:chat_app/features/sign_in/sign_in_screen.dart';
+import 'package:chat_app/helper/hive_db_helper.dart';
 import 'package:chat_app/helper/notification_helper.dart';
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/widgets/custom_safe_area.dart';
@@ -35,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future.delayed(const Duration(seconds: 2), () async {});
     if (Get.find<HiveDBHelper>().onboardingDone) {
       if (authController.firebaseUser.value != null) {
-        if(NotificationHelper.notificationDataModel==null){
+        if (NotificationHelper.notificationDataModel == null) {
           Get.offAllNamed(HomeScreen.routeName);
         }
       } else {

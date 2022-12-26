@@ -5,6 +5,7 @@ class CustomRouteBuilder extends PageRouteBuilder {
   final Widget page;
   String routeName;
   Object? arguments;
+
   CustomRouteBuilder(
       {required this.page, required this.routeName, this.arguments})
       : super(

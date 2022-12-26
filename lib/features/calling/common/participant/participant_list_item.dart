@@ -8,6 +8,7 @@ import '../../../../constants/colors.dart';
 
 class ParticipantListItem extends StatefulWidget {
   final Participant participant;
+
   const ParticipantListItem({Key? key, required this.participant})
       : super(key: key);
 

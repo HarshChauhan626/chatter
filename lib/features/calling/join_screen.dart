@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import '../../../constants/colors.dart';
 import '../../../utils/spacer.dart';
 import '../../../utils/toast.dart';

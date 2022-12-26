@@ -1,4 +1,3 @@
-import 'package:animations/animations.dart';
 import 'package:chat_app/controllers/search_people_controller.dart';
 import 'package:chat_app/widgets/custom_safe_area.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,8 +20,7 @@ class SearchPeopleScreen extends StatelessWidget {
 
   FocusNode inputNode = FocusNode();
 
-  SearchPeopleController controller =
-      Get.find<SearchPeopleController>();
+  SearchPeopleController controller = Get.find<SearchPeopleController>();
 
   static Route route() {
     return CustomRouteBuilder(page: SearchPeopleScreen(), routeName: routeName);
@@ -34,12 +32,11 @@ class SearchPeopleScreen extends StatelessWidget {
     return CustomSafeArea(
         child: Scaffold(
             appBar: getAppBar(context),
-            body: Obx((){
+            body: Obx(() {
               if (controller.searchText.isNotEmpty) {
                 if (controller.isLoading.value) {
                   return const Center(
-                    child: CircularProgressIndicator(
-                    ),
+                    child: CircularProgressIndicator(),
                   );
                 } else {
                   return ListView.builder(
@@ -54,44 +51,40 @@ class SearchPeopleScreen extends StatelessWidget {
                 print("Show empty container");
                 return Container();
               }
-            })
-        )
-    );
+            })));
   }
 
   Widget getSearchResultItem(UserModel userModel) {
-
     return ListTile(
-      onTap: ()async{
+      onTap: () async {
         String? roomId;
-        SearchPeopleController searchPeopleController=Get.find<SearchPeopleController>();
+        SearchPeopleController searchPeopleController =
+            Get.find<SearchPeopleController>();
 
-        roomId=await searchPeopleController.getRoomId(userModel.uid);
+        roomId = await searchPeopleController.getRoomId(userModel.uid);
 
-        Map<String,dynamic> arguments={};
+        Map<String, dynamic> arguments = {};
 
-        if(roomId!=null){
-          arguments["roomId"]=roomId;
+        if (roomId != null) {
+          arguments["roomId"] = roomId;
         }
-        arguments["receiverModel"]=userModel;
-        Get.toNamed(ChatScreen.routeName,arguments: arguments);
+        arguments["receiverModel"] = userModel;
+        Get.toNamed(ChatScreen.routeName, arguments: arguments);
       },
       title: Text(userModel.userName.toString()),
       leading: CircleAvatar(
-        radius: 20.0,
-        child:
-
-          userModel.profilePicture!.isNotEmpty
-            ?CircleAvatar(
-              backgroundImage: NetworkImage(userModel.profilePicture!,
-              ),
-            )
-          :randomAvatar(
-            "Harsh",
-            height: 30,
-            width: 30,
-          )
-      ),
+          radius: 20.0,
+          child: userModel.profilePicture!.isNotEmpty
+              ? CircleAvatar(
+                  backgroundImage: NetworkImage(
+                    userModel.profilePicture!,
+                  ),
+                )
+              : randomAvatar(
+                  "Harsh",
+                  height: 30,
+                  width: 30,
+                )),
     );
   }
 
@@ -108,7 +101,7 @@ class SearchPeopleScreen extends StatelessWidget {
             focusNode: inputNode,
             controller: searchEditingController,
             onChanged: (value) async {
-              controller.searchText.value=value;
+              controller.searchText.value = value;
               await controller.searchPeople();
             },
             textAlignVertical: TextAlignVertical.center,
@@ -124,15 +117,14 @@ class SearchPeopleScreen extends StatelessWidget {
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.clear),
                   onPressed: () {
-                    controller.searchText.value="";
-                    searchEditingController.text="";
+                    controller.searchText.value = "";
+                    searchEditingController.text = "";
                   },
                 )),
           ),
         ));
   }
 }
-
 
 // https://stackoverflow.com/questions/64906620/flutter-passing-multiple-data-with-getx
 

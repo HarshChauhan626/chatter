@@ -1,15 +1,14 @@
-import 'package:chat_app/models/user_model.dart';
 import 'package:chat_app/features/sign_in/sign_in_screen.dart';
-import 'package:chat_app/features/sign_up/sign_up_screen.dart';
+import 'package:chat_app/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
+import '../features/home/home_screen.dart';
 import '../helper/firebase_helper.dart';
 import '../helper/hive_db_helper.dart';
-import '../features/home/home_screen.dart';
 
 class AuthController extends GetxController {
   // static AuthController instance = Get.find();
@@ -197,26 +196,21 @@ class AuthController extends GetxController {
     }
   }
 
-
-  Future<void> saveUserDeviceToken(String deviceToken)async{
+  Future<void> saveUserDeviceToken(String deviceToken) async {
     try {
       final userCollectionRef =
-      FirebaseHelper.fireStoreInstance!.collection("user");
+          FirebaseHelper.fireStoreInstance!.collection("user");
 
       final docReference = userCollectionRef.doc(firebaseUser.value?.uid);
 
-      final userDocument=await docReference.get();
+      final userDocument = await docReference.get();
 
       if (userDocument.exists) {
-        docReference.update({
-          "deviceToken":deviceToken
-        });
+        docReference.update({"deviceToken": deviceToken});
       }
     } catch (e, s) {
       print(
           "Exception coming in set user info ${e.toString()} ${s.toString()}");
     }
   }
-
-
 }

@@ -4,7 +4,9 @@ import 'package:flutter/services.dart';
 
 class BottomNavbar extends StatefulWidget {
   final Function callback;
+
   const BottomNavbar({Key? key, required this.callback}) : super(key: key);
+
   @override
   BottomNavbarState createState() => BottomNavbarState();
 }

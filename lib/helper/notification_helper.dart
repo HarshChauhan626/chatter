@@ -13,7 +13,6 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 
 import '../constants.dart';
-import '../models/message_model.dart';
 import '../models/user_model.dart';
 
 class NotificationHelper {
@@ -33,7 +32,7 @@ class NotificationHelper {
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
 
     await FirebaseMessaging.instance
@@ -44,19 +43,19 @@ class NotificationHelper {
     );
 
     var initializationSettingsAndroid =
-    new AndroidInitializationSettings('ic_launcher');
+        new AndroidInitializationSettings('ic_launcher');
     var initialzationSettingsAndroid =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
+        AndroidInitializationSettings('@mipmap/ic_launcher');
     var initializationSettings =
-    InitializationSettings(android: initialzationSettingsAndroid);
+        InitializationSettings(android: initialzationSettingsAndroid);
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onDidReceiveNotificationResponse:
             (NotificationResponse notificationResponse) {
-          Get.toNamed(ChatScreen.routeName, arguments: {
-            "roomId": notificationDataModel?.roomId,
-            "receiverModel": notificationDataModel?.receiverModel
-          });
-        });
+      Get.toNamed(ChatScreen.routeName, arguments: {
+        "roomId": notificationDataModel?.roomId,
+        "receiverModel": notificationDataModel?.receiverModel
+      });
+    });
   }
 
   static void listenFCM() {
@@ -71,8 +70,7 @@ class NotificationHelper {
         if (currentChatId == null) {
           showNotification(notification);
           // navigateToChatScreen();
-        }
-        else {
+        } else {
           FlutterRingtonePlayer.playNotification();
         }
       }
@@ -111,7 +109,7 @@ class NotificationHelper {
     await Firebase.initializeApp();
     print('Handling a background message ${message.messageId}');
     AndroidNotificationDetails androidDetails =
-    const AndroidNotificationDetails(
+        const AndroidNotificationDetails(
       "default_notification_channel_id",
       "channel",
       enableLights: true,

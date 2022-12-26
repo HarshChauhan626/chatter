@@ -1,23 +1,22 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:chat_app/features/calling/common/app_bar/recording_indicator.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:videosdk/videosdk.dart';
 
 import '../../../../constants/colors.dart';
 import '../../../../utils/api.dart';
 import '../../../../utils/spacer.dart';
 import '../../../../utils/toast.dart';
+
 class MeetingAppBar extends StatefulWidget {
   String token;
   Room meeting;
   String recordingState;
   bool isFullScreen;
+
   MeetingAppBar(
       {Key? key,
       required this.meeting,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../constants/colors.dart';
 import '../../../../utils/spacer.dart';
 import '../../../../utils/toast.dart';
+
 class JoiningDetails extends StatefulWidget {
   bool isCreateMeeting;
   Function onClickMeetingJoin;

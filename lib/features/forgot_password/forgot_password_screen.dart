@@ -5,8 +5,8 @@ import 'package:chat_app/widgets/custom_safe_area.dart';
 import 'package:chat_app/widgets/input_text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sizer/sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../utils/app_strings.dart';
 import '../../utils/asset_strings.dart';

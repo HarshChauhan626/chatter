@@ -52,34 +52,31 @@ class AppStrings {
   static const String message = "Message";
   static const String startChat = "Start chat";
   static const String searchConversation = "Search conversations";
-  static const String search="Search";
+  static const String search = "Search";
 
-  static const String reachOutToUs="Reach out to us";
-
+  static const String reachOutToUs = "Reach out to us";
 
   // Profile screen strings
 
   static const String editProfile = "Edit profile";
-  static const String profileSettings="Profile Settings";
-  static const String updateProfile="Update and modify your profile";
+  static const String profileSettings = "Profile Settings";
+  static const String updateProfile = "Update and modify your profile";
 
-  static const String privacy="Privacy";
-  static const String changeYourPassword="Change your password";
-  static const String aboutUs="About us";
-  static const String knowMoreAboutUs="Know more about us and our goal";
-  static const String settings="Settings";
-  static const String personaliseAndChange="Manage your app preferences";
-  static const String help="Help";
-  static const String reportAProblem="Report a problem";
+  static const String privacy = "Privacy";
+  static const String changeYourPassword = "Change your password";
+  static const String aboutUs = "About us";
+  static const String knowMoreAboutUs = "Know more about us and our goal";
+  static const String settings = "Settings";
+  static const String personaliseAndChange = "Manage your app preferences";
+  static const String help = "Help";
+  static const String reportAProblem = "Report a problem";
 
-  static const String spreadTheWord="Spread the word";
-  static const String inviteFriends="Invite your friends on chatter";
-
+  static const String spreadTheWord = "Spread the word";
+  static const String inviteFriends = "Invite your friends on chatter";
 
   // Edit profile strings
 
-  static const String save="Save";
-
+  static const String save = "Save";
 
   // error handler
   static const String badRequestError = "bad_request_error";
@@ -99,7 +96,8 @@ class AppStrings {
   // alert dialog body texts
   static const String passwordSuccessfullyChanged =
       "Your password has been successfully changed.";
-  static const String profileUpdatedSuccessfully="Your profile has been updated successfully";
+  static const String profileUpdatedSuccessfully =
+      "Your profile has been updated successfully";
   static const String somethingWentWrong =
       "Something went wrong. Please try again.";
   static const String resetPasswordLinkSent =
@@ -121,6 +119,6 @@ class AppStrings {
 
   static const String activeNow = "Active now";
 
-  static const String currentChatId="CurrentChatID";
-  static const String pinnedRoomIds="PinnedRoomIDs";
+  static const String currentChatId = "CurrentChatID";
+  static const String pinnedRoomIds = "PinnedRoomIDs";
 }

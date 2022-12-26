@@ -15,7 +15,7 @@ import '../utils/app_strings.dart';
 class ReviewPopup extends StatelessWidget {
   ReviewPopup({Key? key}) : super(key: key);
 
-  ReviewController reviewController=Get.put(ReviewController());
+  ReviewController reviewController = Get.put(ReviewController());
 
   @override
   Widget build(BuildContext context) {
@@ -36,56 +36,65 @@ class ReviewPopup extends StatelessWidget {
               margin: const EdgeInsets.symmetric(vertical: 5.0),
             ),
           ),
-          Obx(() =>
-              getBody(context))
+          Obx(() => getBody(context))
         ],
       ),
     );
   }
 
-  Widget getBody(BuildContext context){
-    if(reviewController.isLoading.value){
+  Widget getBody(BuildContext context) {
+    if (reviewController.isLoading.value) {
       return getBodyWhileLoading();
     }
-    if(reviewController.isRequestComplete.value){
+    if (reviewController.isRequestComplete.value) {
       return getBodyAfterLoading(context);
     }
     return getBodyBeforeLoading(context);
   }
 
-  Widget getBodyAfterLoading(BuildContext context){
-
-    String imageLoc=reviewController.isSuccessful.value?AssetStrings.success:AssetStrings.errorLottie;
-    String message=reviewController.isSuccessful.value?AppStrings.reviewSaved:AppStrings.somethingWentWrong;
+  Widget getBodyAfterLoading(BuildContext context) {
+    String imageLoc = reviewController.isSuccessful.value
+        ? AssetStrings.success
+        : AssetStrings.errorLottie;
+    String message = reviewController.isSuccessful.value
+        ? AppStrings.reviewSaved
+        : AppStrings.somethingWentWrong;
     return Expanded(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.only(top: 4.h,bottom: 2.h),
+            padding: EdgeInsets.only(top: 4.h, bottom: 2.h),
             child: SizedBox(
                 height: 15.h,
                 width: 15.h,
-                child: Lottie.asset(imageLoc,repeat: false)
-            ),
+                child: Lottie.asset(imageLoc, repeat: false)),
           ),
-          Text(message,style: Theme.of(context).textTheme.headline6,),
+          Text(
+            message,
+            style: Theme.of(context).textTheme.headline6,
+          ),
           SizedBox(
             height: 4.h,
           ),
-          Padding(padding: EdgeInsets.symmetric(horizontal: 5.w,),child: ElevatedButton(
-            onPressed: (){
-              Navigator.pop(context);
-            },
-            child: const Text(AppStrings.gotIt),
-          ),)
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 5.w,
+            ),
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text(AppStrings.gotIt),
+            ),
+          )
         ],
       ),
     );
   }
 
-  Widget getBodyBeforeLoading(BuildContext context){
+  Widget getBodyBeforeLoading(BuildContext context) {
     return Expanded(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -93,7 +102,10 @@ class ReviewPopup extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 5.0),
-            child: Text(AppStrings.giveFeedback,style: Theme.of(context).textTheme.headline6,),
+            child: Text(
+              AppStrings.giveFeedback,
+              style: Theme.of(context).textTheme.headline6,
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -116,24 +128,29 @@ class ReviewPopup extends StatelessWidget {
           Container(
             height: 25.h,
             padding:
-            const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
             child: InputTextField(
                 onChangedValue: (value) {
-                  reviewController.comments.value=value;
+                  reviewController.comments.value = value;
                 },
                 hintText: AppStrings.comments,
                 inputTextType: InputTextType.normal),
           ),
-          Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 20.0),child:
-          ElevatedButton(onPressed: ()async{
-            await reviewController.submitReview();
-          }, child: const Text(AppStrings.submit)),)
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+            child: ElevatedButton(
+                onPressed: () async {
+                  await reviewController.submitReview();
+                },
+                child: const Text(AppStrings.submit)),
+          )
         ],
       ),
     );
   }
 
-  Widget getBodyWhileLoading(){
+  Widget getBodyWhileLoading() {
     return const Expanded(
       child: Center(
         child: SizedBox(
@@ -144,5 +161,4 @@ class ReviewPopup extends StatelessWidget {
       ),
     );
   }
-
 }

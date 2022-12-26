@@ -20,8 +20,7 @@ class AppColors {
 
   static const Color whiteColor = Colors.white;
 
-  static const Color parrotGreenColor=Color(0xffc8f4dd);
+  static const Color parrotGreenColor = Color(0xffc8f4dd);
 
-  static const Color darkParrotGreenColor=Color(0xff89c9a8);
-
+  static const Color darkParrotGreenColor = Color(0xff89c9a8);
 }

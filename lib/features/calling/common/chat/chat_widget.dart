@@ -5,9 +5,11 @@ import 'package:videosdk/videosdk.dart';
 
 import '../../../../constants/colors.dart';
 import '../../../../utils/toast.dart';
+
 class ChatWidget extends StatelessWidget {
   final bool isLocalParticipant;
   final PubSubMessage message;
+
   const ChatWidget(
       {Key? key, required this.isLocalParticipant, required this.message})
       : super(key: key);

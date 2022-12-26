@@ -1,5 +1,3 @@
-import 'package:chat_app/models/user_model.dart';
-
 import 'message_model.dart';
 
 class RoomModel {
@@ -18,8 +16,7 @@ class RoomModel {
       this.adminList,
       this.latestMessage,
       this.userInfoList,
-        this.pinnedByList
-      });
+      this.pinnedByList});
 
   RoomModel.fromJson(Map<String, dynamic> json) {
     roomId = json["roomId"] ?? "";
@@ -30,7 +27,7 @@ class RoomModel {
         ? MessageModel.fromJson(json["latestMessage"])
         : null;
     userInfoList = json["userInfoList"] ?? [];
-    pinnedByList=json["pinnedByList"]??[];
+    pinnedByList = json["pinnedByList"] ?? [];
   }
 
   Map<String, dynamic> toJson() {
@@ -40,8 +37,7 @@ class RoomModel {
       "adminList": adminList,
       "latestMessage": latestMessage,
       "userInfoList": userInfoList,
-      "pinnedByList":pinnedByList
+      "pinnedByList": pinnedByList
     };
   }
 }
-

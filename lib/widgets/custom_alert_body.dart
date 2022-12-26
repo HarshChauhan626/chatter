@@ -1,7 +1,5 @@
 import 'package:chat_app/features/sign_in/sign_in_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:lottie/lottie.dart';
 import 'package:sizer/sizer.dart';
 
@@ -156,7 +154,9 @@ class CustomAlertBody {
   }
 
   static Widget photoSelectionAlert(BuildContext context,
-      {required Function onTapSelectNew, Function? onTapRemove,required Function onTapTakeNew}) {
+      {required Function onTapSelectNew,
+      Function? onTapRemove,
+      required Function onTapTakeNew}) {
     return SizedBox(
       height: 30.h,
       width: 80.w,

@@ -1,17 +1,14 @@
-import 'package:chat_app/bindings/auth_binding.dart';
-import 'package:chat_app/features/home/home_screen.dart';
-import 'package:chat_app/helper/hive_db_helper.dart';
 import 'package:chat_app/features/splash/splash_screen.dart';
+import 'package:chat_app/helper/hive_db_helper.dart';
 import 'package:chat_app/helper/notification_helper.dart';
 import 'package:chat_app/utils/app_theme.dart';
 import 'package:chat_app/utils/custom_router.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:sizer/sizer.dart';
+
 import 'helper/firebase_helper.dart';
 
 void main() async {

@@ -5,6 +5,7 @@ import 'package:lottie/lottie.dart';
 
 class RecordingIndicator extends StatefulWidget {
   String recordingState;
+
   RecordingIndicator({Key? key, required this.recordingState})
       : super(key: key);
 

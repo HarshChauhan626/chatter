@@ -22,8 +22,7 @@ class SearchPeopleController extends GetxController {
       final result = await userCollectionRef
           .where("userName",
               isGreaterThanOrEqualTo: searchText.value,
-              isLessThan: searchText.value + "z"
-      )
+              isLessThan: searchText.value + "z")
           .get();
 
       final currentUserId = Get.find<AuthController>().userInfo.value?.uid;

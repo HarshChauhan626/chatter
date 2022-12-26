@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../utils/app_colors.dart';
@@ -68,7 +67,11 @@ class ReceiverProfileScreen extends StatelessWidget {
           automaticallyImplyLeading: false,
           elevation: 2.0,
           leading: IconButton(
-            icon: const Icon(CupertinoIcons.back,color: Colors.black,size: 28.0,),
+            icon: const Icon(
+              CupertinoIcons.back,
+              color: Colors.black,
+              size: 28.0,
+            ),
             onPressed: () {
               Get.back();
             },
@@ -112,7 +115,7 @@ class ReceiverProfileScreen extends StatelessWidget {
                       child: Container(
                         alignment: Alignment.center,
                         margin: const EdgeInsets.symmetric(horizontal: 15.0),
-                        padding: const EdgeInsets.only(bottom: 18.0,top: 10.0),
+                        padding: const EdgeInsets.only(bottom: 18.0, top: 10.0),
                         decoration: BoxDecoration(
                             color: AppColors.textFieldBackgroundColor,
                             borderRadius: BorderRadius.circular(10.0)
@@ -121,7 +124,7 @@ class ReceiverProfileScreen extends StatelessWidget {
                             //         color: AppColors.appGreyColor.darken(10),
                             //         width: 1.0)
                             // )
-                        ),
+                            ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -140,23 +143,31 @@ class ReceiverProfileScreen extends StatelessWidget {
                     Container(
                       decoration: BoxDecoration(
                           color: AppColors.textFieldBackgroundColor,
-                          borderRadius: BorderRadius.circular(10.0)
-                      ),
+                          borderRadius: BorderRadius.circular(10.0)),
                       margin: const EdgeInsets.symmetric(horizontal: 15.0),
                       padding: const EdgeInsets.symmetric(vertical: 15.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                            child: Text("User info",style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.greyColor?.darken(20)
-                            ),),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 15.0),
+                            child: Text(
+                              "User info",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.greyColor?.darken(20)),
+                            ),
                           ),
-                          userInfoItem(context, "Full name", "${receiverModel?.firstName??""} ${receiverModel?.lastName??""}"),
-                          userInfoItem(context, "Email", receiverModel?.email??""),
-                          userInfoItem(context, "Bio", receiverModel?.bio??""),
+                          userInfoItem(context, "Full name",
+                              "${receiverModel?.firstName ?? ""} ${receiverModel?.lastName ?? ""}"),
+                          userInfoItem(
+                              context, "Email", receiverModel?.email ?? ""),
+                          userInfoItem(
+                              context, "Bio", receiverModel?.bio ?? ""),
                         ],
                       ),
                     ),
@@ -165,20 +176,25 @@ class ReceiverProfileScreen extends StatelessWidget {
                     ),
                     Container(
                       decoration: BoxDecoration(
-                        color: AppColors.textFieldBackgroundColor,
-                        borderRadius: BorderRadius.circular(10.0)
-                      ),
+                          color: AppColors.textFieldBackgroundColor,
+                          borderRadius: BorderRadius.circular(10.0)),
                       margin: const EdgeInsets.symmetric(horizontal: 15.0),
                       padding: const EdgeInsets.symmetric(vertical: 15.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children:  [
+                        children: [
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                            child: Text("No groups in common",style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.greyColor?.darken(20)
-                            ),),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Text(
+                              "No groups in common",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.greyColor?.darken(20)),
+                            ),
                           ),
                           const SizedBox(
                             height: 10.0,
@@ -191,9 +207,13 @@ class ReceiverProfileScreen extends StatelessWidget {
                                 color: AppColors.whiteColor,
                               ),
                             ),
-                            title: Text("Create group with Harsh Chauhan",style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold
-                            ),),
+                            title: Text(
+                              "Create group with Harsh Chauhan",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(fontWeight: FontWeight.bold),
+                            ),
                           )
                         ],
                       ),
@@ -208,15 +228,13 @@ class ReceiverProfileScreen extends StatelessWidget {
     );
   }
 
-
-  Widget userInfoItem(BuildContext context,String userInfoTitle,String userInfoSubTitle){
+  Widget userInfoItem(
+      BuildContext context, String userInfoTitle, String userInfoSubTitle) {
     return ListTile(
       title: Text(userInfoTitle),
       subtitle: Text(userInfoSubTitle),
     );
   }
-
-
 
   Widget getRowItem(Function onPressed, IconData iconData, String subTitleText,
       BuildContext context) {

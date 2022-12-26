@@ -1,9 +1,7 @@
-import 'package:chat_app/constants.dart';
 import 'package:chat_app/controllers/sign_up_controller.dart';
 import 'package:chat_app/features/sign_in/sign_in_screen.dart';
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/utils/enums.dart';
-import 'package:chat_app/utils/extensions.dart';
 import 'package:chat_app/utils/input_validators.dart';
 import 'package:chat_app/widgets/animated_column_widget.dart';
 import 'package:chat_app/widgets/custom_route_builder.dart';
@@ -137,7 +135,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  if(isFormValid()){
+                  if (isFormValid()) {
                     signUpController.registerUser(context);
                   }
                 },
@@ -210,15 +208,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
     ));
   }
 
-
-  bool isFormValid(){
-    final isValidPassword=InputValidators.passwordValidator(signUpController.password.value)==null;
-    final isValidUsername=InputValidators.usernameValidator(signUpController.userName.value)==null;
-    final isValidEmail=InputValidators.usernameValidator(signUpController.email.value)==null;
+  bool isFormValid() {
+    final isValidPassword =
+        InputValidators.passwordValidator(signUpController.password.value) ==
+            null;
+    final isValidUsername =
+        InputValidators.usernameValidator(signUpController.userName.value) ==
+            null;
+    final isValidEmail =
+        InputValidators.usernameValidator(signUpController.email.value) == null;
 
     return isValidPassword && isValidUsername && isValidEmail;
-
   }
-
-
 }

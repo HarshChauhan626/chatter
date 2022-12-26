@@ -21,6 +21,7 @@ class MeetingActionBar extends StatelessWidget {
   final void Function(String) onMoreOptionSelected;
 
   final void Function(TapDownDetails) onSwitchMicButtonPressed;
+
   const MeetingActionBar({
     Key? key,
     required this.isMicEnabled,

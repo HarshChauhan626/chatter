@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sizer/sizer.dart';
 
 import '../utils/app_colors.dart';
 
@@ -9,12 +8,14 @@ class LabelTextField extends StatefulWidget {
   bool isReadOnly;
   int? maxLines;
   Function onChanged;
+
   LabelTextField(
       {Key? key,
       required this.label,
       this.val,
       this.isReadOnly = false,
-      this.maxLines,required this.onChanged})
+      this.maxLines,
+      required this.onChanged})
       : super(key: key);
 
   @override
@@ -39,7 +40,7 @@ class _LabelTextFieldState extends State<LabelTextField> {
       // expands: true,
       minLines: 1,
       maxLines: 12,
-      onChanged: (value){
+      onChanged: (value) {
         widget.onChanged(value);
       },
       style: Theme.of(context)

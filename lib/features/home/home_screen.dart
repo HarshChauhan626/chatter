@@ -2,32 +2,22 @@ import 'dart:ui';
 
 import 'package:animations/animations.dart';
 import 'package:chat_app/controllers/home_controller.dart';
+import 'package:chat_app/features/home/chat_list_item.dart';
 import 'package:chat_app/features/home/selectable_list_app_bar.dart';
-import 'package:chat_app/models/user_model.dart';
-import 'package:chat_app/features/chat/chat_screen.dart';
-import 'package:chat_app/widgets/review_popup.dart';
 import 'package:chat_app/features/search_conversations/search_conversation_screen.dart';
 import 'package:chat_app/features/search_people/search_people_screen.dart';
 import 'package:chat_app/utils/app_colors.dart';
-import 'package:chat_app/utils/util_functions.dart';
-import 'package:chat_app/widgets/animated_column_widget.dart';
-import 'package:chat_app/features/home/chat_list_item.dart';
-import 'package:chat_app/widgets/custom_bottom_navigation_bar_2.dart';
 import 'package:chat_app/widgets/custom_route_builder.dart';
 import 'package:chat_app/widgets/custom_safe_area.dart';
 import 'package:chat_app/widgets/input_text_field.dart';
-import 'package:chat_app/widgets/profile_picture_avatar.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:random_avatar/random_avatar.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../controllers/auth_controller.dart';
-import '../../helper/firebase_helper.dart';
 import '../../models/room_model.dart';
 import '../../utils/app_strings.dart';
 import '../../utils/enums.dart';
@@ -435,30 +425,30 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     }, childCount: roomModelList.length));
   }
 
-  // Widget getBottomNavigation() {
-  //   return Container(
-  //     height: 70.0,
-  //     decoration: const BoxDecoration(color: AppColors.whiteColor, boxShadow: [
-  //       BoxShadow(color: Colors.black, offset: Offset(10.0, 0.0)),
-  //       BoxShadow(color: Colors.white12, offset: Offset(10.0, 10.0)),
-  //     ]),
-  //     alignment: Alignment.center,
-  //     child: Center(child: BottomNavbar(
-  //       callback: (int index) {
-  //         debugPrint(index.toString());
-  //       },
-  //     )),
-  //   );
-  // }
+// Widget getBottomNavigation() {
+//   return Container(
+//     height: 70.0,
+//     decoration: const BoxDecoration(color: AppColors.whiteColor, boxShadow: [
+//       BoxShadow(color: Colors.black, offset: Offset(10.0, 0.0)),
+//       BoxShadow(color: Colors.white12, offset: Offset(10.0, 10.0)),
+//     ]),
+//     alignment: Alignment.center,
+//     child: Center(child: BottomNavbar(
+//       callback: (int index) {
+//         debugPrint(index.toString());
+//       },
+//     )),
+//   );
+// }
 
-  // Widget getHeaderIcon(IconData iconData) {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(horizontal: 10.0),
-  //     child: Icon(
-  //       iconData,
-  //       color: AppColors.primaryColor,
-  //       size: 26,
-  //     ),
-  //   );
-  // }
+// Widget getHeaderIcon(IconData iconData) {
+//   return Padding(
+//     padding: const EdgeInsets.symmetric(horizontal: 10.0),
+//     child: Icon(
+//       iconData,
+//       color: AppColors.primaryColor,
+//       size: 26,
+//     ),
+//   );
+// }
 }

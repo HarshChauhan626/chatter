@@ -36,8 +36,7 @@ class SearchConversationScreen extends StatelessWidget {
   }
 
   Widget getSearchResultItem() {
-    return Container(
-    );
+    return Container();
   }
 
   PreferredSizeWidget getAppBar(context) {

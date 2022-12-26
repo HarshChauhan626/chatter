@@ -1,15 +1,13 @@
+import 'package:chat_app/utils/app_colors.dart';
+import 'package:chat_app/utils/enums.dart';
 import 'package:chat_app/utils/input_validators.dart';
 import 'package:chat_app/widgets/custom_route_builder.dart';
 import 'package:chat_app/widgets/custom_safe_area.dart';
+import 'package:chat_app/widgets/input_text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'package:chat_app/utils/app_colors.dart';
-import 'package:chat_app/utils/enums.dart';
-import 'package:chat_app/widgets/input_text_field.dart';
-import 'package:flutter/material.dart';
-import 'package:sizer/sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sizer/sizer.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   const ResetPasswordScreen({Key? key}) : super(key: key);
@@ -44,8 +42,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 color: AppColors.blackTextColor,
               ),
             ),
-          title: const Text("Reset password")
-        ),
+            title: const Text("Reset password")),
         body: SingleChildScrollView(
           child: Column(
             children: [

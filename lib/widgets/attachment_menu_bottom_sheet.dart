@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cupertino_icons/cupertino_icons.dart';
 
 class AttachmentMenuBottomSheet extends StatelessWidget {
   const AttachmentMenuBottomSheet({Key? key}) : super(key: key);

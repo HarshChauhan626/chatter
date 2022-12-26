@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:videosdk/videosdk.dart';
+
 import '../../../../constants/colors.dart';
 import 'chat_widget.dart';
 
 // ChatScreen
 class ChatView extends StatefulWidget {
   final Room meeting;
+
   const ChatView({
     Key? key,
     required this.meeting,

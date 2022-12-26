@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:chat_app/controllers/auth_controller.dart';
 import 'package:chat_app/models/user_model.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -46,7 +45,6 @@ class UpdateProfileController extends GetxController {
   //   super.onInit();
   //
   // }
-
 
   void initData() async {
     try {
@@ -134,7 +132,10 @@ class UpdateProfileController extends GetxController {
 
       if (image != null && profileRef != null) {
         imageFile = File(image.path);
-        profileRef.putFile(imageFile).snapshotEvents.listen((taskSnapshot) async {
+        profileRef
+            .putFile(imageFile)
+            .snapshotEvents
+            .listen((taskSnapshot) async {
           switch (taskSnapshot.state) {
             case TaskState.running:
               final progress = 100.0 *
@@ -153,7 +154,7 @@ class UpdateProfileController extends GetxController {
             case TaskState.success:
               // Handle successful uploads on complete
               // ...
-              imageUrl.value=await profileRef.getDownloadURL();
+              imageUrl.value = await profileRef.getDownloadURL();
               await updateProfilePicture();
               break;
           }
@@ -164,18 +165,17 @@ class UpdateProfileController extends GetxController {
     }
   }
 
-
   Future<void> updateProfilePicture() async {
     try {
-
-      Map<String,dynamic> updatedInfo={
-        "profilePicture":imageUrl.value.toString()
+      Map<String, dynamic> updatedInfo = {
+        "profilePicture": imageUrl.value.toString()
       };
 
       final userCollectionRef =
-      FirebaseHelper.fireStoreInstance!.collection("user");
+          FirebaseHelper.fireStoreInstance!.collection("user");
 
-      final documentReference = userCollectionRef.doc(currentUserInfo.value?.uid);
+      final documentReference =
+          userCollectionRef.doc(currentUserInfo.value?.uid);
 
       final userDocument = await documentReference.get();
 
@@ -183,11 +183,10 @@ class UpdateProfileController extends GetxController {
         await documentReference.update(updatedInfo);
       }
 
-      final currentUserModel=Get.find<AuthController>().userInfo.value;
+      final currentUserModel = Get.find<AuthController>().userInfo.value;
 
-      Get.find<AuthController>().userInfo.value=currentUserModel?.copyWith(profilePicture: imageUrl.value.toString());
-
-
+      Get.find<AuthController>().userInfo.value =
+          currentUserModel?.copyWith(profilePicture: imageUrl.value.toString());
     } catch (e) {
       rethrow;
     }

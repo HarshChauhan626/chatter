@@ -8,6 +8,7 @@ import '../../../../utils/spacer.dart';
 
 class ParticipantLimitReached extends StatelessWidget {
   Room meeting;
+
   ParticipantLimitReached({Key? key, required this.meeting}) : super(key: key);
 
   @override
