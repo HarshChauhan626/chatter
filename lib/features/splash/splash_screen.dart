@@ -67,7 +67,8 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return CustomSafeArea(
       child: Scaffold(
-        backgroundColor: AppColors.whiteColor,
+        // backgroundColor: AppColors.whiteColor,
+        backgroundColor: AppColors.primaryColor,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -86,7 +87,8 @@ class _SplashScreenState extends State<SplashScreen> {
                   "XChat",
                   style: Theme.of(context).textTheme.headline2?.copyWith(
                       fontWeight: FontWeight.w900,
-                      color: AppColors.primaryColor),
+                    color: Colors.white
+                  ),
                 )
               ],
             ),
@@ -96,7 +98,9 @@ class _SplashScreenState extends State<SplashScreen> {
             SizedBox(
               height: 4.h,
               width: 4.h,
-              child: const CircularProgressIndicator(),
+              child: const CircularProgressIndicator(
+                color: Colors.white,
+              ),
             )
           ],
         ),
