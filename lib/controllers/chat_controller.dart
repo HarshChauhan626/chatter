@@ -46,6 +46,8 @@ class ChatController extends GetxController {
 
   RxList<int> searchResultList = <int>[].obs;
 
+  RxList<String> selectedMessagesList = <String>[].obs;
+
   TextEditingController searchTextController = TextEditingController();
 
   RxList<MessageModel> messageList = <MessageModel>[].obs;
@@ -155,7 +157,7 @@ class ChatController extends GetxController {
       final userCollectionReference =
           FirebaseHelper.fireStoreInstance!.collection("users");
 
-      final dateTimeNow = DateTime.now().millisecondsSinceEpoch.toString();
+      final dateTimeNow = DateTime.now().millisecondsSinceEpoch;
 
       UserModel? senderUserInfo;
 
@@ -169,7 +171,8 @@ class ChatController extends GetxController {
         "timestamp": dateTimeNow,
         "contentType": "Text",
         "replyTo": "", // Message Id
-        "isLikedBy": [],
+        "isLiked": [],
+        "deletedBy": [],
         "isSeenBy": [
           {"uid": "$user1Id", "messageSeenAt": dateTimeNow}
         ],
@@ -182,13 +185,14 @@ class ChatController extends GetxController {
         await groupDocReference.set({
           "roomId": roomId.value,
           "userList": [user1Id, receiverModel?.uid],
-          "pinnedByList": [],
+          "pinnedBy": [],
+          "deletedBy": [],
           "isTyping": [],
           "latestMessage": messageData,
         });
         await groupDocReference
             .collection(uniqueRoomId)
-            .doc(dateTimeNow)
+            .doc(dateTimeNow.toString())
             .set(messageData);
         getChatStream();
       } else {
@@ -196,7 +200,7 @@ class ChatController extends GetxController {
         await groupDocReference.update({"latestMessage": messageData});
         groupDocReference
             .collection(roomId.value)
-            .doc(dateTimeNow)
+            .doc(dateTimeNow.toString())
             .set(messageData);
       }
       if (receiverModel != null &&
@@ -260,7 +264,7 @@ class ChatController extends GetxController {
 
   Future<void> searchMessages() async {
     final set = <int>{};
-    for (int index = 0; index < messageList.value.length; index++) {
+    for (int index = 0; index < messageList.length; index++) {
       final message = messageList[index];
       if (message.content
               ?.toLowerCase()
@@ -275,5 +279,133 @@ class ChatController extends GetxController {
     if (searchResultList.isNotEmpty) {
       currentIndex.value = 0;
     }
+  }
+
+  Future<void> deleteMessage(String messageId, {bool? isDeleteForAll}) async {
+    try {
+      // final receiverId=receiverModel?.uid??"";
+      final user2Id = receiverModel?.uid;
+      final chatCollectionRef =
+          FirebaseHelper.fireStoreInstance!.collection("chats");
+
+      final groupDocReference = chatCollectionRef.doc(roomId.value);
+
+      final messagesCollectionReference =
+          groupDocReference.collection(roomId.value);
+      final messageDocReference = messagesCollectionReference.doc(messageId);
+
+      final messageReference = await messageDocReference.get();
+
+      if (messageReference.exists && messageReference.data() != null) {
+        final deletedByList = messageReference.get("deletedBy");
+
+        if (isDeleteForAll != null) {
+          await messageDocReference.delete();
+          return;
+        }
+
+        if (deletedByList != null && user1Id != null && user2Id != null) {
+          // pinnedByList as List<String>;
+          if (deletedByList.contains(user2Id) &&
+              deletedByList.contains(user1Id)) {
+            await messageDocReference.delete();
+            return;
+          }
+
+          if (deletedByList.contains(user1Id)) {
+            deletedByList.remove(user1Id);
+          } else {
+            deletedByList.add(user1Id!);
+          }
+          await messageDocReference.update({"deletedBy": deletedByList});
+        }
+      }
+    } catch (e, s) {
+      debugPrint(e.toString());
+      debugPrint(s.toString());
+    }
+  }
+
+  Future<void> updateLatestMessage(MessageModel messageModel) async {
+    try {
+      final chatCollectionRef =
+          FirebaseHelper.fireStoreInstance!.collection("chats");
+
+      final groupDocReference = chatCollectionRef.doc(roomId.value);
+
+      await groupDocReference.update({"latestMessage":messageModel.toJson()});
+    } on Exception catch (e,s) {
+      debugPrint(e.toString());
+      debugPrint(s.toString());
+    }
+  }
+
+  Future<void> deleteMessages({bool? isDeleteForAll}) async {
+    for (int i = 0; i < selectedMessagesList.length; i++) {
+      await deleteMessage(selectedMessagesList[i],
+          isDeleteForAll: isDeleteForAll);
+    }
+    final latestUndeletedMessage = getLatestUndeletedMessage();
+    if (latestUndeletedMessage != null) {
+      // await updateLatestMessage(messageList.first);
+      await updateLatestMessage(latestUndeletedMessage);
+    } else {
+      await deleteRoom(isDeleteForAll:isDeleteForAll);
+    }
+    selectedMessagesList.clear();
+  }
+
+  Future<void> deleteRoom({bool? isDeleteForAll}) async {
+    try {
+      final user2Id = receiverModel?.uid;
+      final chatCollectionRef =
+          FirebaseHelper.fireStoreInstance!.collection("chats");
+
+      final groupDocReference = chatCollectionRef.doc(roomId.value);
+
+      final groupReference = await groupDocReference.get();
+
+      final deletedByList = groupReference.get("deletedBy");
+
+      if (isDeleteForAll != null) {
+        await groupDocReference.delete();
+        return;
+      }
+
+
+      if (deletedByList.contains(user2Id) &&
+          deletedByList.contains(user1Id)) {
+        await groupDocReference.delete();
+        return;
+      }
+
+      if (deletedByList != null && user1Id != null && user2Id != null) {
+        // pinnedByList as List<String>;
+        if (deletedByList.contains(user2Id) &&
+            deletedByList.contains(user1Id)) {
+          await groupDocReference.delete();
+          return;
+        }
+
+        if (deletedByList.contains(user1Id)) {
+          await deletedByList.remove(user1Id);
+        } else {
+          await deletedByList.add(user1Id!);
+        }
+        groupDocReference.update({"deletedBy": deletedByList});
+      }
+    } catch (e, s) {
+      debugPrint(e.toString());
+      debugPrint(s.toString());
+    }
+  }
+
+  MessageModel? getLatestUndeletedMessage() {
+    for (int i = 0; i <= messageList.length; i++) {
+      if (!messageList[i].isDeleted(user1Id ?? "")) {
+        return messageList[i];
+      }
+    }
+    return null;
   }
 }

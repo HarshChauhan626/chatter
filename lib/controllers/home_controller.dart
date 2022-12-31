@@ -1,7 +1,9 @@
 import 'package:chat_app/models/room_model.dart';
+import 'package:chat_app/utils/util_functions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart';
 
 import '../helper/firebase_helper.dart';
 import '../models/user_model.dart';
@@ -31,17 +33,29 @@ class HomeController extends GetxController {
 
       senderId = Get.find<AuthController>().firebaseUser.value?.uid;
 
-      chatList = chatCollectionRef
+      final chatListStream = chatCollectionRef
           .where("userList", arrayContains: senderId)
-          .snapshots()
-          .asyncMap<List<RoomModel>>((roomList) async {
+          .snapshots();
+
+      chatListStream.listen((event) {
+        print("Event ${event.docs.toList().map((e) => e.data()).toList()}");
+      });
+
+      chatList = chatListStream.asyncMap<List<RoomModel>>((roomList) async {
         return Future.wait(roomList.docs.map((e) async {
-          final roomModel = RoomModel.fromJson(e.data());
-          for (String uid in roomModel.userList!) {
-            final userModel = await getUserInfo(uid);
-            roomModel.userInfoList?.add(userModel);
+          RoomModel? roomModel;
+          try {
+            final roomModel = RoomModel.fromJson(e.data());
+            for (String uid in roomModel.userList!) {
+              final userModel = await getUserInfo(uid);
+              roomModel.userInfoList?.add(userModel);
+            }
+            return roomModel;
+          } catch (e, s) {
+            print("Exception $e");
+            print("Stacktrace $s");
           }
-          return roomModel;
+          return RoomModel();
         }).toList());
       });
     } catch (e, s) {
@@ -78,14 +92,48 @@ class HomeController extends GetxController {
     }
   }
 
-  Future<void> deleteChat(String roomId) async {
+  Future<void> deleteConversations({bool? isDeleteForAll}) async {
+    for (int i = 0; i < selectedChatIdList.length; i++) {
+      await deleteConversation(selectedChatIdList[i],
+          isDeleteForAll: isDeleteForAll);
+    }
+    selectedChatIdList.clear();
+  }
+
+  Future<void> deleteConversation(String roomId, {bool? isDeleteForAll}) async {
     try {
       final chatCollectionRef =
           FirebaseHelper.fireStoreInstance!.collection("chats");
 
       final roomRef = chatCollectionRef.doc(roomId);
 
-      roomRef.delete();
+      final roomRefData = await roomRef.get();
+
+      final deletedByList = await roomRefData.get("deletedBy");
+
+      final userIdList = await roomRefData.get("userList");
+
+      if (isDeleteForAll != null) {
+        roomRef.delete();
+        return;
+      }
+
+      if (deletedByList != null &&
+          deletedByList != null &&
+          userIdList != null) {
+        // pinnedByList as List<String>;
+        if (UtilFunctions.listsContainSameElements(userIdList, deletedByList)) {
+          roomRef.delete();
+          return;
+        }
+
+        if (deletedByList.contains(senderId ?? "")) {
+          deletedByList.remove(senderId ?? "");
+        } else {
+          deletedByList.add(senderId ?? "");
+        }
+        roomRef.update({"deletedBy": deletedByList});
+      }
     } catch (e, s) {
       debugPrint(e.toString());
       debugPrint(s.toString());

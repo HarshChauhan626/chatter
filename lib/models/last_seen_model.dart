@@ -6,7 +6,7 @@ class LastSeenModel {
 
   LastSeenModel.fromJson(Map<String, dynamic> json) {
     uid = json['uid'];
-    messageSeenAt = int.parse(json["messageSeenAt"]);
+    messageSeenAt = json["messageSeenAt"];
   }
 
   Map<String, dynamic> toJson() {

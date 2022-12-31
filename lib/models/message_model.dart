@@ -7,7 +7,9 @@ class MessageModel {
   String? contentType;
   String? replyTo;
   List<dynamic>? isLikedBy;
+  List<dynamic>? deletedBy;
   List<LastSeenModel>? isSeenBy;
+  String? messageId;
 
   MessageModel(
       {this.content,
@@ -16,14 +18,15 @@ class MessageModel {
       this.contentType,
       this.replyTo,
       this.isLikedBy,
-      this.isSeenBy});
+      this.isSeenBy,this.messageId,this.deletedBy});
 
   MessageModel.fromJson(Map<String, dynamic> data) {
     content = data["content"];
     senderId = data["sender"];
-    timestamp = data["timestamp"] != null
-        ? int.parse(data["timestamp"])
-        : data["timestamp"];
+    // timestamp = data["timestamp"] != null
+    //     ? int.parse(data["timestamp"])
+    //     : data["timestamp"];
+    timestamp=data["timeStamp"];
     contentType = data["contentType"];
     replyTo = data["replyTo"];
     isLikedBy = data["isLikedBy"];
@@ -33,6 +36,7 @@ class MessageModel {
         isSeenBy!.add(LastSeenModel.fromJson(v));
       });
     }
+    deletedBy=data["deletedBy"];
   }
 
   Map<String, dynamic> toJson() {
@@ -43,7 +47,18 @@ class MessageModel {
       "contentType": contentType,
       "replyTo": replyTo,
       "isLikedBy": isLikedBy,
-      "isSeenBy": isSeenBy
+      "isSeenBy": isSeenBy?.map((e) => e.toJson()).toList()??[],
+      "deletedBy":deletedBy
     };
   }
+
+
+  bool isDeleted(String userId){
+    if(deletedBy!=null && deletedBy!.contains(userId)){
+      return true;
+    }
+    return false;
+  }
+
+
 }

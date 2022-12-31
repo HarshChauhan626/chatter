@@ -85,4 +85,21 @@ class UtilFunctions {
     }
     return children;
   }
+
+
+  static bool listsContainSameElements(
+      List<dynamic>? listOne, List<dynamic>? listTwo) {
+    if (listOne != null && listTwo != null) {
+      if (listOne.length != listTwo.length) {
+        return false;
+      }
+      for (int i = 0; i < listOne.length; i++) {
+        if (!listTwo.contains(listOne[i])) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
 }

@@ -24,6 +24,23 @@ extension StringValidators on String {
   bool get containsNumerics => contains(RegExp(r'[0-9]'));
 }
 
+extension CheckNeitherNullNorEmpty on String?{
+  bool neitherNullNorEmpty(){
+    if(this!=null && this!.isNotEmpty){
+      return true;
+  }
+    return false;
+  }
+
+  bool isEitherNullOrEmpty(){
+    if(this!=null || this!.isEmpty){
+      return true;
+    }
+    return false;
+  }
+
+}
+
 // extension FirebaseUserToUserModel on User{
 //   UserModel toUserModel(){
 //     return UserModel(

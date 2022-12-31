@@ -86,9 +86,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 Text(
                   "XChat",
                   style: Theme.of(context).textTheme.headline2?.copyWith(
-                      fontWeight: FontWeight.w900,
-                    color: Colors.white
-                  ),
+                      fontWeight: FontWeight.w900, color: Colors.white),
                 )
               ],
             ),

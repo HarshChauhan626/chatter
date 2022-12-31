@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 import '../../controllers/home_controller.dart';
 import '../../utils/app_colors.dart';
+import '../../widgets/alert_dialog.dart';
+import '../../widgets/custom_alert_body.dart';
+import '../../widgets/util_widgets.dart';
 
 class SelectableListAppBar extends StatelessWidget {
   SelectableListAppBar({Key? key}) : super(key: key);
@@ -16,7 +17,7 @@ class SelectableListAppBar extends StatelessWidget {
     return Obx(() {
       bool isSelectedLengthGT1 = false;
 
-      if (homeController.selectedChatIdList.value.length > 1) {
+      if (homeController.selectedChatIdList.length > 1) {
         isSelectedLengthGT1 = true;
       }
 
@@ -27,7 +28,7 @@ class SelectableListAppBar extends StatelessWidget {
         //* question having 0 here
         pinned: true,
         floating: false,
-        leading: getHeaderIcon(Icons.close, onTap: () {
+        leading: UtilWidgets.getHeaderIcon(Icons.close, onTap: () {
           homeController.selectedChatIdList.clear();
         }),
         title: Text(
@@ -39,34 +40,40 @@ class SelectableListAppBar extends StatelessWidget {
         ),
         actions: [
           if (!isSelectedLengthGT1)
-            getHeaderIcon(Icons.push_pin_outlined, onTap: () {
+            UtilWidgets.getHeaderIcon(Icons.push_pin_outlined, onTap: () {
               onTapPin();
             }),
           // getHeaderIcon(Icons.archive_outlined, onTap: () {}),
-          getHeaderIcon(Icons.delete_outline, onTap: () {
-            onTapDelete();
+          UtilWidgets.getHeaderIcon(Icons.delete_outline, onTap: () {
+            final selectedConversationsList = homeController.selectedChatIdList;
+            const deleteFor = "Everyone";
+            final subtitleText =
+                "Are you sure you want to delete ${selectedConversationsList.length > 1 ? "these" : "this"} ${selectedConversationsList.length > 1 ? "conversation" : "conversation"}?";
+            final titleText =
+                "Delete ${selectedConversationsList.length > 1 ? "${selectedConversationsList.length} messages" : "message"} ";
+            showCustomDialog(
+                context,
+                CustomAlertBody.deleteMessageAlert(
+                    context: context,
+                    title: titleText,
+                    subtitle: subtitleText,
+                    deleteFor: deleteFor,
+                    onTapCancel: () {
+                      Navigator.pop(context);
+                      homeController.selectedChatIdList.clear();
+                    },
+                    onTapDeleteForAll: () {
+                      onTapDelete(isDeleteForAll: true);
+                    },
+                    onTapDeleteForMe: () {
+                      onTapDelete();
+                    }));
           }),
           if (!isSelectedLengthGT1)
-            getHeaderIcon(Icons.block_flipped, onTap: () {})
+            UtilWidgets.getHeaderIcon(Icons.block_flipped, onTap: () {})
         ],
       );
     });
-  }
-
-  Widget getHeaderIcon(IconData iconData, {required Function onTap}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: InkWell(
-        child: Icon(
-          iconData,
-          color: AppColors.primaryColor,
-          size: 26,
-        ),
-        onTap: () {
-          onTap();
-        },
-      ),
-    );
   }
 
   void onTapPin() {
@@ -80,12 +87,8 @@ class SelectableListAppBar extends StatelessWidget {
   //
   // }
 
-  void onTapDelete() async {
-    final selectedChatList = homeController.selectedChatIdList;
-    for (int i = 0; i < selectedChatList.length; i++) {
-      await homeController.deleteChat(selectedChatList[i]);
-    }
-    homeController.selectedChatIdList.clear();
+  void onTapDelete({bool? isDeleteForAll}) async {
+    homeController.deleteConversations(isDeleteForAll: isDeleteForAll);
   }
 
   void onTapBlock() {}

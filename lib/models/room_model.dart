@@ -8,6 +8,7 @@ class RoomModel {
   MessageModel? latestMessage;
   List<dynamic>? userInfoList;
   List<dynamic>? pinnedByList;
+  List<dynamic>? deletedByList;
 
   RoomModel(
       {this.roomId,
@@ -16,7 +17,7 @@ class RoomModel {
       this.adminList,
       this.latestMessage,
       this.userInfoList,
-      this.pinnedByList});
+      this.pinnedByList,this.deletedByList});
 
   RoomModel.fromJson(Map<String, dynamic> json) {
     roomId = json["roomId"] ?? "";
@@ -27,7 +28,8 @@ class RoomModel {
         ? MessageModel.fromJson(json["latestMessage"])
         : null;
     userInfoList = json["userInfoList"] ?? [];
-    pinnedByList = json["pinnedByList"] ?? [];
+    pinnedByList = json["pinnedBy"] ?? [];
+    deletedByList=json["deletedBy"]??[];
   }
 
   Map<String, dynamic> toJson() {
@@ -37,7 +39,18 @@ class RoomModel {
       "adminList": adminList,
       "latestMessage": latestMessage,
       "userInfoList": userInfoList,
-      "pinnedByList": pinnedByList
+      "pinnedBy": pinnedByList,
+      "deletedBy":deletedByList
     };
   }
+
+  bool isDeleted(String userId){
+    if(deletedByList!=null && deletedByList!.contains(userId)){
+      return true;
+    }
+    return false;
+  }
+
+
+
 }

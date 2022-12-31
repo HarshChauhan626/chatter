@@ -1,5 +1,6 @@
 import 'package:chat_app/controllers/auth_controller.dart';
 import 'package:chat_app/controllers/chat_controller.dart';
+import 'package:chat_app/features/chat/selectable_chat_list_app_bar.dart';
 import 'package:chat_app/features/profile/receiver_profile_screen.dart';
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/utils/extensions.dart';
@@ -10,6 +11,7 @@ import 'package:chat_app/widgets/custom_safe_area.dart';
 import 'package:chat_app/widgets/profile_picture_avatar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
@@ -18,6 +20,7 @@ import 'package:sizer/sizer.dart';
 import '../../models/message_model.dart';
 import '../../utils/app_strings.dart';
 import 'chat_loading_screen.dart';
+import 'message_list_item.dart';
 
 class ChatScreen extends StatelessWidget {
   ChatScreen({Key? key}) : super(key: key);
@@ -107,6 +110,9 @@ class ChatScreen extends StatelessWidget {
 
   Widget getAppBarBody() {
     return Obx(() {
+      if(controller.selectedMessagesList.isNotEmpty){
+        return SelectableChatListAppBar();
+      }
       return AnimatedCrossFade(
           firstChild: getNormalBar(),
           secondChild: getSearchBar(),
@@ -349,115 +355,49 @@ class ChatScreen extends StatelessWidget {
       child: Align(
         alignment: Alignment.bottomCenter,
         child: Stack(
-          children: [
-            StreamBuilder(
-              stream: controller.dataList,
-              builder: (context, snapshot) {
-                if (snapshot.hasData &&
-                    snapshot.connectionState == ConnectionState.active) {
-                  final chatList = snapshot.data as QuerySnapshot;
-
-                  controller.messageList.value = chatList.docs
-                      .map((e) {
-                        // print("Message data coming is ${e.data()}");
-                        return MessageModel.fromJson(
-                            e.data() as Map<String, dynamic>);
-                      })
-                      .toList()
-                      .reversed
-                      .toList();
-                  print(controller.messageList.length);
-                  return ListView.builder(
-                      reverse: true,
-                      itemCount: controller.messageList.length,
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      controller: autoScrollController,
-                      itemBuilder: (context, index) {
-                        final userId =
-                            Get.find<AuthController>().firebaseUser.value?.uid;
-
-                        bool isSender =
-                            controller.messageList[index].senderId == userId;
-
-                        // debugPrint("Is Sender coming is $isSender");
-
-                        return Obx(() {
-                          if (controller.searchResultList.contains(index)) {
-                            print(
-                                "Is result item ${controller.messageList[index].content}");
-                          }
-
-                          return AutoScrollTag(
-                            key: ValueKey(index.toString()),
-                            controller: autoScrollController!,
-                            index: index,
-                            child: Container(
-                              padding: EdgeInsets.only(
-                                  left: isSender ? 50 : 14,
-                                  right: isSender ? 14 : 50,
-                                  top: 10,
-                                  bottom: 10),
-                              child: Align(
-                                alignment: (isSender
-                                    ? Alignment.topRight
-                                    : Alignment.topLeft),
-                                child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.only(
-                                          topRight: const Radius.circular(12.0),
-                                          topLeft: const Radius.circular(12.0),
-                                          bottomLeft: isSender
-                                              ? const Radius.circular(12.0)
-                                              : const Radius.circular(0.0),
-                                          bottomRight: isSender
-                                              ? const Radius.circular(0.0)
-                                              : const Radius.circular(12.0)),
-                                      color: (isSender
-                                          ? AppColors.primaryColor
-                                          : AppColors.textFieldBackgroundColor),
-                                    ),
-                                    padding: const EdgeInsets.all(16),
-                                    child: (controller
-                                                .searchText.value.isNotEmpty &&
-                                            controller
-                                                .searchResultList.isNotEmpty)
-                                        ? RichText(
-                                            text: TextSpan(
-                                                children: UtilFunctions
-                                                    .highlightOccurrences(
-                                                        controller
-                                                                .messageList[
-                                                                    index]
-                                                                .content ??
-                                                            "",
-                                                        controller
-                                                            .searchText.value,
-                                                        isSender)),
-                                          )
-                                        : Text(
-                                            controller.messageList[index]
-                                                    .content ??
-                                                "",
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                color: isSender
-                                                    ? AppColors.whiteColor
-                                                    : AppColors.blackTextColor),
-                                          )),
-                              ),
-                            ),
-                          );
-                        });
-                      });
-                }
-                return const ChatLoadingScreen();
-              },
-            ),
-            getSearchResultNavigator()
-          ],
+          children: [getChatStream(), getSearchResultNavigator()],
         ),
       ),
+    );
+  }
+
+  Widget getChatStream() {
+    return StreamBuilder(
+      stream: controller.dataList,
+      builder: (context, snapshot) {
+        if (snapshot.hasData &&
+            snapshot.connectionState == ConnectionState.active) {
+          final chatList = snapshot.data as QuerySnapshot;
+
+          controller.messageList.value = chatList.docs
+              .map((e) {
+                // print("Message data coming is ${e.data()}");
+                final messageModel =
+                    MessageModel.fromJson(e.data() as Map<String, dynamic>);
+                messageModel.messageId = e.id;
+                return messageModel;
+              })
+              .toList()
+              .reversed
+              .toList();
+          if (kDebugMode) {
+            print(controller.messageList.length);
+          }
+          return ListView.builder(
+              reverse: true,
+              itemCount: controller.messageList.length,
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              controller: autoScrollController,
+              itemBuilder: (context, index) {
+                return MessageListItem(
+                  autoScrollController: autoScrollController!,
+                  index: index,
+                );
+              });
+        }
+        return const ChatLoadingScreen();
+      },
     );
   }
 
