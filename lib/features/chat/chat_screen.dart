@@ -439,7 +439,7 @@ class ChatScreen extends StatelessWidget {
                     ),
                     child: Row(
                       children: [
-                        getMoodIconButton(),
+                        // getMoodIconButton(),
                         Expanded(
                           child: SizedBox(
                             // width: 42.w,
