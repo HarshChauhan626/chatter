@@ -11,6 +11,7 @@ import '../helper/firebase_helper.dart';
 import '../models/room_model.dart';
 import '../models/user_model.dart';
 import 'auth_controller.dart';
+import 'package:flutter/services.dart';
 
 class ChatController extends GetxController {
   String? user1Id;
@@ -36,7 +37,7 @@ class ChatController extends GetxController {
 
   RxBool isUserOnlineVal = false.obs;
 
-  Rx<RoomModel>? roomModel;
+  RoomModel? roomModel;
 
   Stream? dataList;
 
@@ -46,7 +47,9 @@ class ChatController extends GetxController {
 
   RxList<int> searchResultList = <int>[].obs;
 
-  RxList<String> selectedMessagesList = <String>[].obs;
+  RxMap<String,MessageModel> selectedMessagesList = <String,MessageModel>{}.obs;
+
+  RxList<UserModel> userInfoList=<UserModel>[].obs;
 
   TextEditingController searchTextController = TextEditingController();
 
@@ -100,7 +103,8 @@ class ChatController extends GetxController {
     debugPrint(Get.arguments['receiverModel'].runtimeType.toString());
     final userModel = Get.arguments['receiverModel'] as UserModel;
     receiverModel = userModel;
-    roomId.value = Get.arguments['roomId'] ?? "";
+    roomModel = Get.arguments['roomModel'];
+    roomId.value=roomModel?.roomId??"";
 
     debugPrint("Room id coming is ${roomId.value}");
     user1Id = Get.find<AuthController>().firebaseUser.value?.uid;
@@ -341,9 +345,13 @@ class ChatController extends GetxController {
   }
 
   Future<void> deleteMessages({bool? isDeleteForAll}) async {
-    for (int i = 0; i < selectedMessagesList.length; i++) {
-      await deleteMessage(selectedMessagesList[i],
-          isDeleteForAll: isDeleteForAll);
+    // for (int i = 0; i < selectedMessagesList.length; i++) {
+    //   await deleteMessage(selectedMessagesList[i],
+    //       isDeleteForAll: isDeleteForAll);
+    // }
+    final keysList=selectedMessagesList.keys.toList();
+    for(int i=0;i<keysList.length;i++){
+      await deleteMessage(selectedMessagesList[keysList[i]]?.messageId??"",isDeleteForAll: isDeleteForAll);
     }
     final latestUndeletedMessage = getLatestUndeletedMessage();
     if (latestUndeletedMessage != null) {
@@ -408,4 +416,29 @@ class ChatController extends GetxController {
     }
     return null;
   }
+
+
+  Future<void> onCopyMessages()async{
+    String copiedText="";
+    final keysList=selectedMessagesList.keys.toList();
+    for(int i=0;i<keysList.length;i++){
+      final selectedMessage=selectedMessagesList[keysList[i]];
+      if(selectedMessage!=null){
+        final senderName=roomModel?.userInfoList?.where((element) => element.uid==selectedMessage.senderId).first;
+        copiedText+="${senderName.userName??""}:";
+        copiedText+=selectedMessage.content??"";
+        copiedText+="\n";
+      }
+    }
+    await Clipboard.setData(ClipboardData(text: copiedText)).then((_){
+      Get.showSnackbar(
+        GetSnackBar(
+          message: '${selectedMessagesList.length} ${selectedMessagesList.length==1?"message":"messages"} copied',
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    });
+    selectedMessagesList.clear();
+  }
+
 }

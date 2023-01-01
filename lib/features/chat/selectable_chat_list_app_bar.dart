@@ -39,6 +39,9 @@ class SelectableChatListAppBar extends StatelessWidget {
                   ?.copyWith(color: AppColors.primaryColor, fontSize: 24),
             ),
             const Spacer(),
+            UtilWidgets.getHeaderIcon(Icons.copy, onTap: (){
+              onTapCopyToClipboard();
+            }),
             Builder(builder: (context) {
               final selectedMessagesList = chatController.selectedMessagesList;
               final deleteFor = chatController.receiverModel?.userName;
@@ -91,6 +94,10 @@ class SelectableChatListAppBar extends StatelessWidget {
       //   ],
       // );
     });
+  }
+
+  void onTapCopyToClipboard()async{
+    chatController.onCopyMessages();
   }
 
   void onTapDelete({bool? isDeleteForAll}) async {

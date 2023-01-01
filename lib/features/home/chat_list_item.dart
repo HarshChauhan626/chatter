@@ -70,8 +70,8 @@ class ChatListItem extends StatelessWidget {
                     Get.find<HomeController>().selectedChatIdList;
                 if (selectedList.isEmpty) {
                   Get.toNamed(ChatScreen.routeName, arguments: {
-                    "roomId": roomModel.roomId,
-                    "receiverModel": receiverModel
+                    "roomModel": roomModel,
+                    "receiverModel": receiverModel,
                   });
                 } else {
                   if (selectedList.contains(roomModel.roomId)) {

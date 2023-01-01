@@ -37,7 +37,7 @@ class MessageListItem extends StatelessWidget {
 
       bool isSelected = messageId.isEmpty
           ? false
-          : controller.selectedMessagesList.contains(messageId);
+          : controller.selectedMessagesList.containsKey(messageId);
 
       Color? containerColor;
 
@@ -71,7 +71,8 @@ class MessageListItem extends StatelessWidget {
                 final selectedMessagesList = controller.selectedMessagesList;
                 if (messageId.isNotEmpty) {
                   if (selectedMessagesList.isEmpty) {
-                    selectedMessagesList.add(messageId);
+                    // selectedMessagesList.add(messageId);
+                    selectedMessagesList[messageId]=messageModel;
                   } else {
                     selectedMessagesList.remove(messageId);
                   }
@@ -79,11 +80,12 @@ class MessageListItem extends StatelessWidget {
               },
               onTap: () {
                 final selectedMessagesList = controller.selectedMessagesList;
-                if (selectedMessagesList.contains(messageId)) {
+                if (selectedMessagesList.containsKey(messageId)) {
                   selectedMessagesList.remove(messageId);
                 } else {
                   if(selectedMessagesList.isNotEmpty && messageId.neitherNullNorEmpty()){
-                    selectedMessagesList.add(messageId);
+                    // selectedMessagesList.add(messageId);
+                    selectedMessagesList[messageId]=messageModel;
                   }
                 }
               },
