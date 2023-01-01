@@ -16,6 +16,7 @@ import 'package:get/get.dart';
 
 import '../controllers/chat_controller.dart';
 import '../controllers/home_controller.dart';
+import '../controllers/reset_password_controller.dart';
 import '../features/account/profile_picture_screen.dart';
 import '../features/account/profile_screen.dart';
 import '../features/account/update_profile_screen.dart';
@@ -128,6 +129,9 @@ class GetXRouter {
         name: ResetPasswordScreen.routeName,
         page: () => const ResetPasswordScreen(),
         middlewares: [MyMiddleware()],
+        binding: BindingsBuilder(() {
+          Get.put<ResetPasswordController>(ResetPasswordController());
+        }),
         transition: Transition.rightToLeft,
         transitionDuration: const Duration(milliseconds: 200),
       ),

@@ -6,9 +6,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class ResetPasswordController extends GetxController {
-  RxString password = "".obs;
+  RxString oldPassword = "".obs;
+  RxString newPassword = "".obs;
+  RxString newConfirmPassword="".obs;
 
-  void updatePassword(
+  Future<void> updatePassword(
       String oldPassword, String newPassword, BuildContext context) async {
     try {
       final authCredential = EmailAuthProvider.credential(

@@ -1,15 +1,21 @@
+import 'package:chat_app/controllers/home_controller.dart';
+import 'package:chat_app/controllers/reset_password_controller.dart';
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/utils/enums.dart';
+import 'package:chat_app/utils/extensions.dart';
 import 'package:chat_app/utils/input_validators.dart';
 import 'package:chat_app/widgets/custom_route_builder.dart';
 import 'package:chat_app/widgets/custom_safe_area.dart';
 import 'package:chat_app/widgets/input_text_field.dart';
+import 'package:chat_app/widgets/util_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:sizer/sizer.dart';
 
-class ResetPasswordScreen extends StatefulWidget {
+class ResetPasswordScreen extends StatelessWidget {
   const ResetPasswordScreen({Key? key}) : super(key: key);
 
   static const String routeName = '/reset_password';
@@ -24,18 +30,16 @@ class ResetPasswordScreen extends StatefulWidget {
   }
 
   @override
-  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
-}
-
-class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
-  @override
   Widget build(BuildContext context) {
+    ResetPasswordController resetPasswordController =
+        Get.find<ResetPasswordController>();
+
     return CustomSafeArea(
       child: Scaffold(
         appBar: AppBar(
             leading: InkWell(
               onTap: () {
-                Navigator.pop(context);
+                Get.back();
               },
               child: const Icon(
                 CupertinoIcons.back,
@@ -51,23 +55,20 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               ),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 4.w),
-                child: Container(
+                child: SizedBox(
                   height: 22.h,
                   child: SvgPicture.asset("assets/reset_password.svg"),
                 ),
               ),
-              // Text(
-              //   "Reset password",
-              //   style: Theme.of(context).textTheme.headline5?.copyWith(
-              //       color: AppColors.primaryColor, fontWeight: FontWeight.w900),
-              // ),
               SizedBox(
                 height: 4.h,
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 4.w),
                 child: InputTextField(
-                    onChangedValue: (value) {},
+                    onChangedValue: (value) {
+                      resetPasswordController.oldPassword.value = value;
+                    },
                     hintText: "Old password",
                     inputTextType: InputTextType.password),
               ),
@@ -81,7 +82,25 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     validator: (String? value) {
                       return InputValidators.passwordValidator(value);
                     },
-                    onChangedValue: (value) {},
+                    onChangedValue: (value) {
+                      resetPasswordController.newPassword.value = value;
+                    },
+                    hintText: "New password",
+                    inputTextType: InputTextType.password),
+              ),
+              SizedBox(
+                height: 5.h,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 4.w),
+                child: InputTextField(
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (String? value) {
+                      return InputValidators.passwordValidator(value);
+                    },
+                    onChangedValue: (value) {
+                      resetPasswordController.newConfirmPassword.value = value;
+                    },
                     hintText: "Confirm new password",
                     inputTextType: InputTextType.password),
               ),
@@ -91,12 +110,42 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 4.w),
                 child: ElevatedButton(
-                    onPressed: () {}, child: const Text("Submit")),
+                    onPressed: ()async {
+                      await onTapResetPassword(context);
+                    }, child: const Text("Submit")),
               )
             ],
           ),
         ),
       ),
     );
+  }
+
+  Future<void> onTapResetPassword(BuildContext context) async{
+    final resetPasswordController = Get.find<ResetPasswordController>();
+    final oldPassword=resetPasswordController.oldPassword.value;
+    final newPassword=resetPasswordController.newPassword.value;
+    final newConfirmPassword=resetPasswordController.newConfirmPassword.value;
+
+    if(oldPassword.isEmpty || newPassword.isEmpty || newConfirmPassword.isEmpty){
+      return;
+    }
+    if(newPassword==oldPassword){
+      UtilWidgets.showSnackBar(
+        "New password cannot be same to old password."
+      );
+      return;
+    }
+    if(newPassword!=newConfirmPassword){
+      UtilWidgets.showSnackBar(
+        "Passwords do not match"
+      );
+      return;
+    }
+    if(InputValidators.passwordValidator(newPassword)==null && InputValidators.passwordValidator(newConfirmPassword)==null)
+     {
+       return;
+     }
+    await resetPasswordController.updatePassword(oldPassword, newPassword, context);
   }
 }
