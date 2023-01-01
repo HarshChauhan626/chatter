@@ -1,8 +1,6 @@
-import 'package:chat_app/controllers/home_controller.dart';
 import 'package:chat_app/controllers/reset_password_controller.dart';
 import 'package:chat_app/utils/app_colors.dart';
 import 'package:chat_app/utils/enums.dart';
-import 'package:chat_app/utils/extensions.dart';
 import 'package:chat_app/utils/input_validators.dart';
 import 'package:chat_app/widgets/custom_route_builder.dart';
 import 'package:chat_app/widgets/custom_safe_area.dart';
@@ -12,7 +10,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:sizer/sizer.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
