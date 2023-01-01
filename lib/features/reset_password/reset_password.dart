@@ -107,9 +107,10 @@ class ResetPasswordScreen extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 4.w),
                 child: ElevatedButton(
-                    onPressed: ()async {
+                    onPressed: () async {
                       await onTapResetPassword(context);
-                    }, child: const Text("Submit")),
+                    },
+                    child: const Text("Submit")),
               )
             ],
           ),
@@ -118,31 +119,30 @@ class ResetPasswordScreen extends StatelessWidget {
     );
   }
 
-  Future<void> onTapResetPassword(BuildContext context) async{
+  Future<void> onTapResetPassword(BuildContext context) async {
     final resetPasswordController = Get.find<ResetPasswordController>();
-    final oldPassword=resetPasswordController.oldPassword.value;
-    final newPassword=resetPasswordController.newPassword.value;
-    final newConfirmPassword=resetPasswordController.newConfirmPassword.value;
+    final oldPassword = resetPasswordController.oldPassword.value;
+    final newPassword = resetPasswordController.newPassword.value;
+    final newConfirmPassword = resetPasswordController.newConfirmPassword.value;
 
-    if(oldPassword.isEmpty || newPassword.isEmpty || newConfirmPassword.isEmpty){
+    if (oldPassword.isEmpty ||
+        newPassword.isEmpty ||
+        newConfirmPassword.isEmpty) {
       return;
     }
-    if(newPassword==oldPassword){
-      UtilWidgets.showSnackBar(
-        "New password cannot be same to old password."
-      );
+    if (newPassword == oldPassword) {
+      UtilWidgets.showSnackBar("New password cannot be same as old password.");
       return;
     }
-    if(newPassword!=newConfirmPassword){
-      UtilWidgets.showSnackBar(
-        "Passwords do not match"
-      );
+    if (newPassword != newConfirmPassword) {
+      UtilWidgets.showSnackBar("Passwords do not match");
       return;
     }
-    if(InputValidators.passwordValidator(newPassword)==null && InputValidators.passwordValidator(newConfirmPassword)==null)
-     {
-       return;
-     }
-    await resetPasswordController.updatePassword(oldPassword, newPassword, context);
+    if (InputValidators.passwordValidator(newPassword) == null &&
+        InputValidators.passwordValidator(newConfirmPassword) == null) {
+      return;
+    }
+    await resetPasswordController.updatePassword(
+        oldPassword, newPassword, context);
   }
 }
