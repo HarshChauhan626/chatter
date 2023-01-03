@@ -68,6 +68,7 @@ dependencies:
   flutter_ringtone_player: ^3.2.0
   shimmer: ^2.0.0
   flutter_reorderable_list: ^1.2.0
+  webcrypto:
 
 dev_dependencies:
   flutter_test:

@@ -1,4 +1,5 @@
 import 'package:chat_app/features/splash/splash_screen.dart';
+import 'package:chat_app/helper/appe2ee.dart';
 import 'package:chat_app/helper/hive_db_helper.dart';
 import 'package:chat_app/helper/notification_helper.dart';
 import 'package:chat_app/utils/app_theme.dart';
@@ -17,6 +18,7 @@ void main() async {
   FirebaseHelper.initInstances();
   // await FirebaseMessaging.instance.subscribeToTopic("all");
   NotificationHelper.loadFCM();
+  AppE2EE.generateKeys();
   Get.put(HiveDBHelper());
   runApp(const MyApp());
 }
