@@ -116,4 +116,10 @@ class HiveDBHelper extends GetxController {
     userPreferenceBox = await Hive.openBox(AppStrings.userPreferences,
         encryptionCipher: HiveAesCipher(generatedKey));
   }
+
+  Future<void> clearData()async {
+    _publicKey=<String,dynamic>{};
+    _privateKey=<String,dynamic>{};
+    userPreferenceBox?.clear();
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:chat_app/features/account/update_profile_screen.dart';
 import 'package:chat_app/features/reset_password/reset_password.dart';
+import 'package:chat_app/helper/hive_db_helper.dart';
 import 'package:chat_app/utils/extensions.dart';
 import 'package:chat_app/widgets/profile_picture_avatar.dart';
 import 'package:flutter/cupertino.dart';
@@ -140,9 +141,10 @@ class ProfileScreen extends StatelessWidget {
                     EdgeInsets.symmetric(horizontal: 20.0, vertical: 1.3.h),
                 child: ElevatedButton(
                   child: const Text(AppStrings.logout),
-                  onPressed: () {
+                  onPressed: () async{
                     debugPrint("Logging out");
                     Get.find<AuthController>().signOut();
+                    await Get.find<HiveDBHelper>().clearData();
                     debugPrint("Logout complete");
                   },
                 ),

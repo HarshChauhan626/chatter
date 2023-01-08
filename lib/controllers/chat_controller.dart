@@ -172,8 +172,15 @@ class ChatController extends GetxController {
         senderUserInfo = await UtilFunctions.getUserInfo(user1Id!);
       }
 
+      final hiveDbHelper=Get.find<HiveDBHelper>();
+      final receiverPublicKey=await EcdhPublicKey.importJsonWebKey(receiverModel!.publicKey!, EllipticCurve.p256);
+      final senderPrivateKey=await EcdhPrivateKey.importJsonWebKey(hiveDbHelper.privateKey, EllipticCurve.p256);
+
+      final encryptedMessage=AppE2EE.encrypt(message.value, senderPrivateKey,receiverPublicKey);
+
+
       final messageData = {
-        "content": message.value,
+        "content": encryptedMessage,
         "sender": user1Id,
         "timestamp": dateTimeNow,
         "contentType": "Text",
