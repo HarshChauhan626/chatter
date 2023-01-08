@@ -10,6 +10,7 @@ class UserModel {
   String? lastName;
   String? profilePicture;
   String? deviceToken;
+  Map<String, dynamic>? publicKey;
 
   UserModel(
       {this.email,
@@ -22,7 +23,8 @@ class UserModel {
       this.lastName,
       this.bio,
       this.profilePicture,
-      this.deviceToken});
+      this.deviceToken,
+      this.publicKey});
 
   UserModel.fromJson(Map<String, dynamic> userModelJson) {
     email = userModelJson["email"] ?? "";
@@ -36,6 +38,7 @@ class UserModel {
     lastName = userModelJson["lastName"] ?? "";
     profilePicture = userModelJson["profilePicture"] ?? "";
     deviceToken = userModelJson["deviceToken"];
+    publicKey = userModelJson["publicKey"];
   }
 
   Map<String, dynamic> toJson() {
@@ -50,7 +53,8 @@ class UserModel {
       "isOnline": isOnline,
       "lastSeenAt": lastSeenAt,
       "profilePicture": profilePicture,
-      "deviceToken": deviceToken
+      "deviceToken": deviceToken,
+      "publicKey": publicKey
     };
   }
 
@@ -64,18 +68,19 @@ class UserModel {
       String? bio,
       String? firstName,
       String? lastName,
-      String? profilePicture}) {
+      String? profilePicture,
+      Map<String, dynamic>? publicKey}) {
     return UserModel(
-      email: email ?? this.email,
-      userName: userName ?? this.userName,
-      password: password ?? this.password,
-      uid: uid ?? this.uid,
-      lastSeenAt: lastSeenAt ?? this.lastSeenAt,
-      isOnline: isOnline ?? this.isOnline,
-      firstName: firstName ?? this.firstName,
-      lastName: lastName ?? this.lastName,
-      bio: bio ?? this.bio,
-      profilePicture: profilePicture ?? this.profilePicture,
-    );
+        email: email ?? this.email,
+        userName: userName ?? this.userName,
+        password: password ?? this.password,
+        uid: uid ?? this.uid,
+        lastSeenAt: lastSeenAt ?? this.lastSeenAt,
+        isOnline: isOnline ?? this.isOnline,
+        firstName: firstName ?? this.firstName,
+        lastName: lastName ?? this.lastName,
+        bio: bio ?? this.bio,
+        profilePicture: profilePicture ?? this.profilePicture,
+        publicKey: publicKey ?? this.publicKey);
   }
 }

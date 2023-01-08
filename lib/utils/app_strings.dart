@@ -121,6 +121,8 @@ class AppStrings {
 
   static const String currentChatId = "CurrentChatID";
   static const String pinnedRoomIds = "PinnedRoomIDs";
+  static const String privateKey="privateKey";
+  static const String publicKey="publicKey";
 
   static const String cancel="Cancel";
   static const String delete="Delete";

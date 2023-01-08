@@ -1,10 +1,8 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart' as pathProvider;
-
 import '../utils/app_strings.dart';
 
 class HiveDBHelper extends GetxController {
@@ -37,6 +35,24 @@ class HiveDBHelper extends GetxController {
     userPreferenceBox?.put(AppStrings.pinnedRoomIds, _pinnedRoomIdList);
   }
 
+  Map<String, dynamic> _privateKey = <String, dynamic>{};
+
+  set privateKey(Map<String, dynamic> privateKey) {
+    _privateKey = privateKey;
+    userPreferenceBox?.put(AppStrings.privateKey, privateKey);
+  }
+
+  Map<String, dynamic> get privateKey => _privateKey;
+
+  Map<String, dynamic> _publicKey = <String, dynamic>{};
+
+  set publicKey(Map<String, dynamic> publicKey) {
+    _publicKey = publicKey;
+    userPreferenceBox?.put(AppStrings.publicKey, publicKey);
+  }
+
+  Map<String, dynamic> get publicKey => _publicKey;
+
   @override
   void onInit() {
     super.onInit();
@@ -53,6 +69,10 @@ class HiveDBHelper extends GetxController {
         userPreferenceBox?.get(AppStrings.isOnBoardingDone) ?? false;
     _pinnedRoomIdList =
         userPreferenceBox?.get(AppStrings.pinnedRoomIds) ?? <String>[];
+    _publicKey =
+        userPreferenceBox?.get(AppStrings.publicKey) ?? <String, dynamic>{};
+    _privateKey =
+        userPreferenceBox?.get(AppStrings.privateKey) ?? <String, dynamic>{};
   }
 
   Future<void> initBoxes() async {

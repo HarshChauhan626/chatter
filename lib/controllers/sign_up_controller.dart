@@ -1,8 +1,10 @@
+import 'package:chat_app/helper/appe2ee.dart';
 import 'package:chat_app/helper/firebase_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
+import '../helper/hive_db_helper.dart';
 import '../utils/app_strings.dart';
 import '../utils/asset_strings.dart';
 import '../widgets/alert_dialog.dart';
@@ -65,7 +67,7 @@ class SignUpController extends GetxController {
       Map<String, dynamic> userDocInfo = {
         "uid": userCredential.user!.uid,
         "email": email.value,
-        "userName": userName.value,
+        "userName": userName.value
       };
       await userCollectionRef.doc(userCredential.user!.uid).set(userDocInfo);
     } catch (e) {

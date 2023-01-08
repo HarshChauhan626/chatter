@@ -6,7 +6,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
+import 'package:webcrypto/webcrypto.dart';
 
+import '../helper/appe2ee.dart';
 import '../helper/firebase_helper.dart';
 import '../models/room_model.dart';
 import '../models/user_model.dart';
@@ -47,9 +49,10 @@ class ChatController extends GetxController {
 
   RxList<int> searchResultList = <int>[].obs;
 
-  RxMap<String,MessageModel> selectedMessagesList = <String,MessageModel>{}.obs;
+  RxMap<String, MessageModel> selectedMessagesList =
+      <String, MessageModel>{}.obs;
 
-  RxList<UserModel> userInfoList=<UserModel>[].obs;
+  RxList<UserModel> userInfoList = <UserModel>[].obs;
 
   TextEditingController searchTextController = TextEditingController();
 
@@ -104,7 +107,7 @@ class ChatController extends GetxController {
     final userModel = Get.arguments['receiverModel'] as UserModel;
     receiverModel = userModel;
     roomModel = Get.arguments['roomModel'];
-    roomId.value=roomModel?.roomId??"";
+    roomId.value = roomModel?.roomId ?? "";
 
     debugPrint("Room id coming is ${roomId.value}");
     user1Id = Get.find<AuthController>().firebaseUser.value?.uid;
@@ -253,10 +256,28 @@ class ChatController extends GetxController {
             .update({"latestMessage": groupDataMap["latestMessage"]});
       }
 
-      dataList = groupDocReference
+      final messagesListStream = groupDocReference
           .collection(roomId.value)
           .orderBy("timestamp")
           .snapshots();
+
+      dataList = messagesListStream.asyncMap<List<MessageModel>>((messageList) async {
+        return Future.wait(messageList.docs.map((e) async {
+          MessageModel messageModel;
+          try {
+            final hiveDbHelper=Get.find<HiveDBHelper>();
+            final receiverPrivateKey=await EcdhPrivateKey.importJsonWebKey(hiveDbHelper.privateKey, EllipticCurve.p256);
+            final senderPublicKey=await EcdhPublicKey.importJsonWebKey(receiverModel!.publicKey!, EllipticCurve.p256);
+            messageModel=MessageModel.fromJson(e.data());
+            messageModel.content=await AppE2EE.decrypt(messageModel.content!,senderPublicKey,receiverPrivateKey);
+            return messageModel;
+          } catch (e, s) {
+            print("Exception $e");
+            print("Stacktrace $s");
+            return MessageModel();
+          }
+        }).toList());
+      });
 
       showChat.value = true;
     } catch (e, s) {
@@ -337,28 +358,24 @@ class ChatController extends GetxController {
 
       final groupDocReference = chatCollectionRef.doc(roomId.value);
 
-      await groupDocReference.update({"latestMessage":messageModel.toJson()});
-    } on Exception catch (e,s) {
+      await groupDocReference.update({"latestMessage": messageModel.toJson()});
+    } on Exception catch (e, s) {
       debugPrint(e.toString());
       debugPrint(s.toString());
     }
   }
 
   Future<void> deleteMessages({bool? isDeleteForAll}) async {
-    // for (int i = 0; i < selectedMessagesList.length; i++) {
-    //   await deleteMessage(selectedMessagesList[i],
-    //       isDeleteForAll: isDeleteForAll);
-    // }
-    final keysList=selectedMessagesList.keys.toList();
-    for(int i=0;i<keysList.length;i++){
-      await deleteMessage(selectedMessagesList[keysList[i]]?.messageId??"",isDeleteForAll: isDeleteForAll);
+    final keysList = selectedMessagesList.keys.toList();
+    for (int i = 0; i < keysList.length; i++) {
+      await deleteMessage(selectedMessagesList[keysList[i]]?.messageId ?? "",
+          isDeleteForAll: isDeleteForAll);
     }
     final latestUndeletedMessage = getLatestUndeletedMessage();
     if (latestUndeletedMessage != null) {
-      // await updateLatestMessage(messageList.first);
       await updateLatestMessage(latestUndeletedMessage);
     } else {
-      await deleteRoom(isDeleteForAll:isDeleteForAll);
+      await deleteRoom(isDeleteForAll: isDeleteForAll);
     }
     selectedMessagesList.clear();
   }
@@ -380,9 +397,7 @@ class ChatController extends GetxController {
         return;
       }
 
-
-      if (deletedByList.contains(user2Id) &&
-          deletedByList.contains(user1Id)) {
+      if (deletedByList.contains(user2Id) && deletedByList.contains(user1Id)) {
         await groupDocReference.delete();
         return;
       }
@@ -417,28 +432,29 @@ class ChatController extends GetxController {
     return null;
   }
 
-
-  Future<void> onCopyMessages()async{
-    String copiedText="";
-    final keysList=selectedMessagesList.keys.toList();
-    for(int i=0;i<keysList.length;i++){
-      final selectedMessage=selectedMessagesList[keysList[i]];
-      if(selectedMessage!=null){
-        final senderName=roomModel?.userInfoList?.where((element) => element.uid==selectedMessage.senderId).first;
-        copiedText+="${senderName.userName??""}:";
-        copiedText+=selectedMessage.content??"";
-        copiedText+="\n";
+  Future<void> onCopyMessages() async {
+    String copiedText = "";
+    final keysList = selectedMessagesList.keys.toList();
+    for (int i = 0; i < keysList.length; i++) {
+      final selectedMessage = selectedMessagesList[keysList[i]];
+      if (selectedMessage != null) {
+        final senderName = roomModel?.userInfoList
+            ?.where((element) => element.uid == selectedMessage.senderId)
+            .first;
+        copiedText += "${senderName.userName ?? ""}:";
+        copiedText += selectedMessage.content ?? "";
+        copiedText += "\n";
       }
     }
-    await Clipboard.setData(ClipboardData(text: copiedText)).then((_){
+    await Clipboard.setData(ClipboardData(text: copiedText)).then((_) {
       Get.showSnackbar(
         GetSnackBar(
-          message: '${selectedMessagesList.length} ${selectedMessagesList.length==1?"message":"messages"} copied',
+          message:
+              '${selectedMessagesList.length} ${selectedMessagesList.length == 1 ? "message" : "messages"} copied',
           duration: const Duration(seconds: 2),
         ),
       );
     });
     selectedMessagesList.clear();
   }
-
 }
